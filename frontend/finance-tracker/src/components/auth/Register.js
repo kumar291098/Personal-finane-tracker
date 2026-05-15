@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { AlertTriangle, CheckCircle2, Eye, EyeOff, Gauge, Lock, Rocket, ShieldCheck, User, Wallet } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import './Auth.css';
 
@@ -23,7 +24,6 @@ const Register = () => {
       ...formData,
       [e.target.name]: e.target.value
     });
-    // Clear messages when user starts typing
     if (error) setError('');
     if (success) setSuccess('');
   };
@@ -46,9 +46,9 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!validateForm()) return;
-    
+
     setLoading(true);
     setError('');
 
@@ -57,7 +57,7 @@ const Register = () => {
         username: formData.username,
         password: formData.password
       });
-      setSuccess('Account created successfully! Redirecting to login...');
+      setSuccess('Account created successfully. Redirecting to login...');
       setTimeout(() => {
         navigate('/login');
       }, 2000);
@@ -72,8 +72,8 @@ const Register = () => {
     if (password.length === 0) return { strength: 0, label: '', color: '' };
     if (password.length < 6) return { strength: 25, label: 'Weak', color: 'var(--error-500)' };
     if (password.length < 8) return { strength: 50, label: 'Fair', color: 'var(--warning-500)' };
-    if (password.length < 12) return { strength: 75, label: 'Good', color: 'var(--primary-500)' };
-    return { strength: 100, label: 'Strong', color: 'var(--success-500)' };
+    if (password.length < 12) return { strength: 75, label: 'Good', color: '#0f766e' };
+    return { strength: 100, label: 'Strong', color: 'var(--success-600)' };
   };
 
   const passwordStrength = getPasswordStrength(formData.password);
@@ -84,41 +84,39 @@ const Register = () => {
         <div className="auth-pattern"></div>
         <div className="auth-gradient"></div>
       </div>
-      
+
       <div className="auth-content">
         <div className="auth-card">
           <div className="auth-header">
             <div className="auth-logo">
-              <span className="auth-logo-icon">💰</span>
+              <span className="auth-logo-icon"><Wallet size={28} /></span>
               <span className="auth-logo-text">FinanceTracker</span>
             </div>
             <h1 className="auth-title">Create Account</h1>
             <p className="auth-subtitle">
-              Join thousands of users managing their finances smarter
+              Start with a simple workspace for balances, transactions, and spending categories.
             </p>
           </div>
 
           <form onSubmit={handleSubmit} className="auth-form">
             {error && (
               <div className="error-message">
-                <span className="error-icon">⚠️</span>
+                <AlertTriangle size={16} />
                 {error}
               </div>
             )}
 
             {success && (
               <div className="success-message">
-                <span className="success-icon">✅</span>
+                <CheckCircle2 size={16} />
                 {success}
               </div>
             )}
 
             <div className="form-group">
-              <label htmlFor="username" className="form-label">
-                Username
-              </label>
+              <label htmlFor="username" className="form-label">Username</label>
               <div className="input-wrapper">
-                <span className="input-icon">👤</span>
+                <span className="input-icon"><User size={18} /></span>
                 <input
                   type="text"
                   id="username"
@@ -132,17 +130,13 @@ const Register = () => {
                   minLength={3}
                 />
               </div>
-              <div className="form-hint">
-                Username must be at least 3 characters long
-              </div>
+              <div className="form-hint">Username must be at least 3 characters long</div>
             </div>
 
             <div className="form-group">
-              <label htmlFor="password" className="form-label">
-                Password
-              </label>
+              <label htmlFor="password" className="form-label">Password</label>
               <div className="input-wrapper">
-                <span className="input-icon">🔒</span>
+                <span className="input-icon"><Lock size={18} /></span>
                 <input
                   type={showPassword ? 'text' : 'password'}
                   id="password"
@@ -159,22 +153,23 @@ const Register = () => {
                   type="button"
                   className="password-toggle"
                   onClick={() => setShowPassword(!showPassword)}
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
                 >
-                  {showPassword ? '👁️' : '👁️‍🗨️'}
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
               </div>
               {formData.password && (
                 <div className="password-strength">
                   <div className="strength-bar">
-                    <div 
+                    <div
                       className="strength-fill"
-                      style={{ 
+                      style={{
                         width: `${passwordStrength.strength}%`,
                         backgroundColor: passwordStrength.color
                       }}
                     ></div>
                   </div>
-                  <span 
+                  <span
                     className="strength-label"
                     style={{ color: passwordStrength.color }}
                   >
@@ -185,11 +180,9 @@ const Register = () => {
             </div>
 
             <div className="form-group">
-              <label htmlFor="confirmPassword" className="form-label">
-                Confirm Password
-              </label>
+              <label htmlFor="confirmPassword" className="form-label">Confirm Password</label>
               <div className="input-wrapper">
-                <span className="input-icon">🔒</span>
+                <span className="input-icon"><Lock size={18} /></span>
                 <input
                   type={showConfirmPassword ? 'text' : 'password'}
                   id="confirmPassword"
@@ -205,14 +198,13 @@ const Register = () => {
                   type="button"
                   className="password-toggle"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  aria-label={showConfirmPassword ? 'Hide password' : 'Show password'}
                 >
-                  {showConfirmPassword ? '👁️' : '👁️‍🗨️'}
+                  {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
               </div>
               {formData.confirmPassword && formData.password !== formData.confirmPassword && (
-                <div className="form-error">
-                  Passwords do not match
-                </div>
+                <div className="form-error">Passwords do not match</div>
               )}
             </div>
 
@@ -228,11 +220,7 @@ const Register = () => {
               </label>
             </div>
 
-            <button
-              type="submit"
-              className="auth-button"
-              disabled={loading}
-            >
+            <button type="submit" className="auth-button" disabled={loading}>
               {loading ? (
                 <>
                   <span className="spinner"></span>
@@ -240,7 +228,7 @@ const Register = () => {
                 </>
               ) : (
                 <>
-                  <span>🎉</span>
+                  <Rocket size={18} />
                   Create Account
                 </>
               )}
@@ -258,43 +246,36 @@ const Register = () => {
 
           <div className="auth-features">
             <div className="feature-item">
-              <span className="feature-icon">🆓</span>
-              <span className="feature-text">Free Forever</span>
-            </div>
-            <div className="feature-item">
-              <span className="feature-icon">⚡</span>
+              <Gauge size={18} />
               <span className="feature-text">Quick Setup</span>
             </div>
             <div className="feature-item">
-              <span className="feature-icon">🌟</span>
-              <span className="feature-text">Premium Features</span>
+              <ShieldCheck size={18} />
+              <span className="feature-text">Private Account</span>
+            </div>
+            <div className="feature-item">
+              <Wallet size={18} />
+              <span className="feature-text">Money Control</span>
             </div>
           </div>
         </div>
 
         <div className="auth-demo">
           <div className="demo-card">
-            <h3 className="demo-title">Why Choose Us?</h3>
+            <h3 className="demo-title">Built For Daily Tracking</h3>
             <div className="demo-benefits">
               <div className="benefit-item">
-                <span className="benefit-icon">📈</span>
+                <Gauge size={20} />
                 <div className="benefit-content">
-                  <h4>Smart Analytics</h4>
-                  <p>Get insights into your spending patterns</p>
+                  <h4>Fast Entry</h4>
+                  <p>Add income or expenses without leaving your flow.</p>
                 </div>
               </div>
               <div className="benefit-item">
-                <span className="benefit-icon">🎯</span>
+                <ShieldCheck size={20} />
                 <div className="benefit-content">
-                  <h4>Goal Tracking</h4>
-                  <p>Set and achieve your financial goals</p>
-                </div>
-              </div>
-              <div className="benefit-item">
-                <span className="benefit-icon">🔐</span>
-                <div className="benefit-content">
-                  <h4>Bank-Level Security</h4>
-                  <p>Your data is encrypted and secure</p>
+                  <h4>Account Scoped</h4>
+                  <p>Your transactions stay tied to your logged-in user.</p>
                 </div>
               </div>
             </div>

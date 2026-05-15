@@ -1,5 +1,19 @@
 import React, { useState } from 'react';
 import { Outlet, NavLink, useNavigate } from 'react-router-dom';
+import {
+  BarChart3,
+  Bell,
+  ChartNoAxesCombined,
+  ChevronDown,
+  CreditCard,
+  FolderTree,
+  LogOut,
+  Menu,
+  Search,
+  Settings,
+  Wallet,
+  X
+} from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import './Layout.css';
 
@@ -16,31 +30,31 @@ const Layout = () => {
   const menuItems = [
     {
       path: '/dashboard',
-      icon: '📊',
+      icon: BarChart3,
       label: 'Dashboard',
       description: 'Overview & Analytics'
     },
     {
       path: '/transactions',
-      icon: '💳',
+      icon: CreditCard,
       label: 'Transactions',
       description: 'Manage your money'
     },
     {
       path: '/analytics',
-      icon: '📈',
+      icon: ChartNoAxesCombined,
       label: 'Analytics',
       description: 'Insights & Reports'
     },
     {
       path: '/categories',
-      icon: '🏷️',
+      icon: FolderTree,
       label: 'Categories',
       description: 'Organize expenses'
     },
     {
       path: '/profile',
-      icon: '👤',
+      icon: Settings,
       label: 'Profile',
       description: 'Account settings'
     }
@@ -48,40 +62,43 @@ const Layout = () => {
 
   return (
     <div className="layout">
-      {/* Sidebar */}
       <aside className={`sidebar ${sidebarOpen ? 'sidebar-open' : ''}`}>
         <div className="sidebar-header">
           <div className="logo">
-            <span className="logo-icon">💰</span>
+            <span className="logo-icon"><Wallet size={22} /></span>
             <span className="logo-text">FinanceTracker</span>
           </div>
-          <button 
+          <button
             className="sidebar-toggle"
             onClick={() => setSidebarOpen(!sidebarOpen)}
+            aria-label="Toggle navigation"
           >
-            {sidebarOpen ? '✕' : '☰'}
+            {sidebarOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
         </div>
 
         <nav className="sidebar-nav">
           <ul className="nav-list">
-            {menuItems.map((item) => (
-              <li key={item.path} className="nav-item">
-                <NavLink
-                  to={item.path}
-                  className={({ isActive }) => 
-                    `nav-link ${isActive ? 'nav-link-active' : ''}`
-                  }
-                  onClick={() => setSidebarOpen(false)}
-                >
-                  <span className="nav-icon">{item.icon}</span>
-                  <div className="nav-content">
-                    <span className="nav-label">{item.label}</span>
-                    <span className="nav-description">{item.description}</span>
-                  </div>
-                </NavLink>
-              </li>
-            ))}
+            {menuItems.map((item) => {
+              const Icon = item.icon;
+              return (
+                <li key={item.path} className="nav-item">
+                  <NavLink
+                    to={item.path}
+                    className={({ isActive }) =>
+                      `nav-link ${isActive ? 'nav-link-active' : ''}`
+                    }
+                    onClick={() => setSidebarOpen(false)}
+                  >
+                    <span className="nav-icon"><Icon size={20} /></span>
+                    <div className="nav-content">
+                      <span className="nav-label">{item.label}</span>
+                      <span className="nav-description">{item.description}</span>
+                    </div>
+                  </NavLink>
+                </li>
+              );
+            })}
           </ul>
         </nav>
 
@@ -96,61 +113,58 @@ const Layout = () => {
             </div>
           </div>
           <button className="logout-btn" onClick={handleLogout}>
-            <span>🚪</span>
+            <LogOut size={16} />
             Logout
           </button>
         </div>
       </aside>
 
-      {/* Main Content */}
       <main className="main-content">
-        {/* Top Header */}
         <header className="top-header">
-          <button 
+          <button
             className="mobile-menu-btn"
             onClick={() => setSidebarOpen(!sidebarOpen)}
+            aria-label="Open navigation"
           >
-            ☰
+            <Menu size={22} />
           </button>
-          
+
           <div className="header-actions">
             <div className="search-box">
-              <input 
-                type="text" 
-                placeholder="Search transactions..." 
+              <input
+                type="text"
+                placeholder="Search transactions..."
                 className="search-input"
               />
-              <span className="search-icon">🔍</span>
+              <span className="search-icon"><Search size={16} /></span>
             </div>
-            
+
             <div className="header-buttons">
-              <button className="notification-btn">
-                <span>🔔</span>
+              <button className="notification-btn" aria-label="Notifications">
+                <Bell size={18} />
                 <span className="notification-badge">3</span>
               </button>
-              
+
               <div className="user-menu">
                 <button className="user-menu-btn">
                   <div className="user-avatar-small">
                     {user?.username?.charAt(0).toUpperCase() || 'U'}
                   </div>
                   <span className="user-name-header">{user?.username || 'User'}</span>
-                  <span className="dropdown-arrow">▼</span>
+                  <span className="dropdown-arrow"><ChevronDown size={14} /></span>
                 </button>
               </div>
             </div>
           </div>
         </header>
 
-        {/* Page Content */}
         <div className="page-content">
           <Outlet />
         </div>
       </main>
 
-      {/* Sidebar Overlay for Mobile */}
       {sidebarOpen && (
-        <div 
+        <div
           className="sidebar-overlay"
           onClick={() => setSidebarOpen(false)}
         />

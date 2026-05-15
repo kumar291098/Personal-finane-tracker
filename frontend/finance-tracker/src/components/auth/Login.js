@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { Eye, EyeOff, Lock, Rocket, ShieldCheck, User, Wallet, AlertTriangle, BarChart3, Lightbulb } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import './Auth.css';
 
@@ -20,7 +21,6 @@ const Login = () => {
       ...formData,
       [e.target.name]: e.target.value
     });
-    // Clear error when user starts typing
     if (error) setError('');
   };
 
@@ -45,34 +45,32 @@ const Login = () => {
         <div className="auth-pattern"></div>
         <div className="auth-gradient"></div>
       </div>
-      
+
       <div className="auth-content">
         <div className="auth-card">
           <div className="auth-header">
             <div className="auth-logo">
-              <span className="auth-logo-icon">💰</span>
+              <span className="auth-logo-icon"><Wallet size={28} /></span>
               <span className="auth-logo-text">FinanceTracker</span>
             </div>
-            <h1 className="auth-title">Welcome Back!</h1>
+            <h1 className="auth-title">Welcome Back</h1>
             <p className="auth-subtitle">
-              Sign in to your account to continue managing your finances
+              Sign in to review spending, add transactions, and keep your money picture current.
             </p>
           </div>
 
           <form onSubmit={handleSubmit} className="auth-form">
             {error && (
               <div className="error-message">
-                <span className="error-icon">⚠️</span>
+                <AlertTriangle size={16} />
                 {error}
               </div>
             )}
 
             <div className="form-group">
-              <label htmlFor="username" className="form-label">
-                Username
-              </label>
+              <label htmlFor="username" className="form-label">Username</label>
               <div className="input-wrapper">
-                <span className="input-icon">👤</span>
+                <span className="input-icon"><User size={18} /></span>
                 <input
                   type="text"
                   id="username"
@@ -88,11 +86,9 @@ const Login = () => {
             </div>
 
             <div className="form-group">
-              <label htmlFor="password" className="form-label">
-                Password
-              </label>
+              <label htmlFor="password" className="form-label">Password</label>
               <div className="input-wrapper">
-                <span className="input-icon">🔒</span>
+                <span className="input-icon"><Lock size={18} /></span>
                 <input
                   type={showPassword ? 'text' : 'password'}
                   id="password"
@@ -108,8 +104,9 @@ const Login = () => {
                   type="button"
                   className="password-toggle"
                   onClick={() => setShowPassword(!showPassword)}
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
                 >
-                  {showPassword ? '👁️' : '👁️‍🗨️'}
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
               </div>
             </div>
@@ -124,11 +121,7 @@ const Login = () => {
               </Link>
             </div>
 
-            <button
-              type="submit"
-              className="auth-button"
-              disabled={loading}
-            >
+            <button type="submit" className="auth-button" disabled={loading}>
               {loading ? (
                 <>
                   <span className="spinner"></span>
@@ -136,7 +129,7 @@ const Login = () => {
                 </>
               ) : (
                 <>
-                  <span>🚀</span>
+                  <Rocket size={18} />
                   Sign In
                 </>
               )}
@@ -154,15 +147,15 @@ const Login = () => {
 
           <div className="auth-features">
             <div className="feature-item">
-              <span className="feature-icon">📊</span>
+              <BarChart3 size={18} />
               <span className="feature-text">Track Expenses</span>
             </div>
             <div className="feature-item">
-              <span className="feature-icon">💡</span>
+              <Lightbulb size={18} />
               <span className="feature-text">Smart Insights</span>
             </div>
             <div className="feature-item">
-              <span className="feature-icon">🔒</span>
+              <ShieldCheck size={18} />
               <span className="feature-text">Secure & Private</span>
             </div>
           </div>
@@ -170,29 +163,26 @@ const Login = () => {
 
         <div className="auth-demo">
           <div className="demo-card">
-            <h3 className="demo-title">Try Demo Account</h3>
+            <h3 className="demo-title">Fast Money Checkups</h3>
             <p className="demo-description">
-              Test the application with sample data
+              Log in to see balances, category trends, and recent activity in one focused workspace.
             </p>
-            <div className="demo-credentials">
-              <div className="demo-credential">
-                <span className="demo-label">Username:</span>
-                <code className="demo-value">demo</code>
+            <div className="demo-benefits">
+              <div className="benefit-item">
+                <BarChart3 size={20} />
+                <div className="benefit-content">
+                  <h4>Clear Overview</h4>
+                  <p>Income, expenses, and balance are visible immediately.</p>
+                </div>
               </div>
-              <div className="demo-credential">
-                <span className="demo-label">Password:</span>
-                <code className="demo-value">demo123</code>
+              <div className="benefit-item">
+                <ShieldCheck size={20} />
+                <div className="benefit-content">
+                  <h4>Private Workspace</h4>
+                  <p>Your account keeps transactions tied to your login.</p>
+                </div>
               </div>
             </div>
-            <button
-              type="button"
-              className="demo-button"
-              onClick={() => {
-                setFormData({ username: 'demo', password: 'demo123' });
-              }}
-            >
-              Fill Demo Credentials
-            </button>
           </div>
         </div>
       </div>

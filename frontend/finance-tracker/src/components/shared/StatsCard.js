@@ -1,36 +1,55 @@
 import React from 'react';
+import {
+  Activity,
+  ArrowDownRight,
+  ArrowUpRight,
+  Banknote,
+  ListChecks,
+  TrendingDown,
+  TrendingUp,
+  Wallet
+} from 'lucide-react';
 import './StatsCard.css';
 
-const StatsCard = ({ 
-  title, 
-  value, 
-  icon, 
-  type = 'primary', 
-  trend, 
+const StatsCard = ({
+  title,
+  value,
+  type = 'primary',
+  trend,
   subtitle,
   isCount = false,
-  onClick 
+  onClick
 }) => {
   const formatValue = (val) => {
     if (isCount) {
       return val.toLocaleString();
     }
-    
+
     if (typeof val === 'number') {
       return new Intl.NumberFormat('en-US', {
         style: 'currency',
         currency: 'USD',
         minimumFractionDigits: 0,
-        maximumFractionDigits: 0,
+        maximumFractionDigits: 0
       }).format(Math.abs(val));
     }
-    
+
     return val;
   };
 
   const getTrendIcon = () => {
     if (!trend) return null;
-    return trend === 'up' ? '📈' : '📉';
+    return trend === 'up' ? <ArrowUpRight size={14} /> : <ArrowDownRight size={14} />;
+  };
+
+  const getMainIcon = () => {
+    const normalizedTitle = title.toLowerCase();
+    if (normalizedTitle.includes('balance') || normalizedTitle.includes('net')) return <Wallet size={24} />;
+    if (normalizedTitle.includes('income')) return <TrendingUp size={24} />;
+    if (normalizedTitle.includes('expense')) return <TrendingDown size={24} />;
+    if (normalizedTitle.includes('transaction')) return <ListChecks size={24} />;
+    if (normalizedTitle.includes('amount')) return <Banknote size={24} />;
+    return <Activity size={24} />;
   };
 
   const getTypeClass = () => {
@@ -43,13 +62,13 @@ const StatsCard = ({
   };
 
   return (
-    <div 
+    <div
       className={`stats-card ${getTypeClass()} ${onClick ? 'stats-card-clickable' : ''}`}
       onClick={onClick}
     >
       <div className="stats-card-header">
         <div className="stats-card-icon">
-          {icon}
+          {getMainIcon()}
         </div>
         {trend && (
           <div className={`stats-card-trend trend-${trend}`}>
@@ -57,7 +76,7 @@ const StatsCard = ({
           </div>
         )}
       </div>
-      
+
       <div className="stats-card-content">
         <div className="stats-card-value">
           {!isCount && value < 0 && <span className="negative-sign">-</span>}
@@ -67,10 +86,6 @@ const StatsCard = ({
         {subtitle && (
           <div className="stats-card-subtitle">{subtitle}</div>
         )}
-      </div>
-      
-      <div className="stats-card-background">
-        <div className="stats-card-pattern"></div>
       </div>
     </div>
   );
