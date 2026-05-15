@@ -40,6 +40,7 @@ const RecentTransactions = ({ transactions, onRefresh }) => {
       'Utilities': '⚡',
       'Healthcare': '🏥',
       'Education': '📚',
+      'Donation': '🤝',
       'Travel': '✈️',
       'Income': '💰',
       'Expense': '💸'

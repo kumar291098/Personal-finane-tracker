@@ -31,11 +31,16 @@ public class DataInitializer implements CommandLineRunner {
             categoryRepository.save(new Category("Transportation", "EXPENSE", "🚗"));
             categoryRepository.save(new Category("Entertainment", "EXPENSE", "🎬"));
             categoryRepository.save(new Category("Utilities", "EXPENSE", "⚡"));
+            categoryRepository.save(new Category("Donation", "EXPENSE", "🤝"));
             categoryRepository.save(new Category("Salary", "INCOME", "💼"));
             categoryRepository.save(new Category("Freelance", "INCOME", "💻"));
             
             System.out.println("✅ Default categories created successfully!");
         } else {
+            if (!categoryRepository.existsByNameAndType("Donation", "EXPENSE")) {
+                categoryRepository.save(new Category("Donation", "EXPENSE", "🤝"));
+                System.out.println("🤝 Donation category added.");
+            }
             System.out.println("📋 Categories already exist, skipping initialization.");
         }
     }

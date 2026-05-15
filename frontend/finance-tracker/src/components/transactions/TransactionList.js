@@ -39,6 +39,7 @@ const TransactionList = ({
       'Utilities': '⚡',
       'Healthcare': '🏥',
       'Education': '📚',
+      'Donation': '🤝',
       'Travel': '✈️',
       'Income': '💰',
       'Expense': '💸'

@@ -33,6 +33,7 @@ const TransactionForm = ({ onSuccess, onCancel, transaction = null }) => {
       { id: 11, name: 'Healthcare', icon: '🏥' },
       { id: 12, name: 'Education', icon: '📚' },
       { id: 13, name: 'Travel', icon: '✈️' },
+      { id: 15, name: 'Donation', icon: '🤝' },
       { id: 14, name: 'Other Expense', icon: '💸' }
     ]
   };

@@ -27,6 +27,7 @@ const ExpenseChart = ({ transactions }) => {
       'Utilities': '⚡',
       'Healthcare': '🏥',
       'Education': '📚',
+      'Donation': '🤝',
       'Travel': '���️',
       'Other': '📝'
     };
