@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Search } from 'lucide-react';
+import { CheckCircle2, CreditCard, Search, ShieldCheck, Smartphone, X } from 'lucide-react';
 import { transactionService } from '../../services/transactionService';
 import TransactionForm from './TransactionForm';
 import TransactionList from './TransactionList';
@@ -11,7 +11,16 @@ const Transactions = () => {
   const [filteredTransactions, setFilteredTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
+  const [showPaymentFlow, setShowPaymentFlow] = useState(false);
   const [editingTransaction, setEditingTransaction] = useState(null);
+  const [paymentProcessing, setPaymentProcessing] = useState(false);
+  const [paymentMessage, setPaymentMessage] = useState('');
+  const [paymentData, setPaymentData] = useState({
+    app: 'Paytm',
+    amount: '',
+    category: 'Food & Dining',
+    description: ''
+  });
   const [filters, setFilters] = useState({
     type: 'ALL',
     category: 'ALL',
@@ -145,6 +154,77 @@ const Transactions = () => {
     setEditingTransaction(null);
   };
 
+  const paymentApps = [
+    { id: 'Paytm', label: 'Paytm', tone: 'paytm' },
+    { id: 'PhonePe', label: 'PhonePe', tone: 'phonepe' },
+    { id: 'Google Pay', label: 'GPay', tone: 'gpay' },
+    { id: 'UPI', label: 'UPI', tone: 'upi' }
+  ];
+
+  const paymentCategories = [
+    { id: 2, name: 'Food & Dining' },
+    { id: 3, name: 'Transportation' },
+    { id: 4, name: 'Shopping' },
+    { id: 5, name: 'Entertainment' },
+    { id: 6, name: 'Utilities' },
+    { id: 11, name: 'Healthcare' },
+    { id: 12, name: 'Education' },
+    { id: 13, name: 'Travel' },
+    { id: 15, name: 'Donation' },
+    { id: 14, name: 'Other Expense' }
+  ];
+
+  const resetPaymentFlow = () => {
+    setShowPaymentFlow(false);
+    setPaymentProcessing(false);
+    setPaymentMessage('');
+    setPaymentData({
+      app: 'Paytm',
+      amount: '',
+      category: 'Food & Dining',
+      description: ''
+    });
+  };
+
+  const handlePaymentChange = (field, value) => {
+    setPaymentData(prev => ({
+      ...prev,
+      [field]: value
+    }));
+    if (paymentMessage) setPaymentMessage('');
+  };
+
+  const handlePaymentSubmit = async (event) => {
+    event.preventDefault();
+
+    const amount = Number(paymentData.amount);
+    if (!amount || amount <= 0) {
+      setPaymentMessage('Enter a valid payment amount.');
+      return;
+    }
+
+    const selectedCategory = paymentCategories.find(category => category.name === paymentData.category);
+    setPaymentProcessing(true);
+    setPaymentMessage('');
+
+    try {
+      await transactionService.createTransaction({
+        type: 'EXPENSE',
+        amount,
+        category: paymentData.category,
+        categoryId: selectedCategory?.id || 2,
+        description: paymentData.description.trim() || `${paymentData.app} payment - ${paymentData.category}`
+      });
+      await fetchTransactions();
+      setPaymentMessage('Payment completed and expense added.');
+      setTimeout(resetPaymentFlow, 700);
+    } catch (error) {
+      setPaymentMessage(error.message || 'Payment was completed, but expense could not be added.');
+    } finally {
+      setPaymentProcessing(false);
+    }
+  };
+
   const handleEdit = (transaction) => {
     setEditingTransaction(transaction);
     setShowForm(true);
@@ -212,6 +292,20 @@ const Transactions = () => {
         >
           <span>➕</span>
           Add Transaction
+        </button>
+      </div>
+
+      <div className="payment-simulator-card">
+        <div className="payment-simulator-content">
+          <span className="payment-simulator-icon"><Smartphone size={22} /></span>
+          <div>
+            <h3>Pay with app and auto-track expense</h3>
+            <p>Select Paytm or another payment app, choose category, complete payment, and save it as an expense.</p>
+          </div>
+        </div>
+        <button className="btn btn-primary" onClick={() => setShowPaymentFlow(true)}>
+          <CreditCard size={18} />
+          Make Payment
         </button>
       </div>
 
@@ -392,6 +486,96 @@ const Transactions = () => {
                 setEditingTransaction(null);
               }}
             />
+          </div>
+        </div>
+      )}
+
+      {showPaymentFlow && (
+        <div className="modal-overlay" onClick={resetPaymentFlow}>
+          <div className="modal-content payment-modal" onClick={event => event.stopPropagation()}>
+            <div className="modal-header">
+              <div>
+                <h3>Complete Payment</h3>
+                <p className="modal-subtitle">This payment flow records an expense after completion.</p>
+              </div>
+              <button className="modal-close" onClick={resetPaymentFlow} aria-label="Close payment">
+                <X size={18} />
+              </button>
+            </div>
+
+            <form className="payment-form" onSubmit={handlePaymentSubmit}>
+              <div className="payment-app-grid">
+                {paymentApps.map(app => (
+                  <button
+                    key={app.id}
+                    type="button"
+                    className={`payment-app-option ${app.tone} ${paymentData.app === app.id ? 'selected' : ''}`}
+                    onClick={() => handlePaymentChange('app', app.id)}
+                  >
+                    <span>{app.label}</span>
+                    {paymentData.app === app.id && <CheckCircle2 size={16} />}
+                  </button>
+                ))}
+              </div>
+
+              <div className="payment-field">
+                <label htmlFor="paymentAmount">Amount</label>
+                <input
+                  id="paymentAmount"
+                  type="number"
+                  min="1"
+                  step="0.01"
+                  value={paymentData.amount}
+                  onChange={(event) => handlePaymentChange('amount', event.target.value)}
+                  placeholder="Enter amount"
+                  required
+                />
+              </div>
+
+              <div className="payment-field">
+                <label htmlFor="paymentCategory">Category</label>
+                <select
+                  id="paymentCategory"
+                  value={paymentData.category}
+                  onChange={(event) => handlePaymentChange('category', event.target.value)}
+                >
+                  {paymentCategories.map(category => (
+                    <option key={category.name} value={category.name}>{category.name}</option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="payment-field">
+                <label htmlFor="paymentDescription">Description</label>
+                <input
+                  id="paymentDescription"
+                  type="text"
+                  value={paymentData.description}
+                  onChange={(event) => handlePaymentChange('description', event.target.value)}
+                  placeholder={`${paymentData.app} payment`}
+                />
+              </div>
+
+              <div className="payment-security-note">
+                <ShieldCheck size={18} />
+                <span>Demo payment confirmation. Real Paytm/UPI integration can be connected later with merchant API keys.</span>
+              </div>
+
+              {paymentMessage && (
+                <div className={`payment-message ${paymentMessage.includes('completed') ? 'success' : 'error'}`}>
+                  {paymentMessage}
+                </div>
+              )}
+
+              <div className="form-actions">
+                <button type="button" className="btn btn-secondary" onClick={resetPaymentFlow} disabled={paymentProcessing}>
+                  Cancel
+                </button>
+                <button type="submit" className="btn btn-primary" disabled={paymentProcessing}>
+                  {paymentProcessing ? 'Processing...' : `Pay with ${paymentData.app}`}
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}
