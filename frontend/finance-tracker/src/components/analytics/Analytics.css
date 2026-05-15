@@ -17,6 +17,14 @@
   margin-bottom: var(--spacing-lg);
 }
 
+.export-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
 .header-content {
   flex: 1;
   min-width: 0;
@@ -708,6 +716,15 @@
     gap: var(--spacing-md);
     margin-bottom: 0;
   }
+
+  .export-actions {
+    width: 100%;
+    justify-content: stretch;
+  }
+
+  .export-actions .btn {
+    flex: 1;
+  }
   
   .page-title {
     font-size: var(--font-size-2xl);
@@ -769,6 +786,43 @@
   .ratio-row strong {
     text-align: left;
   }
+}
+
+:root[data-theme='dark'] .filter-card,
+:root[data-theme='dark'] .goal-progress-card,
+:root[data-theme='dark'] .report-card,
+:root[data-theme='dark'] .category-breakdown {
+  background: #0f172a;
+  border-color: #334155;
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.32);
+}
+
+:root[data-theme='dark'] .period-select,
+:root[data-theme='dark'] .custom-range input {
+  background-color: #111827;
+  border-color: #334155;
+  color: #f8fafc;
+}
+
+:root[data-theme='dark'] .cashflow-bars,
+:root[data-theme='dark'] .category-item,
+:root[data-theme='dark'] .empty-analytics,
+:root[data-theme='dark'] .source-track,
+:root[data-theme='dark'] .ratio-row div,
+:root[data-theme='dark'] .goal-progress-track {
+  background: #1e293b;
+  border-color: #334155;
+}
+
+:root[data-theme='dark'] .analytics-donut > div,
+:root[data-theme='dark'] .insight-card {
+  background: #111827;
+  border-color: #334155;
+}
+
+:root[data-theme='dark'] .insights-section {
+  background: linear-gradient(135deg, #0f172a, #134e4a);
+  border-color: #0f766e;
 }
 
 @media (max-width: 480px) {

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { BarChart3, CalendarDays, Flag, PieChart, TrendingDown, TrendingUp } from 'lucide-react';
+import { BarChart3, CalendarDays, FileSpreadsheet, Flag, PieChart, Printer, TrendingDown, TrendingUp } from 'lucide-react';
 import { transactionService } from '../../services/transactionService';
 import StatsCard from '../shared/StatsCard';
 import { formatCurrency } from '../../utils/transactionUtils';
@@ -251,6 +251,100 @@ const Analytics = () => {
   const incomeShare = (analytics.income / incomeExpenseTotal) * 100;
   const expenseShare = (analytics.expenses / incomeExpenseTotal) * 100;
 
+  const getExportRows = () => {
+    return analytics.periodTransactions.map(transaction => ({
+      Date: new Date(transaction.transactionDate).toLocaleDateString('en-IN'),
+      Type: transaction.type,
+      Category: transaction.category || 'Other',
+      Description: transaction.description || '',
+      Amount: transaction.amount
+    }));
+  };
+
+  const downloadFile = (content, filename, type) => {
+    const blob = new Blob([content], { type });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
+  const escapeCell = (value) => String(value ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+
+  const exportExcel = () => {
+    const rows = getExportRows();
+    const summaryRows = [
+      ['Total Income', analytics.income],
+      ['Total Expenses', analytics.expenses],
+      ['Net Balance', analytics.balance],
+      ['Goal Progress', `${analytics.goal.progress.toFixed(1)}%`]
+    ];
+    const html = `
+      <html>
+        <head><meta charset="utf-8" /></head>
+        <body>
+          <table border="1">
+            <tr><th colspan="5">FinanceTracker Report</th></tr>
+            ${summaryRows.map(row => `<tr><td colspan="3">${escapeCell(row[0])}</td><td colspan="2">${escapeCell(row[1])}</td></tr>`).join('')}
+            <tr>${Object.keys(rows[0] || { Date: '', Type: '', Category: '', Description: '', Amount: '' }).map(key => `<th>${key}</th>`).join('')}</tr>
+            ${rows.map(row => `<tr>${Object.values(row).map(value => `<td>${escapeCell(value)}</td>`).join('')}</tr>`).join('')}
+          </table>
+        </body>
+      </html>`;
+    downloadFile(html, `finance-report-${Date.now()}.xls`, 'application/vnd.ms-excel');
+  };
+
+  const exportPdf = () => {
+    const rows = getExportRows();
+    const printWindow = window.open('', '_blank');
+    if (!printWindow) return;
+
+    printWindow.document.write(`
+      <html>
+        <head>
+          <title>FinanceTracker Report</title>
+          <style>
+            body { font-family: Arial, sans-serif; padding: 24px; color: #111827; }
+            h1 { margin: 0 0 6px; }
+            .summary { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 20px 0; }
+            .box { border: 1px solid #d1d5db; border-radius: 8px; padding: 12px; }
+            .box span { display: block; color: #6b7280; font-size: 12px; }
+            .box strong { display: block; margin-top: 6px; font-size: 16px; }
+            table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+            th, td { border: 1px solid #d1d5db; padding: 8px; text-align: left; font-size: 12px; }
+            th { background: #f3f4f6; }
+          </style>
+        </head>
+        <body>
+          <h1>FinanceTracker Report</h1>
+          <p>Income, expenses, and goal progress from the selected filters.</p>
+          <div class="summary">
+            <div class="box"><span>Income</span><strong>${escapeCell(formatCurrency(analytics.income))}</strong></div>
+            <div class="box"><span>Expenses</span><strong>${escapeCell(formatCurrency(analytics.expenses))}</strong></div>
+            <div class="box"><span>Balance</span><strong>${escapeCell(formatCurrency(analytics.balance))}</strong></div>
+            <div class="box"><span>Goal</span><strong>${analytics.goal.progress.toFixed(1)}%</strong></div>
+          </div>
+          <table>
+            <thead><tr><th>Date</th><th>Type</th><th>Category</th><th>Description</th><th>Amount</th></tr></thead>
+            <tbody>
+              ${rows.map(row => `<tr><td>${escapeCell(row.Date)}</td><td>${escapeCell(row.Type)}</td><td>${escapeCell(row.Category)}</td><td>${escapeCell(row.Description)}</td><td>${escapeCell(formatCurrency(row.Amount))}</td></tr>`).join('')}
+            </tbody>
+          </table>
+        </body>
+      </html>
+    `);
+    printWindow.document.close();
+    printWindow.focus();
+    printWindow.print();
+  };
+
   if (loading) {
     return (
       <div className="analytics-loading">
@@ -270,6 +364,16 @@ const Analytics = () => {
           <p className="page-subtitle">
             Track income, expenses, date ranges, and progress toward your goal.
           </p>
+        </div>
+        <div className="export-actions">
+          <button type="button" className="btn btn-secondary" onClick={exportExcel}>
+            <FileSpreadsheet size={17} />
+            Excel
+          </button>
+          <button type="button" className="btn btn-primary" onClick={exportPdf}>
+            <Printer size={17} />
+            PDF
+          </button>
         </div>
       </div>
 

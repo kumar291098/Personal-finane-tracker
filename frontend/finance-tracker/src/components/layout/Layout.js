@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Outlet, NavLink, useNavigate } from 'react-router-dom';
 import {
   BarChart3,
@@ -9,8 +9,10 @@ import {
   FolderTree,
   LogOut,
   Menu,
+  Moon,
   Search,
   Settings,
+  Sun,
   Wallet,
   X
 } from 'lucide-react';
@@ -20,6 +22,7 @@ import './Layout.css';
 const Layout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
+  const [theme, setTheme] = useState(() => localStorage.getItem('financeTheme') || 'light');
   const [notifications, setNotifications] = useState([
     {
       id: 1,
@@ -43,6 +46,11 @@ const Layout = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const unreadCount = notifications.filter(notification => notification.unread).length;
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('financeTheme', theme);
+  }, [theme]);
 
   const handleLogout = () => {
     logout();
@@ -169,6 +177,16 @@ const Layout = () => {
             </div>
 
             <div className="header-buttons">
+              <button
+                className="theme-toggle-btn"
+                type="button"
+                onClick={() => setTheme(prev => prev === 'dark' ? 'light' : 'dark')}
+                aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+                title={theme === 'dark' ? 'Light mode' : 'Dark mode'}
+              >
+                {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+              </button>
+
               <div className="notification-menu">
                 <button
                   className="notification-btn"

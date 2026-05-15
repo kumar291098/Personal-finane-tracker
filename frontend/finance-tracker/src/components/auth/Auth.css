@@ -58,6 +58,12 @@
   z-index: 1;
 }
 
+.auth-content-single {
+  grid-template-columns: 1fr;
+  justify-items: center;
+  max-width: 620px;
+}
+
 /* Auth Card */
 .auth-card {
   background: rgba(255, 255, 255, 0.97);
@@ -241,6 +247,25 @@
   display: flex;
   align-items: center;
   gap: var(--spacing-xs);
+}
+
+.reset-methods {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  flex-wrap: wrap;
+}
+
+.reset-methods span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 10px;
+  border-radius: var(--radius-full);
+  background: #f0fdfa;
+  color: #0f766e;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-semibold);
 }
 
 /* Password Strength */

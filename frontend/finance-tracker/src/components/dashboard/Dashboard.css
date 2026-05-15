@@ -21,6 +21,8 @@
   border: 1px solid #e2e8f0;
   border-radius: var(--radius-xl);
   box-shadow: 0 12px 30px rgba(15, 23, 42, 0.05);
+  min-width: 0;
+  overflow: hidden;
 }
 
 .welcome-section {
@@ -113,6 +115,7 @@
   transition: all var(--transition-normal);
   min-width: 0;
   overflow: hidden;
+  max-width: 100%;
 }
 
 .chart-card:hover {
@@ -182,7 +185,7 @@
 
 .expense-intelligence-grid {
   display: grid;
-  grid-template-columns: minmax(180px, 0.8fr) minmax(180px, 0.9fr) minmax(240px, 1.3fr);
+  grid-template-columns: minmax(0, 0.85fr) minmax(170px, 0.9fr) minmax(0, 1.35fr);
   gap: var(--spacing-lg);
   align-items: center;
   min-width: 0;
@@ -298,7 +301,9 @@
 .category-rank-meta strong {
   color: var(--gray-900);
   overflow-wrap: anywhere;
+  word-break: break-word;
   text-align: right;
+  min-width: 0;
 }
 
 .category-dot {
@@ -371,6 +376,7 @@
   font-size: 11px;
   line-height: 1.25;
   overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .dashboard-empty-state {
@@ -393,6 +399,7 @@
   height: fit-content;
   min-width: 0;
   overflow: hidden;
+  max-width: 100%;
 }
 
 .section-header {
@@ -437,6 +444,7 @@
   box-shadow: 0 12px 30px rgba(15, 23, 42, 0.05);
   border: 1px solid #e2e8f0;
   min-width: 0;
+  overflow: hidden;
 }
 
 .actions-grid {
@@ -493,6 +501,7 @@
   padding: 22px;
   border: 1px solid #a5f3fc;
   min-width: 0;
+  overflow: hidden;
 }
 
 .tips-grid {
@@ -551,6 +560,12 @@
   color: var(--gray-600);
   margin: 0;
   line-height: var(--leading-relaxed);
+  overflow-wrap: anywhere;
+}
+
+.tip-content,
+.tip-content h4 {
+  min-width: 0;
   overflow-wrap: anywhere;
 }
 
@@ -798,7 +813,7 @@
   }
 
   .date-expense-chart {
-    grid-template-columns: repeat(10, minmax(64px, 1fr));
+    grid-template-columns: repeat(10, minmax(58px, 1fr));
     margin-inline: calc(var(--spacing-sm) * -1);
     padding-inline: var(--spacing-sm);
   }
@@ -810,6 +825,50 @@
   .goal-summary {
     padding: var(--spacing-md);
   }
+}
+
+:root[data-theme='dark'] .dashboard-header,
+:root[data-theme='dark'] .chart-card,
+:root[data-theme='dark'] .recent-section,
+:root[data-theme='dark'] .quick-actions {
+  background: #0f172a;
+  border-color: #334155;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.34);
+}
+
+:root[data-theme='dark'] .dashboard-title,
+:root[data-theme='dark'] .expense-focus-panel strong,
+:root[data-theme='dark'] .category-donut-center strong,
+:root[data-theme='dark'] .category-rank-meta strong,
+:root[data-theme='dark'] .date-expense-column strong,
+:root[data-theme='dark'] .tip-content h4 {
+  color: #f8fafc;
+}
+
+:root[data-theme='dark'] .expense-focus-panel,
+:root[data-theme='dark'] .tips-section {
+  background: #102a2a;
+  border-color: #0f766e;
+}
+
+:root[data-theme='dark'] .category-donut-center,
+:root[data-theme='dark'] .action-card,
+:root[data-theme='dark'] .tip-card,
+:root[data-theme='dark'] .dashboard-empty-state,
+:root[data-theme='dark'] .date-expense-bar-wrap {
+  background: #111827;
+  border-color: #334155;
+}
+
+:root[data-theme='dark'] .dashboard-filter-select,
+:root[data-theme='dark'] .goal-field input {
+  background-color: #111827;
+  color: #f8fafc;
+  border-color: #334155;
+}
+
+:root[data-theme='dark'] .category-rank-bar {
+  background: #1e293b;
 }
 
 @media (max-width: 480px) {

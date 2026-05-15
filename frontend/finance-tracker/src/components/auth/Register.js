@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { AlertTriangle, CheckCircle2, Eye, EyeOff, Gauge, Lock, Rocket, ShieldCheck, User, Wallet } from 'lucide-react';
+import { AlertTriangle, CheckCircle2, Eye, EyeOff, Gauge, Lock, Mail, Phone, Rocket, ShieldCheck, User, Wallet } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import './Auth.css';
 
 const Register = () => {
   const [formData, setFormData] = useState({
     username: '',
+    email: '',
+    phone: '',
     password: '',
     confirmPassword: ''
   });
@@ -55,6 +57,8 @@ const Register = () => {
     try {
       await register({
         username: formData.username,
+        email: formData.email,
+        phone: formData.phone,
         password: formData.password
       });
       setSuccess('Account created successfully. Redirecting to login...');
@@ -131,6 +135,42 @@ const Register = () => {
                 />
               </div>
               <div className="form-hint">Username must be at least 3 characters long</div>
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="email" className="form-label">Gmail / Email</label>
+              <div className="input-wrapper">
+                <span className="input-icon"><Mail size={18} /></span>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  className="form-input"
+                  placeholder="yourname@gmail.com"
+                  required
+                  autoComplete="email"
+                />
+              </div>
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="phone" className="form-label">Phone Number</label>
+              <div className="input-wrapper">
+                <span className="input-icon"><Phone size={18} /></span>
+                <input
+                  type="tel"
+                  id="phone"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleChange}
+                  className="form-input"
+                  placeholder="Enter mobile number"
+                  required
+                  autoComplete="tel"
+                />
+              </div>
             </div>
 
             <div className="form-group">

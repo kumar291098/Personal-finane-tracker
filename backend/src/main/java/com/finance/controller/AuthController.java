@@ -45,6 +45,8 @@ public class AuthController {
     public Map<String, Object> register(@RequestBody Map<String, String> data) {
         String username = data.get("username");
         String password = data.get("password");
+        String email = normalize(data.get("email"));
+        String phone = normalize(data.get("phone"));
 
         Map<String, Object> response = new HashMap<>();
 
@@ -60,8 +62,22 @@ public class AuthController {
             return response;
         }
 
+        if (email != null && userRepository.findByEmail(email).isPresent()) {
+            response.put("success", false);
+            response.put("message", "Email already exists");
+            return response;
+        }
+
+        if (phone != null && userRepository.findByPhone(phone).isPresent()) {
+            response.put("success", false);
+            response.put("message", "Phone number already exists");
+            return response;
+        }
+
         User user = new User();
         user.setUsername(username);
+        user.setEmail(email);
+        user.setPhone(phone);
         user.setPassword(password); // no encoding
         userRepository.save(user);
 
@@ -70,5 +86,39 @@ public class AuthController {
         response.put("userId", user.getId());
         response.put("username", user.getUsername());
         return response;
+    }
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<?> forgotPassword(@RequestBody Map<String, String> data) {
+        String identifier = normalize(data.get("identifier"));
+        String newPassword = data.get("newPassword");
+
+        if (identifier == null || newPassword == null || newPassword.trim().length() < 6) {
+            return ResponseEntity.badRequest().body("Enter your email, phone, or username and a password with at least 6 characters.");
+        }
+
+        Optional<User> userResult = userRepository.findByEmail(identifier)
+            .or(() -> userRepository.findByPhone(identifier))
+            .or(() -> userRepository.findByUsername(identifier));
+
+        if (userResult.isEmpty()) {
+            return ResponseEntity.badRequest().body("No account found for that email, phone, or username.");
+        }
+
+        User user = userResult.get();
+        user.setPassword(newPassword.trim());
+        userRepository.save(user);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", true);
+        response.put("message", "Password reset successfully. You can login now.");
+        return ResponseEntity.ok(response);
+    }
+
+    private String normalize(String value) {
+        if (value == null || value.trim().isEmpty()) {
+            return null;
+        }
+        return value.trim();
     }
 }

@@ -343,6 +343,26 @@
   transition: all var(--transition-fast);
 }
 
+.theme-toggle-btn {
+  width: 40px;
+  height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-lg);
+  background: white;
+  color: var(--gray-700);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.theme-toggle-btn:hover {
+  border-color: #14b8a6;
+  color: #0f766e;
+  background: #f0fdfa;
+}
+
 .notification-btn:hover {
   background-color: var(--gray-100);
   color: var(--gray-900);
@@ -609,4 +629,37 @@
   .dropdown-arrow {
     display: none;
   }
+}
+
+:root[data-theme='dark'] .layout {
+  background: #020617;
+}
+
+:root[data-theme='dark'] .top-header,
+:root[data-theme='dark'] .notification-panel {
+  background-color: rgba(15, 23, 42, 0.94);
+  border-color: #334155;
+}
+
+:root[data-theme='dark'] .search-icon,
+:root[data-theme='dark'] .search-input,
+:root[data-theme='dark'] .theme-toggle-btn,
+:root[data-theme='dark'] .user-menu-btn,
+:root[data-theme='dark'] .notification-item {
+  background-color: #0f172a;
+  border-color: #334155;
+  color: #e2e8f0;
+}
+
+:root[data-theme='dark'] .notification-item:hover,
+:root[data-theme='dark'] .notification-item.unread,
+:root[data-theme='dark'] .theme-toggle-btn:hover,
+:root[data-theme='dark'] .user-menu-btn:hover {
+  background-color: #134e4a;
+  border-color: #14b8a6;
+}
+
+:root[data-theme='dark'] .notification-panel-header,
+:root[data-theme='dark'] .notification-item {
+  border-color: #334155;
 }

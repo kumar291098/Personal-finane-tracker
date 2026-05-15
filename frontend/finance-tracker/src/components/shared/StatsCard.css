@@ -9,6 +9,7 @@
   overflow: hidden;
   cursor: default;
   min-width: 0;
+  max-width: 100%;
 }
 
 .stats-card:hover {
@@ -75,10 +76,11 @@
   position: relative;
   z-index: 2;
   min-width: 0;
+  max-width: 100%;
 }
 
 .stats-card-value {
-  font-size: 1.9rem;
+  font-size: clamp(1.25rem, 2vw, 1.9rem);
   font-weight: var(--font-bold);
   color: var(--gray-900);
   margin-bottom: var(--spacing-xs);
@@ -89,6 +91,7 @@
   min-width: 0;
   overflow-wrap: anywhere;
   word-break: break-word;
+  max-width: 100%;
 }
 
 .negative-sign {
@@ -174,12 +177,36 @@
   }
   
   .stats-card-value {
-    font-size: var(--font-size-2xl);
+    font-size: clamp(1.15rem, 7vw, 1.5rem);
   }
   
   .stats-card-header {
     margin-bottom: var(--spacing-md);
   }
+}
+
+:root[data-theme='dark'] .stats-card {
+  background: #0f172a;
+  border-color: #334155;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.34);
+}
+
+:root[data-theme='dark'] .stats-card-icon {
+  background: #134e4a;
+  border-color: #0f766e;
+  color: #99f6e4;
+}
+
+:root[data-theme='dark'] .trend-up {
+  background: rgba(22, 101, 52, 0.42);
+  border-color: #166534;
+  color: #bbf7d0;
+}
+
+:root[data-theme='dark'] .trend-down {
+  background: rgba(127, 29, 29, 0.42);
+  border-color: #991b1b;
+  color: #fecaca;
 }
 
 @media (max-width: 480px) {
