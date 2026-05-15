@@ -877,3 +877,20 @@
     text-align: left;
   }
 }
+
+/* Additional Dark Mode Overrides */
+:root[data-theme='dark'] .filter-card,
+:root[data-theme='dark'] .goal-progress-card,
+:root[data-theme='dark'] .report-card,
+:root[data-theme='dark'] .category-breakdown,
+:root[data-theme='dark'] .insight-card {
+  background-color: #111827;
+  border-color: #334155;
+  box-shadow: none;
+}
+:root[data-theme='dark'] .analytics-header h1,
+:root[data-theme='dark'] .section-title,
+:root[data-theme='dark'] .report-card h3,
+:root[data-theme='dark'] .goal-progress-card h3 {
+  color: var(--gray-900);
+}

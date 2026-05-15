@@ -663,3 +663,33 @@
 :root[data-theme='dark'] .notification-item {
   border-color: #334155;
 }
+
+/* Dark Mode Overrides for Layout */
+:root[data-theme='dark'] .top-header,
+:root[data-theme='dark'] .sidebar,
+:root[data-theme='dark'] .notification-panel {
+  background-color: #111827;
+  border-color: #334155;
+}
+:root[data-theme='dark'] .search-input {
+  background-color: #1e293b;
+  color: var(--gray-900);
+  border-color: #334155;
+}
+:root[data-theme='dark'] .search-input:focus {
+  background-color: #0f172a;
+}
+:root[data-theme='dark'] .user-menu-btn,
+:root[data-theme='dark'] .theme-toggle-btn {
+  background-color: #1e293b;
+  border-color: #334155;
+}
+:root[data-theme='dark'] .notification-item {
+  background-color: #111827;
+}
+:root[data-theme='dark'] .notification-item:hover {
+  background-color: #1e293b;
+}
+:root[data-theme='dark'] .notification-item.unread {
+  background-color: #1e293b;
+}
