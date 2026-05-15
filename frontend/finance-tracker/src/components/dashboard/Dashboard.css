@@ -6,6 +6,7 @@
   flex-direction: column;
   gap: 24px;
   animation: fadeIn 0.35s ease-out;
+  min-width: 0;
 }
 
 /* Dashboard Header */
@@ -24,6 +25,7 @@
 
 .welcome-section {
   flex: 1;
+  min-width: 0;
 }
 
 .dashboard-kicker {
@@ -42,12 +44,14 @@
   margin-bottom: 6px;
   color: #0f172a;
   letter-spacing: 0;
+  overflow-wrap: anywhere;
 }
 
 .dashboard-subtitle {
   color: var(--gray-600);
   font-size: var(--font-size-base);
   margin: 0;
+  line-height: 1.5;
 }
 
 .header-actions {
@@ -107,6 +111,8 @@
   box-shadow: 0 12px 30px rgba(15, 23, 42, 0.05);
   border: 1px solid #e2e8f0;
   transition: all var(--transition-normal);
+  min-width: 0;
+  overflow: hidden;
 }
 
 .chart-card:hover {
@@ -123,6 +129,7 @@
   font-weight: var(--font-bold);
   color: var(--gray-900);
   margin-bottom: var(--spacing-xs);
+  overflow-wrap: anywhere;
 }
 
 .chart-subtitle {
@@ -178,6 +185,7 @@
   grid-template-columns: minmax(180px, 0.8fr) minmax(180px, 0.9fr) minmax(240px, 1.3fr);
   gap: var(--spacing-lg);
   align-items: center;
+  min-width: 0;
 }
 
 .expense-focus-panel {
@@ -190,6 +198,7 @@
   border: 1px solid #ccfbf1;
   border-radius: var(--radius-xl);
   background: #f0fdfa;
+  min-width: 0;
 }
 
 .focus-label {
@@ -202,8 +211,9 @@
 
 .expense-focus-panel strong {
   color: #0f172a;
-  font-size: 1.9rem;
+  font-size: clamp(1.35rem, 2.6vw, 1.9rem);
   line-height: 1.1;
+  overflow-wrap: anywhere;
 }
 
 .expense-focus-panel p {
@@ -260,6 +270,7 @@
   display: flex;
   flex-direction: column;
   gap: var(--spacing-md);
+  min-width: 0;
 }
 
 .category-rank-item {
@@ -286,6 +297,8 @@
 
 .category-rank-meta strong {
   color: var(--gray-900);
+  overflow-wrap: anywhere;
+  text-align: right;
 }
 
 .category-dot {
@@ -315,6 +328,7 @@
   align-items: end;
   padding-top: var(--spacing-md);
   overflow-x: auto;
+  min-width: 0;
 }
 
 .date-expense-column {
@@ -377,6 +391,8 @@
   box-shadow: 0 12px 30px rgba(15, 23, 42, 0.05);
   border: 1px solid #e2e8f0;
   height: fit-content;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .section-header {
@@ -420,6 +436,7 @@
   padding: 22px;
   box-shadow: 0 12px 30px rgba(15, 23, 42, 0.05);
   border: 1px solid #e2e8f0;
+  min-width: 0;
 }
 
 .actions-grid {
@@ -475,6 +492,7 @@
   border-radius: var(--radius-xl);
   padding: 22px;
   border: 1px solid #a5f3fc;
+  min-width: 0;
 }
 
 .tips-grid {
@@ -533,6 +551,7 @@
   color: var(--gray-600);
   margin: 0;
   line-height: var(--leading-relaxed);
+  overflow-wrap: anywhere;
 }
 
 /* Modal Styles */

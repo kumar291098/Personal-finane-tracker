@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { CalendarDays, Flag, TrendingDown, TrendingUp } from 'lucide-react';
+import { BarChart3, CalendarDays, Flag, PieChart, TrendingDown, TrendingUp } from 'lucide-react';
 import { transactionService } from '../../services/transactionService';
 import StatsCard from '../shared/StatsCard';
 import { formatCurrency } from '../../utils/transactionUtils';
@@ -24,12 +24,12 @@ const Analytics = () => {
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [incomeFilter, setIncomeFilter] = useState({
-    period: 'month',
+    period: 'all',
     startDate: '',
     endDate: ''
   });
   const [expenseFilter, setExpenseFilter] = useState({
-    period: 'month',
+    period: 'all',
     startDate: '',
     endDate: ''
   });
@@ -80,29 +80,35 @@ const Analytics = () => {
     return date;
   };
 
+  const getEndOfToday = () => {
+    const date = new Date();
+    date.setHours(23, 59, 59, 999);
+    return date;
+  };
+
   const getDateRange = (filter) => {
     const now = new Date();
     const startDate = getStartOfToday();
 
     switch (filter.period) {
       case 'today':
-        return { startDate, endDate: new Date() };
+        return { startDate, endDate: getEndOfToday() };
       case 'week':
         startDate.setDate(now.getDate() - 7);
-        return { startDate, endDate: new Date() };
+        return { startDate, endDate: getEndOfToday() };
       case 'month':
         startDate.setMonth(now.getMonth() - 1);
-        return { startDate, endDate: new Date() };
+        return { startDate, endDate: getEndOfToday() };
       case 'year':
         startDate.setFullYear(now.getFullYear() - 1);
-        return { startDate, endDate: new Date() };
+        return { startDate, endDate: getEndOfToday() };
       case 'custom':
         return {
           startDate: filter.startDate ? new Date(`${filter.startDate}T00:00:00`) : new Date(0),
           endDate: filter.endDate ? new Date(`${filter.endDate}T23:59:59`) : new Date()
         };
       default:
-        return { startDate: new Date(0), endDate: new Date() };
+        return { startDate: new Date(0), endDate: getEndOfToday() };
     }
   };
 
@@ -157,6 +163,9 @@ const Analytics = () => {
     }, {});
 
     return {
+      incomeTransactions,
+      expenseTransactions,
+      periodTransactions,
       income,
       expenses,
       balance: income - expenses,
@@ -177,6 +186,70 @@ const Analytics = () => {
   };
 
   const analytics = getAnalytics();
+  const getCategoryChartData = (type) => {
+    const source = type === 'income' ? analytics.incomeTransactions : analytics.expenseTransactions;
+    const totals = source.reduce((acc, transaction) => {
+      const category = transaction.category || 'Other';
+      acc[category] = (acc[category] || 0) + transaction.amount;
+      return acc;
+    }, {});
+    const total = Object.values(totals).reduce((sum, amount) => sum + amount, 0);
+    const colors = type === 'income'
+      ? ['#16a34a', '#0f766e', '#2563eb', '#7c3aed', '#0891b2', '#64748b']
+      : ['#ef4444', '#f97316', '#db2777', '#7c3aed', '#2563eb', '#64748b'];
+
+    return Object.entries(totals)
+      .sort(([, firstAmount], [, secondAmount]) => secondAmount - firstAmount)
+      .slice(0, 6)
+      .map(([category, amount], index) => ({
+        category,
+        amount,
+        color: colors[index % colors.length],
+        percentage: total > 0 ? (amount / total) * 100 : 0
+      }));
+  };
+
+  const getMonthlyTrend = () => {
+    const grouped = analytics.periodTransactions.reduce((acc, transaction) => {
+      const date = new Date(transaction.transactionDate);
+      const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+
+      if (!acc[key]) {
+        acc[key] = { month: key, income: 0, expense: 0 };
+      }
+
+      if (transaction.type === 'INCOME') {
+        acc[key].income += transaction.amount;
+      } else {
+        acc[key].expense += transaction.amount;
+      }
+
+      return acc;
+    }, {});
+
+    return Object.values(grouped)
+      .sort((first, second) => first.month.localeCompare(second.month))
+      .slice(-6)
+      .map(item => ({
+        ...item,
+        label: new Date(`${item.month}-01T00:00:00`).toLocaleDateString('en-IN', {
+          month: 'short',
+          year: '2-digit'
+        })
+      }));
+  };
+
+  const expenseCategoryData = getCategoryChartData('expense');
+  const incomeCategoryData = getCategoryChartData('income');
+  const monthlyTrend = getMonthlyTrend();
+  const categoryTotal = expenseCategoryData.reduce((sum, item) => sum + item.amount, 0);
+  const maxTrendAmount = Math.max(
+    ...monthlyTrend.flatMap(item => [item.income, item.expense]),
+    1
+  );
+  const incomeExpenseTotal = Math.max(analytics.income + analytics.expenses, 1);
+  const incomeShare = (analytics.income / incomeExpenseTotal) * 100;
+  const expenseShare = (analytics.expenses / incomeExpenseTotal) * 100;
 
   if (loading) {
     return (
@@ -333,6 +406,130 @@ const Analytics = () => {
           type="primary"
           subtitle="Average amount"
         />
+      </div>
+
+      <div className="report-grid">
+        <div className="report-card report-card-wide">
+          <div className="report-card-header">
+            <div>
+              <h3><BarChart3 size={20} /> Cash Flow Trend</h3>
+              <p>Month-wise income and expenses for the selected filters.</p>
+            </div>
+          </div>
+          <div className="cashflow-chart">
+            {monthlyTrend.length === 0 ? (
+              <div className="empty-analytics">No cash flow data available for this range.</div>
+            ) : (
+              monthlyTrend.map(item => (
+                <div key={item.month} className="cashflow-column">
+                  <div className="cashflow-bars">
+                    <span
+                      className="cashflow-bar income"
+                      style={{ height: `${Math.max((item.income / maxTrendAmount) * 100, 8)}%` }}
+                      title={`Income ${formatCurrency(item.income)}`}
+                    />
+                    <span
+                      className="cashflow-bar expense"
+                      style={{ height: `${Math.max((item.expense / maxTrendAmount) * 100, 8)}%` }}
+                      title={`Expense ${formatCurrency(item.expense)}`}
+                    />
+                  </div>
+                  <strong>{item.label}</strong>
+                  <small>{formatCurrency(item.income - item.expense)}</small>
+                </div>
+              ))
+            )}
+          </div>
+          <div className="report-legend">
+            <span><i className="legend-income" /> Income</span>
+            <span><i className="legend-expense" /> Expenses</span>
+          </div>
+        </div>
+
+        <div className="report-card">
+          <div className="report-card-header">
+            <div>
+              <h3><PieChart size={20} /> Expense Mix</h3>
+              <p>Top categories by spend.</p>
+            </div>
+          </div>
+          <div className="analytics-donut-layout">
+            <div
+              className="analytics-donut"
+              style={{
+                background: expenseCategoryData.length
+                  ? `conic-gradient(${expenseCategoryData.map((item, index) => {
+                      const start = expenseCategoryData
+                        .slice(0, index)
+                        .reduce((sum, current) => sum + current.percentage, 0);
+                      return `${item.color} ${start}% ${start + item.percentage}%`;
+                    }).join(', ')})`
+                  : '#e2e8f0'
+              }}
+            >
+              <div>
+                <span>Expense</span>
+                <strong>{formatCurrency(categoryTotal)}</strong>
+              </div>
+            </div>
+            <div className="donut-list">
+              {expenseCategoryData.length === 0 ? (
+                <div className="empty-analytics">No expense categories yet.</div>
+              ) : expenseCategoryData.map(item => (
+                <div key={item.category} className="donut-list-item">
+                  <span style={{ backgroundColor: item.color }} />
+                  <p>{item.category}</p>
+                  <strong>{item.percentage.toFixed(0)}%</strong>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div className="report-card">
+          <div className="report-card-header">
+            <div>
+              <h3><TrendingUp size={20} /> Income Sources</h3>
+              <p>Where your money comes from.</p>
+            </div>
+          </div>
+          <div className="source-list">
+            {incomeCategoryData.length === 0 ? (
+              <div className="empty-analytics">No income sources for this range.</div>
+            ) : incomeCategoryData.map(item => (
+              <div key={item.category} className="source-item">
+                <div>
+                  <span>{item.category}</span>
+                  <strong>{formatCurrency(item.amount)}</strong>
+                </div>
+                <div className="source-track">
+                  <span style={{ width: `${item.percentage}%`, backgroundColor: item.color }} />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="report-card report-card-wide">
+          <div className="report-card-header">
+            <div>
+              <h3><TrendingDown size={20} /> Income vs Expense Ratio</h3>
+              <p>Compare the selected income filter against the selected expense filter.</p>
+            </div>
+          </div>
+          <div className="ratio-chart">
+            <div className="ratio-row">
+              <span>Income</span>
+              <div><i className="ratio-income" style={{ width: `${incomeShare}%` }} /></div>
+              <strong>{formatCurrency(analytics.income)}</strong>
+            </div>
+            <div className="ratio-row">
+              <span>Expenses</span>
+              <div><i className="ratio-expense" style={{ width: `${expenseShare}%` }} /></div>
+              <strong>{formatCurrency(analytics.expenses)}</strong>
+            </div>
+          </div>
+        </div>
       </div>
 
       <div className="analytics-content">
