@@ -940,15 +940,22 @@
 :root[data-theme='dark'] .dashboard-header,
 :root[data-theme='dark'] .chart-card,
 :root[data-theme='dark'] .expense-focus-panel,
+:root[data-theme='dark'] .recent-section,
+:root[data-theme='dark'] .quick-actions,
+:root[data-theme='dark'] .tips-section,
 :root[data-theme='dark'] .tip-card,
-:root[data-theme='dark'] .action-card,
-:root[data-theme='dark'] .quick-actions-panel {
+:root[data-theme='dark'] .action-card {
   background-color: #111827;
   border-color: #334155;
   box-shadow: none;
 }
 :root[data-theme='dark'] .dashboard-title,
 :root[data-theme='dark'] .chart-title,
+:root[data-theme='dark'] .section-title,
+:root[data-theme='dark'] .expense-focus-panel strong,
+:root[data-theme='dark'] .category-donut-center strong,
+:root[data-theme='dark'] .category-rank-meta strong,
+:root[data-theme='dark'] .date-expense-column strong,
 :root[data-theme='dark'] .tip-content h4 {
   color: var(--gray-900);
 }
@@ -956,4 +963,13 @@
   background-color: #1e293b;
   color: var(--gray-900);
   border-color: #334155;
+}
+
+:root[data-theme='dark'] .dashboard-subtitle,
+:root[data-theme='dark'] .chart-subtitle,
+:root[data-theme='dark'] .expense-focus-panel p,
+:root[data-theme='dark'] .category-rank-meta,
+:root[data-theme='dark'] .date-expense-label,
+:root[data-theme='dark'] .tip-content p {
+  color: var(--gray-600);
 }
