@@ -1,0 +1,13 @@
+node_modules
+build
+.git
+.gitignore
+.DS_Store
+*.log
+.idea
+.vscode
+*.md
+public/manifest.json
+public/robots.txt
+src/**/*.test.js
+src/setupTests.js

@@ -1,0 +1,4 @@
+.tools/
+backend/target/
+frontend/finance-tracker/node_modules/
+frontend/finance-tracker/build/
