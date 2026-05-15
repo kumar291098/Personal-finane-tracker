@@ -1,9 +1,9 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { BarChart3, CreditCard, Flag, Lightbulb, Plus, Target, Wallet } from 'lucide-react';
+import { BarChart3, CalendarDays, CreditCard, Flag, Lightbulb, PieChart, Plus, Target, Wallet } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { transactionService } from '../../services/transactionService';
-import { getISTDateString } from '../../utils/transactionUtils';
+import { formatCurrency, getISTDateString } from '../../utils/transactionUtils';
 import StatsCard from '../shared/StatsCard';
 import TransactionForm from '../transactions/TransactionForm';
 import RecentTransactions from '../transactions/RecentTransactions';
@@ -18,6 +18,10 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [showTransactionForm, setShowTransactionForm] = useState(false);
   const [showGoalForm, setShowGoalForm] = useState(false);
+  const [dashboardFilters, setDashboardFilters] = useState({
+    range: 'month',
+    category: 'ALL'
+  });
   const [goalData, setGoalData] = useState(() => {
     const defaultGoal = {
       title: 'Monthly Savings',
@@ -128,6 +132,97 @@ const Dashboard = () => {
     });
   };
 
+  const getRangeStartDate = () => {
+    const now = new Date();
+    const startDate = new Date();
+    startDate.setHours(0, 0, 0, 0);
+
+    switch (dashboardFilters.range) {
+      case 'week':
+        startDate.setDate(now.getDate() - 7);
+        return startDate;
+      case 'month':
+        startDate.setMonth(now.getMonth() - 1);
+        return startDate;
+      case 'quarter':
+        startDate.setMonth(now.getMonth() - 3);
+        return startDate;
+      case 'year':
+        startDate.setFullYear(now.getFullYear() - 1);
+        return startDate;
+      default:
+        return new Date(0);
+    }
+  };
+
+  const getFilteredExpenses = () => {
+    const startDate = getRangeStartDate();
+    return transactions.filter(transaction => {
+      const transactionDate = new Date(transaction.transactionDate);
+      const matchesType = transaction.type === 'EXPENSE';
+      const matchesRange = transactionDate >= startDate;
+      const matchesCategory = dashboardFilters.category === 'ALL' ||
+        transaction.category === dashboardFilters.category;
+      return matchesType && matchesRange && matchesCategory;
+    });
+  };
+
+  const getExpenseCategories = () => {
+    return [...new Set(
+      transactions
+        .filter(transaction => transaction.type === 'EXPENSE')
+        .map(transaction => transaction.category || 'Other')
+    )].sort();
+  };
+
+  const getCategoryInsights = () => {
+    const expenses = getFilteredExpenses();
+    const totals = expenses.reduce((acc, transaction) => {
+      const category = transaction.category || 'Other';
+      acc[category] = (acc[category] || 0) + transaction.amount;
+      return acc;
+    }, {});
+
+    const total = Object.values(totals).reduce((sum, amount) => sum + amount, 0);
+    return Object.entries(totals)
+      .sort(([, firstAmount], [, secondAmount]) => secondAmount - firstAmount)
+      .slice(0, 6)
+      .map(([category, amount], index) => ({
+        category,
+        amount,
+        percentage: total > 0 ? (amount / total) * 100 : 0,
+        color: ['#0f766e', '#2563eb', '#db2777', '#f59e0b', '#7c3aed', '#64748b'][index % 6]
+      }));
+  };
+
+  const getDailyExpenseTrend = () => {
+    const expenses = getFilteredExpenses();
+    const totals = expenses.reduce((acc, transaction) => {
+      const dateKey = getISTDateString(new Date(transaction.transactionDate));
+      acc[dateKey] = (acc[dateKey] || 0) + transaction.amount;
+      return acc;
+    }, {});
+
+    return Object.entries(totals)
+      .sort(([firstDate], [secondDate]) => firstDate.localeCompare(secondDate))
+      .slice(-10)
+      .map(([date, amount]) => ({
+        date,
+        amount,
+        label: new Date(`${date}T00:00:00`).toLocaleDateString('en-IN', {
+          day: '2-digit',
+          month: 'short'
+        })
+      }));
+  };
+
+  const filteredExpenses = getFilteredExpenses();
+  const categoryInsights = getCategoryInsights();
+  const dailyExpenseTrend = getDailyExpenseTrend();
+  const filteredExpenseTotal = filteredExpenses.reduce((sum, transaction) => sum + transaction.amount, 0);
+  const topCategory = categoryInsights[0];
+  const maxDailyExpense = Math.max(...dailyExpenseTrend.map(item => item.amount), 1);
+
   if (loading) {
     return (
       <div className="dashboard-loading">
@@ -196,6 +291,120 @@ const Dashboard = () => {
 
       <div className="dashboard-grid">
         <div className="charts-section">
+          <div className="chart-card dashboard-insights-card">
+            <div className="chart-header enhanced-chart-header">
+              <div>
+                <h3 className="chart-title"><PieChart size={20} /> Expense Intelligence</h3>
+                <p className="chart-subtitle">Customize by date range and category</p>
+              </div>
+              <div className="dashboard-filter-row">
+                <select
+                  value={dashboardFilters.range}
+                  onChange={(event) => setDashboardFilters(prev => ({ ...prev, range: event.target.value }))}
+                  className="dashboard-filter-select"
+                  aria-label="Expense date range"
+                >
+                  <option value="week">Last 7 Days</option>
+                  <option value="month">Last Month</option>
+                  <option value="quarter">Last 3 Months</option>
+                  <option value="year">Last Year</option>
+                  <option value="all">All Time</option>
+                </select>
+                <select
+                  value={dashboardFilters.category}
+                  onChange={(event) => setDashboardFilters(prev => ({ ...prev, category: event.target.value }))}
+                  className="dashboard-filter-select"
+                  aria-label="Expense category"
+                >
+                  <option value="ALL">All Categories</option>
+                  {getExpenseCategories().map(category => (
+                    <option key={category} value={category}>{category}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            <div className="expense-intelligence-grid">
+              <div className="expense-focus-panel">
+                <span className="focus-label">Filtered Expenses</span>
+                <strong>{formatCurrency(filteredExpenseTotal)}</strong>
+                <p>
+                  {topCategory
+                    ? `${topCategory.category} leads with ${topCategory.percentage.toFixed(1)}% of this view.`
+                    : 'Add expense transactions to see category insights.'}
+                </p>
+              </div>
+
+              <div className="category-donut-panel">
+                <div
+                  className="category-donut"
+                  style={{
+                    background: categoryInsights.length > 0
+                      ? `conic-gradient(${categoryInsights.map((item, index) => {
+                          const start = categoryInsights
+                            .slice(0, index)
+                            .reduce((sum, current) => sum + current.percentage, 0);
+                          return `${item.color} ${start}% ${start + item.percentage}%`;
+                        }).join(', ')})`
+                      : '#e2e8f0'
+                  }}
+                >
+                  <div className="category-donut-center">
+                    <span>Total</span>
+                    <strong>{formatCurrency(filteredExpenseTotal)}</strong>
+                  </div>
+                </div>
+              </div>
+
+              <div className="category-rank-list">
+                {categoryInsights.length === 0 ? (
+                  <div className="dashboard-empty-state">No category data for this filter.</div>
+                ) : (
+                  categoryInsights.map(item => (
+                    <div key={item.category} className="category-rank-item">
+                      <div className="category-rank-meta">
+                        <span className="category-dot" style={{ backgroundColor: item.color }} />
+                        <span>{item.category}</span>
+                        <strong>{formatCurrency(item.amount)}</strong>
+                      </div>
+                      <div className="category-rank-bar">
+                        <span style={{ width: `${item.percentage}%`, backgroundColor: item.color }} />
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+            </div>
+          </div>
+
+          <div className="chart-card">
+            <div className="chart-header enhanced-chart-header">
+              <div>
+                <h3 className="chart-title"><CalendarDays size={20} /> Date-wise Expenses</h3>
+                <p className="chart-subtitle">Daily spending for the selected filter</p>
+              </div>
+            </div>
+            <div className="date-expense-chart">
+              {dailyExpenseTrend.length === 0 ? (
+                <div className="dashboard-empty-state">No daily expense data for this filter.</div>
+              ) : (
+                dailyExpenseTrend.map(item => (
+                  <div key={item.date} className="date-expense-column">
+                    <div className="date-expense-bar-wrap">
+                      <span
+                        className="date-expense-bar"
+                        style={{ height: `${Math.max((item.amount / maxDailyExpense) * 100, 8)}%` }}
+                        title={`${item.label}: ${formatCurrency(item.amount)}`}
+                      />
+                    </div>
+                    <span className="date-expense-label">{item.label}</span>
+                    <strong>{formatCurrency(item.amount)}</strong>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+
           <div className="chart-card">
             <div className="chart-header">
               <h3 className="chart-title">Income vs Expenses</h3>
