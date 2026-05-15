@@ -506,10 +506,18 @@
 /* Dark Mode Overrides */
 :root[data-theme='dark'] .transaction-form,
 :root[data-theme='dark'] .transactions-list,
+:root[data-theme='dark'] .transactions-controls,
 :root[data-theme='dark'] .filters-section,
 :root[data-theme='dark'] .transactions-container {
   background-color: #111827;
   border-color: #334155;
+  box-shadow: none;
+}
+
+:root[data-theme='dark'] .payment-simulator-card {
+  background: #111827;
+  border-color: #334155;
+  box-shadow: none;
 }
 :root[data-theme='dark'] .transactions-list th {
   background-color: #1e293b;
@@ -519,6 +527,36 @@
   border-color: #334155;
 }
 :root[data-theme='dark'] .transactions-header h1,
-:root[data-theme='dark'] .transaction-form h2 {
+:root[data-theme='dark'] .transaction-form h2,
+:root[data-theme='dark'] .payment-simulator-content h3 {
   color: var(--gray-900);
+}
+
+:root[data-theme='dark'] .payment-simulator-content p,
+:root[data-theme='dark'] .sort-label {
+  color: var(--gray-600);
+}
+
+:root[data-theme='dark'] .transactions-page .search-icon {
+  background-color: #1e293b;
+  border-color: #334155;
+  color: #99f6e4;
+}
+
+:root[data-theme='dark'] .transactions-page .search-input,
+:root[data-theme='dark'] .filter-select,
+:root[data-theme='dark'] .sort-select,
+:root[data-theme='dark'] .sort-order-btn,
+:root[data-theme='dark'] .payment-field input,
+:root[data-theme='dark'] .payment-field select,
+:root[data-theme='dark'] .payment-app-option {
+  background-color: #0f172a;
+  color: var(--gray-900);
+  border-color: #334155;
+}
+
+:root[data-theme='dark'] .payment-security-note {
+  background-color: #102a2a;
+  border-color: #0f766e;
+  color: #99f6e4;
 }

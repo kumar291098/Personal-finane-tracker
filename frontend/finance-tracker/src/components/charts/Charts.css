@@ -479,3 +479,24 @@
 .chart-tooltip.visible {
   opacity: 1;
 }
+
+/* Dark Mode Overrides */
+:root[data-theme='dark'] .chart-grid {
+  border-color: #334155;
+}
+
+:root[data-theme='dark'] .chart-bars-container,
+:root[data-theme='dark'] .summary-item {
+  background: #0f172a;
+  border-color: #334155;
+}
+
+:root[data-theme='dark'] .chart-bar-wrapper {
+  background-color: #1e293b;
+}
+
+:root[data-theme='dark'] .chart-legend,
+:root[data-theme='dark'] .chart-legend.horizontal,
+:root[data-theme='dark'] .legend-total {
+  border-color: #334155;
+}
