@@ -12,8 +12,8 @@ const Profile = () => {
     lastName: '',
     phone: '',
     dateOfBirth: '',
-    currency: 'USD',
-    timezone: 'UTC'
+    currency: 'INR',
+    timezone: 'Asia/Kolkata'
   });
   const [passwordData, setPasswordData] = useState({
     currentPassword: '',
@@ -197,6 +197,7 @@ const Profile = () => {
                       onChange={(e) => setProfileData(prev => ({ ...prev, currency: e.target.value }))}
                       className="form-select"
                     >
+                      <option value="INR">INR - Indian Rupee</option>
                       <option value="USD">USD - US Dollar</option>
                       <option value="EUR">EUR - Euro</option>
                       <option value="GBP">GBP - British Pound</option>
@@ -211,6 +212,7 @@ const Profile = () => {
                       onChange={(e) => setProfileData(prev => ({ ...prev, timezone: e.target.value }))}
                       className="form-select"
                     >
+                      <option value="Asia/Kolkata">IST - India Standard Time</option>
                       <option value="UTC">UTC</option>
                       <option value="EST">EST - Eastern Time</option>
                       <option value="PST">PST - Pacific Time</option>

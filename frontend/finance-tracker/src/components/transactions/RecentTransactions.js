@@ -1,30 +1,28 @@
 import React from 'react';
+import { formatCurrency, getISTDateString } from '../../utils/transactionUtils';
 import './RecentTransactions.css';
 
 const RecentTransactions = ({ transactions, onRefresh }) => {
   const formatDate = (dateString) => {
     const date = new Date(dateString);
-    const now = new Date();
-    const diffTime = Math.abs(now - date);
+    const now = new Date(`${getISTDateString()}T00:00:00+05:30`);
+    const transactionDay = new Date(`${getISTDateString(date)}T00:00:00+05:30`);
+    const diffTime = Math.abs(now - transactionDay);
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     
     if (diffDays === 1) return 'Today';
     if (diffDays === 2) return 'Yesterday';
     if (diffDays <= 7) return `${diffDays - 1} days ago`;
     
-    return date.toLocaleDateString('en-US', {
+    return date.toLocaleDateString('en-IN', {
       month: 'short',
-      day: 'numeric'
+      day: 'numeric',
+      timeZone: 'Asia/Kolkata'
     });
   };
 
   const formatAmount = (amount, type) => {
-    const formatted = new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    }).format(amount);
+    const formatted = formatCurrency(amount);
     
     return type === 'INCOME' ? `+${formatted}` : `-${formatted}`;
   };

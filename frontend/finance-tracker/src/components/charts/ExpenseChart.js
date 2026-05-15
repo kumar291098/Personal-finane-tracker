@@ -1,4 +1,5 @@
 import React from 'react';
+import { formatCurrency } from '../../utils/transactionUtils';
 import './Charts.css';
 
 const ExpenseChart = ({ transactions }) => {
@@ -69,7 +70,7 @@ const ExpenseChart = ({ transactions }) => {
                   <span className="category-icon">{getCategoryIcon(category)}</span>
                   <span className="category-name">{category}</span>
                   <span className="category-amount">
-                    ${amount.toLocaleString()}
+                    {formatCurrency(amount)}
                   </span>
                 </div>
                 <div className="chart-bar-wrapper">
@@ -100,13 +101,13 @@ const ExpenseChart = ({ transactions }) => {
                 />
                 <span className="legend-label">{category}</span>
                 <span className="legend-value">
-                  ${amount.toLocaleString()}
+                  {formatCurrency(amount)}
                 </span>
               </div>
             ))}
           </div>
           <div className="legend-total">
-            <strong>Total: ${total.toLocaleString()}</strong>
+            <strong>Total: {formatCurrency(total)}</strong>
           </div>
         </div>
       </div>

@@ -1,4 +1,5 @@
 import React from 'react';
+import { formatCurrency } from '../../utils/transactionUtils';
 import './TransactionList.css';
 
 const TransactionList = ({ 
@@ -11,19 +12,16 @@ const TransactionList = ({
 }) => {
   const formatDate = (dateString) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
+    return date.toLocaleDateString('en-IN', {
       year: 'numeric',
       month: 'short',
-      day: 'numeric'
+      day: 'numeric',
+      timeZone: 'Asia/Kolkata'
     });
   };
 
   const formatAmount = (amount, type) => {
-    const formatted = new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-      minimumFractionDigits: 2,
-    }).format(amount);
+    const formatted = formatCurrency(amount);
     
     return type === 'INCOME' ? `+${formatted}` : `-${formatted}`;
   };

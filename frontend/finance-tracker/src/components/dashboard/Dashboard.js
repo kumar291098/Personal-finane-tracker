@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { BarChart3, CreditCard, Flag, Lightbulb, Plus, Target, Wallet } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { transactionService } from '../../services/transactionService';
+import { getISTDateString } from '../../utils/transactionUtils';
 import StatsCard from '../shared/StatsCard';
 import TransactionForm from '../transactions/TransactionForm';
 import RecentTransactions from '../transactions/RecentTransactions';
@@ -61,7 +62,11 @@ const Dashboard = () => {
   };
 
   const getGreeting = () => {
-    const hour = new Date().getHours();
+    const hour = Number(new Intl.DateTimeFormat('en-IN', {
+      timeZone: 'Asia/Kolkata',
+      hour: '2-digit',
+      hour12: false
+    }).format(new Date()));
     if (hour < 12) return 'Good Morning';
     if (hour < 18) return 'Good Afternoon';
     return 'Good Evening';
@@ -74,13 +79,13 @@ const Dashboard = () => {
   };
 
   const getMonthlyData = () => {
-    const currentMonth = new Date().getMonth();
-    const currentYear = new Date().getFullYear();
+    const [currentYear, currentMonth] = getISTDateString().split('-').map(Number);
 
     return transactions.filter(t => {
       const transactionDate = new Date(t.transactionDate);
-      return transactionDate.getMonth() === currentMonth &&
-             transactionDate.getFullYear() === currentYear;
+      const transactionParts = getISTDateString(transactionDate).split('-').map(Number);
+      return transactionParts[0] === currentYear &&
+             transactionParts[1] === currentMonth;
     });
   };
 

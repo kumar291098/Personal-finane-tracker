@@ -1,3 +1,5 @@
+import { getISTDateString } from '../utils/transactionUtils';
+
 import { API_BASE_URL } from '../config/api';
 
 // Utility function to get auth data
@@ -57,7 +59,7 @@ export const transactionService = {
         amount: parseFloat(transaction.amount),
         category: transaction.category || 'General',
         categoryId: transaction.categoryId || (transaction.type === 'INCOME' ? 1 : 2),
-        transactionDate: transaction.transactionDate || new Date().toISOString().split('T')[0],
+        transactionDate: transaction.transactionDate || getISTDateString(),
         userId: user.id
       };
       

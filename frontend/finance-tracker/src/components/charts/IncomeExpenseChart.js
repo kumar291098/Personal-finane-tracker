@@ -1,4 +1,5 @@
 import React from 'react';
+import { formatCurrency } from '../../utils/transactionUtils';
 import './Charts.css';
 
 const IncomeExpenseChart = ({ transactions }) => {
@@ -33,7 +34,11 @@ const IncomeExpenseChart = ({ transactions }) => {
   const formatMonth = (monthKey) => {
     const [year, month] = monthKey.split('-');
     const date = new Date(year, month - 1);
-    return date.toLocaleDateString('en-US', { month: 'short', year: '2-digit' });
+    return date.toLocaleDateString('en-IN', {
+      month: 'short',
+      year: '2-digit',
+      timeZone: 'Asia/Kolkata'
+    });
   };
 
   if (chartData.length === 0) {
@@ -65,7 +70,7 @@ const IncomeExpenseChart = ({ transactions }) => {
                       height: `${incomeHeight}%`,
                       animationDelay: `${index * 0.1}s`
                     }}
-                    title={`Income: $${data.income.toLocaleString()}`}
+                    title={`Income: ${formatCurrency(data.income)}`}
                   />
                   <div 
                     className="chart-bar expense-bar"
@@ -73,7 +78,7 @@ const IncomeExpenseChart = ({ transactions }) => {
                       height: `${expenseHeight}%`,
                       animationDelay: `${index * 0.1 + 0.05}s`
                     }}
-                    title={`Expense: $${data.expense.toLocaleString()}`}
+                    title={`Expense: ${formatCurrency(data.expense)}`}
                   />
                 </div>
                 <div className="chart-label">
@@ -81,10 +86,10 @@ const IncomeExpenseChart = ({ transactions }) => {
                 </div>
                 <div className="chart-values">
                   <div className="income-value">
-                    +${data.income.toLocaleString()}
+                    +{formatCurrency(data.income)}
                   </div>
                   <div className="expense-value">
-                    -${data.expense.toLocaleString()}
+                    -{formatCurrency(data.expense)}
                   </div>
                 </div>
               </div>
@@ -112,7 +117,7 @@ const IncomeExpenseChart = ({ transactions }) => {
               <div key={data.month} className="summary-item">
                 <div className="summary-month">{formatMonth(data.month)}</div>
                 <div className={`summary-net ${net >= 0 ? 'positive' : 'negative'}`}>
-                  {net >= 0 ? '+' : ''}${net.toLocaleString()}
+                  {net >= 0 ? '+' : ''}{formatCurrency(net)}
                 </div>
               </div>
             );

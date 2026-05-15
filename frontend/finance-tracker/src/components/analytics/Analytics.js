@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { transactionService } from '../../services/transactionService';
 import StatsCard from '../shared/StatsCard';
+import { formatCurrency } from '../../utils/transactionUtils';
 import './Analytics.css';
 
 const Analytics = () => {
@@ -162,12 +163,12 @@ const Analytics = () => {
                 <div className="category-amounts">
                   {data.income > 0 && (
                     <span className="income-amount">
-                      +${data.income.toLocaleString()}
+                      +{formatCurrency(data.income)}
                     </span>
                   )}
                   {data.expense > 0 && (
                     <span className="expense-amount">
-                      -${data.expense.toLocaleString()}
+                      -{formatCurrency(data.expense)}
                     </span>
                   )}
                 </div>

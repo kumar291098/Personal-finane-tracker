@@ -9,6 +9,7 @@ import {
   TrendingUp,
   Wallet
 } from 'lucide-react';
+import { formatCurrency } from '../../utils/transactionUtils';
 import './StatsCard.css';
 
 const StatsCard = ({
@@ -26,12 +27,7 @@ const StatsCard = ({
     }
 
     if (typeof val === 'number') {
-      return new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD',
-        minimumFractionDigits: 0,
-        maximumFractionDigits: 0
-      }).format(Math.abs(val));
+      return formatCurrency(Math.abs(val));
     }
 
     return val;

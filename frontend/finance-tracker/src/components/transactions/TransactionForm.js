@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { transactionService } from '../../services/transactionService';
+import { getISTDateString } from '../../utils/transactionUtils';
 import './TransactionForm.css';
 
 const TransactionForm = ({ onSuccess, onCancel, transaction = null }) => {
@@ -9,7 +10,7 @@ const TransactionForm = ({ onSuccess, onCancel, transaction = null }) => {
     amount: transaction?.amount || '',
     category: transaction?.category || '',
     categoryId: transaction?.categoryId || '',
-    transactionDate: transaction?.transactionDate || new Date().toISOString().split('T')[0]
+    transactionDate: transaction?.transactionDate || getISTDateString()
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -166,7 +167,7 @@ const TransactionForm = ({ onSuccess, onCancel, transaction = null }) => {
             Amount
           </label>
           <div className="amount-input-wrapper">
-            <span className="currency-symbol">$</span>
+            <span className="currency-symbol">₹</span>
             <input
               type="number"
               id="amount"
