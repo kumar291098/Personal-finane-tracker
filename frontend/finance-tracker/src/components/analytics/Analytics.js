@@ -33,17 +33,33 @@ const Analytics = () => {
     startDate: '',
     endDate: ''
   });
-  const [goal] = useState(() => {
+  const readSavedGoal = () => {
     try {
       const savedGoal = localStorage.getItem('financeGoal');
       return savedGoal ? { ...defaultGoal, ...JSON.parse(savedGoal) } : defaultGoal;
     } catch (error) {
       return defaultGoal;
     }
-  });
+  };
+  const [goal, setGoal] = useState(readSavedGoal);
 
   useEffect(() => {
     fetchTransactions();
+  }, []);
+
+  useEffect(() => {
+    const refreshAnalyticsData = () => {
+      setGoal(readSavedGoal());
+      fetchTransactions();
+    };
+
+    window.addEventListener('focus', refreshAnalyticsData);
+    window.addEventListener('storage', refreshAnalyticsData);
+
+    return () => {
+      window.removeEventListener('focus', refreshAnalyticsData);
+      window.removeEventListener('storage', refreshAnalyticsData);
+    };
   }, []);
 
   const fetchTransactions = async () => {
