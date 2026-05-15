@@ -130,6 +130,35 @@
   color: #555;
 }
 
+.transactions-page .search-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  max-width: 420px;
+  width: 100%;
+}
+
+.transactions-page .search-icon {
+  position: static;
+  transform: none;
+  width: 42px;
+  min-width: 42px;
+  height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #d8e0ea;
+  border-radius: 4px;
+  background-color: #eef5ff;
+  color: #0069d9;
+}
+
+.transactions-page .search-input {
+  flex: 1;
+  min-width: 0;
+  padding-right: 12px;
+}
+
 .edit-button,
 .delete-button {
   padding: 5px 10px;

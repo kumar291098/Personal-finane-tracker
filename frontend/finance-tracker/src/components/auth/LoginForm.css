@@ -49,6 +49,28 @@ main {
   text-align: left;
 }
 
+.register-form .field-row,
+.login-form .field-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 0;
+}
+
+.register-form .field-icon,
+.login-form .field-icon {
+  width: 42px;
+  min-width: 42px;
+  height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #d8e0ea;
+  border-radius: 4px;
+  background-color: #eef5ff;
+  color: #0069d9;
+}
+
 .register-form label, .login-form label {
   display: block;
   margin-bottom: 5px;
@@ -57,6 +79,7 @@ main {
 
 .register-form input, .login-form input {
   width: 100%;
+  flex: 1;
   padding: 8px;
   border: 1px solid #ddd;
   border-radius: 4px;

@@ -13,6 +13,10 @@ RUN npm ci
 # Copy app source
 COPY . .
 
+# Use the nginx /api proxy by default for container deployments.
+ARG REACT_APP_API_BASE_URL=/api
+ENV REACT_APP_API_BASE_URL=$REACT_APP_API_BASE_URL
+
 # Build the React app
 RUN npm run build
 

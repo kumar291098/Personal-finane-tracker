@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
+import { Search } from 'lucide-react';
 import { transactionService } from '../../services/transactionService';
 import TransactionForm from './TransactionForm';
 import TransactionList from './TransactionList';
@@ -254,6 +255,7 @@ const Transactions = () => {
       <div className="transactions-controls">
         <div className="search-section">
           <div className="search-box">
+            <span className="search-icon" aria-hidden="true"><Search size={18} /></span>
             <input
               type="text"
               placeholder="Search transactions..."
@@ -261,7 +263,6 @@ const Transactions = () => {
               onChange={(e) => handleFilterChange('search', e.target.value)}
               className="search-input"
             />
-            <span className="search-icon">🔍</span>
           </div>
         </div>
 

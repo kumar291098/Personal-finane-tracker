@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { BarChart3, CreditCard, Flag, Lightbulb, Plus, Target, Wallet } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { transactionService } from '../../services/transactionService';
@@ -12,9 +13,25 @@ import './Dashboard.css';
 
 const Dashboard = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showTransactionForm, setShowTransactionForm] = useState(false);
+  const [showGoalForm, setShowGoalForm] = useState(false);
+  const [goalData, setGoalData] = useState(() => {
+    const defaultGoal = {
+      title: 'Monthly Savings',
+      targetAmount: '',
+      targetDate: getISTDateString()
+    };
+
+    try {
+      const savedGoal = localStorage.getItem('financeGoal');
+      return savedGoal ? { ...defaultGoal, ...JSON.parse(savedGoal) } : defaultGoal;
+    } catch (error) {
+      return defaultGoal;
+    }
+  });
   const [stats, setStats] = useState({
     totalIncome: 0,
     totalExpenses: 0,
@@ -59,6 +76,28 @@ const Dashboard = () => {
   const handleTransactionAdded = () => {
     fetchTransactions();
     setShowTransactionForm(false);
+  };
+
+  const handleGoalChange = (e) => {
+    const { name, value } = e.target;
+    setGoalData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleGoalSubmit = (e) => {
+    e.preventDefault();
+    localStorage.setItem('financeGoal', JSON.stringify(goalData));
+    setShowGoalForm(false);
+  };
+
+  const openGoalForm = (title = goalData.title) => {
+    setGoalData(prev => ({
+      ...prev,
+      title
+    }));
+    setShowGoalForm(true);
   };
 
   const getGreeting = () => {
@@ -177,7 +216,7 @@ const Dashboard = () => {
         <div className="recent-section">
           <div className="section-header">
             <h3 className="section-title">Recent Transactions</h3>
-            <button className="view-all-btn">
+            <button className="view-all-btn" onClick={() => navigate('/transactions')}>
               View All
             </button>
           </div>
@@ -199,11 +238,11 @@ const Dashboard = () => {
             <span className="action-icon"><Wallet size={24} /></span>
             <span className="action-label">Add Income</span>
           </button>
-          <button className="action-card">
+          <button className="action-card" onClick={() => navigate('/analytics')}>
             <span className="action-icon"><BarChart3 size={24} /></span>
             <span className="action-label">View Reports</span>
           </button>
-          <button className="action-card">
+          <button className="action-card" onClick={() => openGoalForm('Monthly Savings')}>
             <span className="action-icon"><Flag size={24} /></span>
             <span className="action-label">Set Goals</span>
           </button>
@@ -213,27 +252,39 @@ const Dashboard = () => {
       <div className="tips-section">
         <h3 className="section-title"><Lightbulb size={20} /> Financial Tips</h3>
         <div className="tips-grid">
-          <div className="tip-card">
+          <button
+            type="button"
+            className="tip-card"
+            onClick={() => openGoalForm('Monthly Budget')}
+          >
             <span className="tip-icon"><Target size={18} /></span>
             <div className="tip-content">
               <h4>Set Monthly Budgets</h4>
               <p>Create spending limits for different categories to stay on track.</p>
             </div>
-          </div>
-          <div className="tip-card">
+          </button>
+          <button
+            type="button"
+            className="tip-card"
+            onClick={() => setShowTransactionForm(true)}
+          >
             <span className="tip-icon"><CreditCard size={18} /></span>
             <div className="tip-content">
               <h4>Track Daily Expenses</h4>
               <p>Record transactions immediately to maintain accurate records.</p>
             </div>
-          </div>
-          <div className="tip-card">
+          </button>
+          <button
+            type="button"
+            className="tip-card"
+            onClick={() => navigate('/analytics')}
+          >
             <span className="tip-icon"><BarChart3 size={18} /></span>
             <div className="tip-content">
               <h4>Review Weekly</h4>
               <p>Check your spending patterns every week to identify trends.</p>
             </div>
-          </div>
+          </button>
         </div>
       </div>
 
@@ -253,6 +304,89 @@ const Dashboard = () => {
               onSuccess={handleTransactionAdded}
               onCancel={() => setShowTransactionForm(false)}
             />
+          </div>
+        </div>
+      )}
+
+      {showGoalForm && (
+        <div className="modal-overlay" onClick={() => setShowGoalForm(false)}>
+          <div className="modal-content" onClick={e => e.stopPropagation()}>
+            <div className="modal-header">
+              <h3>Set Financial Goal</h3>
+              <button
+                className="modal-close"
+                onClick={() => setShowGoalForm(false)}
+                aria-label="Close goal form"
+              >
+                x
+              </button>
+            </div>
+            <form className="goal-form" onSubmit={handleGoalSubmit}>
+              <div className="goal-summary">
+                <span className="goal-summary-icon"><Target size={20} /></span>
+                <div>
+                  <h4>{goalData.title || 'Monthly Goal'}</h4>
+                  <p>
+                    {goalData.targetAmount
+                      ? `Target: ₹${Number(goalData.targetAmount).toLocaleString('en-IN')}`
+                      : 'Choose an amount you want to save or reach.'}
+                  </p>
+                </div>
+              </div>
+
+              <div className="goal-field">
+                <label htmlFor="goalTitle">Goal Name</label>
+                <input
+                  id="goalTitle"
+                  name="title"
+                  type="text"
+                  value={goalData.title}
+                  onChange={handleGoalChange}
+                  placeholder="Monthly Savings"
+                  required
+                />
+              </div>
+
+              <div className="goal-field">
+                <label htmlFor="targetAmount">Target Amount</label>
+                <input
+                  id="targetAmount"
+                  name="targetAmount"
+                  type="number"
+                  min="1"
+                  step="1"
+                  value={goalData.targetAmount}
+                  onChange={handleGoalChange}
+                  placeholder="25000"
+                  required
+                />
+              </div>
+
+              <div className="goal-field">
+                <label htmlFor="targetDate">Target Date</label>
+                <input
+                  id="targetDate"
+                  name="targetDate"
+                  type="date"
+                  value={goalData.targetDate}
+                  onChange={handleGoalChange}
+                  required
+                />
+              </div>
+
+              <div className="form-actions">
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  onClick={() => setShowGoalForm(false)}
+                >
+                  Cancel
+                </button>
+                <button type="submit" className="btn btn-primary">
+                  Save Goal
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}

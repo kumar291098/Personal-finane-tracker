@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Lock, User } from 'lucide-react';
 import { API_BASE_URL } from '../../config/api';
 import './RegisterForm.css';
 
@@ -51,25 +52,31 @@ const RegisterForm = () => {
       <form onSubmit={handleSubmit}>
         <div>
           <label htmlFor="username">Username:</label>
-          <input
-            type="text"
-            id="username"
-            name="username"
-            value={user.username}
-            onChange={handleChange}
-            required
-          />
+          <div className="field-row">
+            <span className="field-icon" aria-hidden="true"><User size={18} /></span>
+            <input
+              type="text"
+              id="username"
+              name="username"
+              value={user.username}
+              onChange={handleChange}
+              required
+            />
+          </div>
         </div>
         <div>
           <label htmlFor="password">Password:</label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            value={user.password}
-            onChange={handleChange}
-            required
-          />
+          <div className="field-row">
+            <span className="field-icon" aria-hidden="true"><Lock size={18} /></span>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              value={user.password}
+              onChange={handleChange}
+              required
+            />
+          </div>
         </div>
         <button type="submit">Register</button>
       </form>

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { CalendarDays, FileText, IndianRupee } from 'lucide-react';
 import { transactionService } from '../../services/transactionService';
 import { getISTDateString } from '../../utils/transactionUtils';
 import './TransactionForm.css';
@@ -166,8 +167,8 @@ const TransactionForm = ({ onSuccess, onCancel, transaction = null }) => {
           <label htmlFor="amount" className="form-label">
             Amount
           </label>
-          <div className="amount-input-wrapper">
-            <span className="currency-symbol">₹</span>
+          <div className="field-row">
+            <span className="field-icon" aria-hidden="true"><IndianRupee size={18} /></span>
             <input
               type="number"
               id="amount"
@@ -188,16 +189,19 @@ const TransactionForm = ({ onSuccess, onCancel, transaction = null }) => {
           <label htmlFor="description" className="form-label">
             Description
           </label>
-          <input
-            type="text"
-            id="description"
-            name="description"
-            value={formData.description}
-            onChange={handleChange}
-            className="form-input"
-            placeholder="Enter transaction description"
-            required
-          />
+          <div className="field-row">
+            <span className="field-icon" aria-hidden="true"><FileText size={18} /></span>
+            <input
+              type="text"
+              id="description"
+              name="description"
+              value={formData.description}
+              onChange={handleChange}
+              className="form-input"
+              placeholder="Enter transaction description"
+              required
+            />
+          </div>
         </div>
 
         {/* Category */}
@@ -230,15 +234,18 @@ const TransactionForm = ({ onSuccess, onCancel, transaction = null }) => {
           <label htmlFor="transactionDate" className="form-label">
             Date
           </label>
-          <input
-            type="date"
-            id="transactionDate"
-            name="transactionDate"
-            value={formData.transactionDate}
-            onChange={handleChange}
-            className="form-input"
-            required
-          />
+          <div className="field-row">
+            <span className="field-icon" aria-hidden="true"><CalendarDays size={18} /></span>
+            <input
+              type="date"
+              id="transactionDate"
+              name="transactionDate"
+              value={formData.transactionDate}
+              onChange={handleChange}
+              className="form-input"
+              required
+            />
+          </div>
         </div>
 
         {/* Form Actions */}

@@ -19,12 +19,41 @@ import './Layout.css';
 
 const Layout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [notificationsOpen, setNotificationsOpen] = useState(false);
+  const [notifications, setNotifications] = useState([
+    {
+      id: 1,
+      title: 'Weekly review ready',
+      body: 'Open Analytics to review your spending trend.',
+      unread: true
+    },
+    {
+      id: 2,
+      title: 'Set a monthly goal',
+      body: 'Use Set Goals on the dashboard to track savings.',
+      unread: true
+    },
+    {
+      id: 3,
+      title: 'Keep transactions fresh',
+      body: 'Add recent expenses so your reports stay accurate.',
+      unread: true
+    }
+  ]);
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const unreadCount = notifications.filter(notification => notification.unread).length;
 
   const handleLogout = () => {
     logout();
     navigate('/login');
+  };
+
+  const markNotificationsRead = () => {
+    setNotifications(prev => prev.map(notification => ({
+      ...notification,
+      unread: false
+    })));
   };
 
   const menuItems = [
@@ -131,19 +160,62 @@ const Layout = () => {
 
           <div className="header-actions">
             <div className="search-box">
+              <span className="search-icon" aria-hidden="true"><Search size={16} /></span>
               <input
                 type="text"
                 placeholder="Search transactions..."
                 className="search-input"
               />
-              <span className="search-icon"><Search size={16} /></span>
             </div>
 
             <div className="header-buttons">
-              <button className="notification-btn" aria-label="Notifications">
-                <Bell size={18} />
-                <span className="notification-badge">3</span>
-              </button>
+              <div className="notification-menu">
+                <button
+                  className="notification-btn"
+                  aria-label="Notifications"
+                  aria-expanded={notificationsOpen}
+                  onClick={() => setNotificationsOpen(prev => !prev)}
+                >
+                  <Bell size={18} />
+                  {unreadCount > 0 && (
+                    <span className="notification-badge">{unreadCount}</span>
+                  )}
+                </button>
+
+                {notificationsOpen && (
+                  <div className="notification-panel">
+                    <div className="notification-panel-header">
+                      <h3>Notifications</h3>
+                      <button type="button" onClick={markNotificationsRead}>
+                        Mark read
+                      </button>
+                    </div>
+                    <div className="notification-list">
+                      {notifications.map(notification => (
+                        <button
+                          type="button"
+                          key={notification.id}
+                          className={`notification-item ${notification.unread ? 'unread' : ''}`}
+                          onClick={() => {
+                            setNotifications(prev => prev.map(item =>
+                              item.id === notification.id ? { ...item, unread: false } : item
+                            ));
+                            if (notification.id === 1) navigate('/analytics');
+                            if (notification.id === 2) navigate('/dashboard');
+                            setNotificationsOpen(false);
+                          }}
+                        >
+                          <span className="notification-dot" />
+                          <span>
+                            <strong>{notification.title}</strong>
+                            <small>{notification.body}</small>
+                          </span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
 
               <div className="user-menu">
                 <button className="user-menu-btn">
