@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { transactionService } from '../../services/transactionService';
 import StatsCard from '../shared/StatsCard';
@@ -20,24 +20,7 @@ const Dashboard = () => {
     transactionCount: 0
   });
 
-  useEffect(() => {
-    fetchTransactions();
-  }, []);
-
-  const fetchTransactions = async () => {
-    try {
-      setLoading(true);
-      const data = await transactionService.getUserTransactions();
-      setTransactions(data);
-      calculateStats(data);
-    } catch (error) {
-      console.error('Error fetching transactions:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const calculateStats = (transactionData) => {
+  const calculateStats = useCallback((transactionData) => {
     const income = transactionData
       .filter(t => t.type === 'INCOME')
       .reduce((sum, t) => sum + t.amount, 0);
@@ -52,7 +35,24 @@ const Dashboard = () => {
       balance: income - expenses,
       transactionCount: transactionData.length
     });
-  };
+  }, []);
+
+  const fetchTransactions = useCallback(async () => {
+    try {
+      setLoading(true);
+      const data = await transactionService.getUserTransactions();
+      setTransactions(data);
+      calculateStats(data);
+    } catch (error) {
+      console.error('Error fetching transactions:', error);
+    } finally {
+      setLoading(false);
+    }
+  }, [calculateStats]);
+
+  useEffect(() => {
+    fetchTransactions();
+  }, [fetchTransactions]);
 
   const handleTransactionAdded = () => {
     fetchTransactions();

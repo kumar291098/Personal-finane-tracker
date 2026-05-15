@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { transactionService } from '../../services/transactionService';
 import TransactionForm from './TransactionForm';
 import TransactionList from './TransactionList';
@@ -24,10 +24,6 @@ const Transactions = () => {
     fetchTransactions();
   }, []);
 
-  useEffect(() => {
-    applyFilters();
-  }, [transactions, filters, sortBy, sortOrder]);
-
   const fetchTransactions = async () => {
     try {
       setLoading(true);
@@ -40,7 +36,7 @@ const Transactions = () => {
     }
   };
 
-  const applyFilters = () => {
+  const applyFilters = useCallback(() => {
     let filtered = [...transactions];
 
     // Filter by type
@@ -120,7 +116,11 @@ const Transactions = () => {
     });
 
     setFilteredTransactions(filtered);
-  };
+  }, [filters, sortBy, sortOrder, transactions]);
+
+  useEffect(() => {
+    applyFilters();
+  }, [applyFilters]);
 
   const handleFilterChange = (filterType, value) => {
     setFilters(prev => ({

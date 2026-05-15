@@ -3,7 +3,6 @@ import './Categories.css';
 
 const Categories = () => {
   const [categories, setCategories] = useState([]);
-  const [loading, setLoading] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [editingCategory, setEditingCategory] = useState(null);
   const [formData, setFormData] = useState({
@@ -29,6 +28,7 @@ const Categories = () => {
   useEffect(() => {
     // For now, use default categories
     setCategories(defaultCategories);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const availableIcons = [
