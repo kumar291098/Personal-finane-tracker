@@ -277,3 +277,12 @@
   0% { background-position: -200% 0; }
   100% { background-position: 200% 0; }
 }
+/* Dark Mode Overrides */
+:root[data-theme='dark'] .transaction-item {
+  background-color: #111827;
+  border-color: #334155;
+}
+:root[data-theme='dark'] .transaction-item:hover {
+  background-color: #1e293b;
+  border-color: #475569;
+}

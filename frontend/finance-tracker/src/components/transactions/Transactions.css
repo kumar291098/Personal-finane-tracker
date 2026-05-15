@@ -502,3 +502,23 @@
     padding: var(--spacing-md);
   }
 }
+
+/* Dark Mode Overrides */
+:root[data-theme='dark'] .transaction-form,
+:root[data-theme='dark'] .transactions-list,
+:root[data-theme='dark'] .filters-section,
+:root[data-theme='dark'] .transactions-container {
+  background-color: #111827;
+  border-color: #334155;
+}
+:root[data-theme='dark'] .transactions-list th {
+  background-color: #1e293b;
+  color: var(--gray-900);
+}
+:root[data-theme='dark'] .transactions-list td {
+  border-color: #334155;
+}
+:root[data-theme='dark'] .transactions-header h1,
+:root[data-theme='dark'] .transaction-form h2 {
+  color: var(--gray-900);
+}

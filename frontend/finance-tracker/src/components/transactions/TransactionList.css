@@ -463,3 +463,16 @@
   0% { background-position: -200% 0; }
   100% { background-position: 200% 0; }
 }
+
+/* Dark Mode Overrides */
+:root[data-theme='dark'] .transaction-list-empty,
+:root[data-theme='dark'] .transaction-table-container {
+  background-color: #111827;
+  border-color: #334155;
+}
+:root[data-theme='dark'] .transaction-table thead {
+  background: linear-gradient(135deg, #1e293b, #0f172a);
+}
+:root[data-theme='dark'] .transaction-table tbody tr:hover {
+  background-color: #1e293b;
+}

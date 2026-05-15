@@ -254,3 +254,9 @@
   0% { background-position: -200% 0; }
   100% { background-position: 200% 0; }
 }
+
+/* Dark Mode Overrides */
+:root[data-theme='dark'] .stats-card {
+  background-color: #111827;
+  border-color: #334155;
+}

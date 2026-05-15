@@ -935,3 +935,25 @@
 .stagger-animation > *:nth-child(2) { animation-delay: 0.2s; }
 .stagger-animation > *:nth-child(3) { animation-delay: 0.3s; }
 .stagger-animation > *:nth-child(4) { animation-delay: 0.4s; }
+
+/* Dark Mode Overrides */
+:root[data-theme='dark'] .dashboard-header,
+:root[data-theme='dark'] .chart-card,
+:root[data-theme='dark'] .expense-focus-panel,
+:root[data-theme='dark'] .tip-card,
+:root[data-theme='dark'] .action-card,
+:root[data-theme='dark'] .quick-actions-panel {
+  background-color: #111827;
+  border-color: #334155;
+  box-shadow: none;
+}
+:root[data-theme='dark'] .dashboard-title,
+:root[data-theme='dark'] .chart-title,
+:root[data-theme='dark'] .tip-content h4 {
+  color: var(--gray-900);
+}
+:root[data-theme='dark'] .dashboard-filter-select {
+  background-color: #1e293b;
+  color: var(--gray-900);
+  border-color: #334155;
+}

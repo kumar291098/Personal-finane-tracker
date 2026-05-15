@@ -493,3 +493,33 @@
   color: #7f8c8d;
   font-style: italic;
 }
+
+/* Dark Mode Overrides */
+:root[data-theme='dark'] .beautiful-dashboard {
+  background: var(--gray-50);
+}
+:root[data-theme='dark'] .dashboard-header,
+:root[data-theme='dark'] .filters-section,
+:root[data-theme='dark'] .summary-card,
+:root[data-theme='dark'] .transactions-section,
+:root[data-theme='dark'] .charts-section,
+:root[data-theme='dark'] .category-breakdown {
+  background-color: #111827;
+  border-color: #334155;
+  box-shadow: none;
+}
+:root[data-theme='dark'] .welcome-section h1,
+:root[data-theme='dark'] .card-content h3,
+:root[data-theme='dark'] .amount,
+:root[data-theme='dark'] .section-header h2 {
+  color: var(--gray-900);
+}
+:root[data-theme='dark'] .filter-group label {
+  color: var(--gray-800);
+}
+:root[data-theme='dark'] .filter-group select {
+  background-color: #1e293b;
+  color: var(--gray-900);
+  border-color: #334155;
+}
+

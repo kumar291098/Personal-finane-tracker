@@ -412,3 +412,15 @@
     font-size: 1rem;
   }
 }
+/* Dark Mode Overrides */
+:root[data-theme='dark'] .profile-sidebar,
+:root[data-theme='dark'] .profile-main {
+  background-color: #111827;
+  border-color: #334155;
+}
+:root[data-theme='dark'] .user-avatar-large {
+  border-color: #111827;
+}
+:root[data-theme='dark'] .nav-tab:hover {
+  background-color: #1e293b;
+}
