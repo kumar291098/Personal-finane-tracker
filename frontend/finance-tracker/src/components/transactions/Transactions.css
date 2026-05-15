@@ -159,6 +159,60 @@
   padding-right: 12px;
 }
 
+.transactions-page,
+.transactions-controls,
+.transactions-content,
+.transactions-stats {
+  min-width: 0;
+}
+
+.transactions-controls {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  background: white;
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-xl);
+  padding: var(--spacing-lg);
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.05);
+  margin-bottom: var(--spacing-xl);
+}
+
+.filters-section,
+.sort-section {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  flex-wrap: wrap;
+  min-width: 0;
+}
+
+.filter-select,
+.sort-select {
+  min-height: 42px;
+  min-width: 150px;
+  padding: 9px 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: var(--radius-lg);
+  background: white;
+  color: var(--gray-700);
+  font-size: var(--font-size-sm);
+}
+
+.sort-label {
+  color: var(--gray-600);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-semibold);
+}
+
+.sort-order-btn {
+  min-width: 42px;
+  min-height: 42px;
+  border: 1px solid #cbd5e1;
+  border-radius: var(--radius-lg);
+  background: white;
+}
+
 .edit-button,
 .delete-button {
   padding: 5px 10px;
@@ -205,6 +259,27 @@
   
   .transactions-list {
     overflow-x: auto;
+  }
+
+  .transactions-controls {
+    padding: var(--spacing-md);
+    border-radius: var(--radius-lg);
+  }
+
+  .transactions-page .search-box,
+  .search-section,
+  .filters-section,
+  .sort-section,
+  .filter-select,
+  .sort-select,
+  .transactions-controls .btn {
+    width: 100%;
+  }
+
+  .filters-section,
+  .sort-section {
+    align-items: stretch;
+    flex-direction: column;
   }
   
   .transactions-list table {

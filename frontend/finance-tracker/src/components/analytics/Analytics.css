@@ -706,6 +706,7 @@
     flex-direction: column;
     align-items: stretch;
     gap: var(--spacing-md);
+    margin-bottom: 0;
   }
   
   .page-title {
@@ -713,7 +714,7 @@
   }
   
   .analytics-stats {
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-template-columns: 1fr;
     gap: var(--spacing-md);
   }
 
@@ -732,7 +733,7 @@
   }
   
   .category-item {
-    flex-direction: column;
+    grid-template-columns: 1fr;
     align-items: flex-start;
     gap: var(--spacing-sm);
   }
@@ -744,6 +745,20 @@
 
   .analytics-donut-layout {
     grid-template-columns: 1fr;
+  }
+
+  .analytics-donut {
+    width: min(180px, 75vw);
+  }
+
+  .cashflow-chart {
+    grid-template-columns: repeat(6, minmax(70px, 1fr));
+    margin-inline: calc(var(--spacing-sm) * -1);
+    padding-inline: var(--spacing-sm);
+  }
+
+  .cashflow-bars {
+    height: 150px;
   }
 
   .ratio-row {
@@ -761,15 +776,50 @@
     font-size: var(--font-size-xl);
   }
   
-  .analytics-stats {
-    grid-template-columns: 1fr;
-  }
-  
   .insight-card {
     padding: var(--spacing-md);
   }
 
   .custom-range {
     grid-template-columns: 1fr;
+  }
+
+  .filter-card,
+  .goal-progress-card,
+  .category-breakdown,
+  .insights-section,
+  .report-card {
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-md);
+  }
+
+  .goal-progress-values,
+  .goal-progress-footer {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .report-card-header h3,
+  .section-title {
+    font-size: var(--font-size-lg);
+  }
+
+  .donut-list-item {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .donut-list-item strong {
+    grid-column: 2;
+  }
+
+  .source-item > div:first-child {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .source-item strong {
+    text-align: left;
   }
 }

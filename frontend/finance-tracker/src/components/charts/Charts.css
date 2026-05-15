@@ -2,8 +2,9 @@
   width: 100%;
   height: 300px;
   display: flex;
-  align-items: center;
+  align-items: stretch;
   justify-content: center;
+  min-width: 0;
 }
 
 .chart-empty {
@@ -161,44 +162,53 @@
 .income-expense-chart {
   width: 100%;
   height: 100%;
+  min-height: 360px;
   display: flex;
   flex-direction: column;
   gap: var(--spacing-md);
+  min-width: 0;
 }
 
 .chart-grid {
   flex: 1;
   display: flex;
   align-items: flex-end;
-  gap: var(--spacing-sm);
-  padding: var(--spacing-md) 0;
+  justify-content: center;
+  gap: var(--spacing-lg);
+  padding: var(--spacing-lg) var(--spacing-md) var(--spacing-md);
   border-bottom: 2px solid var(--gray-200);
   position: relative;
+  min-width: 0;
+  min-height: 220px;
 }
 
 .chart-column {
-  flex: 1;
+  flex: 0 1 150px;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: var(--spacing-xs);
-  min-height: 200px;
+  min-height: 220px;
+  min-width: 0;
 }
 
 .chart-bars-container {
   flex: 1;
   display: flex;
   align-items: flex-end;
-  gap: 4px;
-  width: 100%;
+  gap: 10px;
+  width: min(110px, 100%);
   justify-content: center;
   position: relative;
-  min-height: 150px;
+  min-height: 165px;
+  padding: 0 14px;
+  border-radius: var(--radius-lg);
+  background: linear-gradient(180deg, #f8fafc 0%, #eef2f7 100%);
 }
 
 .chart-bar {
-  width: 20px;
-  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+  width: 30px;
+  border-radius: var(--radius-lg) var(--radius-lg) 4px 4px;
   transition: height 0.8s ease-out;
   animation: growHeight 0.8s ease-out;
   position: relative;
@@ -221,36 +231,42 @@
 
 .chart-label {
   font-size: var(--font-size-xs);
-  font-weight: var(--font-medium);
-  color: var(--gray-600);
+  font-weight: var(--font-bold);
+  color: var(--gray-700);
   text-align: center;
+  max-width: 100%;
+  overflow-wrap: anywhere;
 }
 
 .chart-values {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 3px;
   text-align: center;
   margin-top: var(--spacing-xs);
+  max-width: 100%;
+  min-width: 0;
 }
 
 .income-value {
   font-size: var(--font-size-xs);
   color: var(--success-600);
   font-weight: var(--font-medium);
+  overflow-wrap: anywhere;
 }
 
 .expense-value {
   font-size: var(--font-size-xs);
   color: var(--error-600);
   font-weight: var(--font-medium);
+  overflow-wrap: anywhere;
 }
 
 .chart-legend.horizontal {
   display: flex;
   justify-content: center;
   gap: var(--spacing-lg);
-  padding: var(--spacing-md) 0;
+  padding: var(--spacing-sm) 0;
   border-top: 1px solid var(--gray-200);
 }
 
@@ -270,20 +286,25 @@
 
 .chart-summary {
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
   gap: var(--spacing-sm);
-  padding: var(--spacing-md);
-  background-color: var(--gray-50);
+  padding: var(--spacing-sm);
+  background-color: transparent;
   border-radius: var(--radius-lg);
-  border: 1px solid var(--gray-200);
+  border: none;
 }
 
 .summary-item {
-  display: flex;
-  flex-direction: column;
+  display: inline-flex;
+  flex-direction: row;
   align-items: center;
-  gap: var(--spacing-xs);
+  gap: var(--spacing-sm);
   text-align: center;
+  max-width: 100%;
+  padding: 8px 12px;
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-full);
+  background: var(--gray-50);
 }
 
 .summary-month {
@@ -295,6 +316,7 @@
 .summary-net {
   font-size: var(--font-size-sm);
   font-weight: var(--font-bold);
+  overflow-wrap: anywhere;
 }
 
 .summary-net.positive {
@@ -308,19 +330,54 @@
 /* Responsive Design */
 @media (max-width: 768px) {
   .chart-container {
-    height: 250px;
+    height: auto;
+    min-height: 340px;
+    align-items: stretch;
+  }
+
+  .income-expense-chart {
+    gap: var(--spacing-sm);
+  }
+
+  .chart-grid {
+    min-height: 230px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    align-items: stretch;
+    justify-content: flex-start;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-md) var(--spacing-xs);
+    border-bottom: 1px solid var(--gray-200);
+  }
+
+  .chart-column {
+    flex: 0 0 92px;
+    min-height: 220px;
+    justify-content: flex-end;
   }
   
   .chart-bars-container {
-    min-height: 120px;
+    min-height: 130px;
+    max-height: 130px;
+    flex: 0 0 130px;
+    width: 100%;
+    gap: 6px;
+    padding: 0 8px;
   }
   
   .chart-bar {
-    width: 16px;
+    width: 18px;
   }
   
   .chart-values {
-    display: none;
+    display: flex;
+    min-height: 36px;
+  }
+
+  .income-value,
+  .expense-value {
+    font-size: 10px;
+    line-height: 1.2;
   }
   
   .chart-summary {
@@ -340,11 +397,17 @@
 
 @media (max-width: 480px) {
   .chart-container {
-    height: 200px;
+    min-height: 330px;
+  }
+
+  .chart-column {
+    flex-basis: 86px;
   }
   
   .chart-bars-container {
-    min-height: 100px;
+    min-height: 120px;
+    max-height: 120px;
+    flex-basis: 120px;
   }
   
   .chart-bar {
@@ -352,17 +415,18 @@
   }
   
   .chart-grid {
-    gap: 2px;
+    gap: var(--spacing-xs);
   }
   
   .chart-column {
-    min-height: 150px;
+    min-height: 215px;
   }
   
   .chart-legend.horizontal {
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
-    gap: var(--spacing-sm);
+    gap: var(--spacing-md);
+    padding: var(--spacing-sm) 0;
   }
   
   .chart-summary {

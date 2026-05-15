@@ -2,6 +2,7 @@
   display: flex;
   min-height: 100vh;
   background: #f4f7fb;
+  min-width: 0;
 }
 
 /* Sidebar Styles */
@@ -232,6 +233,7 @@
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  min-width: 0;
 }
 
 /* Top Header */
@@ -247,6 +249,7 @@
   position: sticky;
   top: 0;
   z-index: 100;
+  gap: var(--spacing-sm);
 }
 
 .mobile-menu-btn {
@@ -272,6 +275,7 @@
   gap: var(--spacing-lg);
   flex: 1;
   justify-content: flex-end;
+  min-width: 0;
 }
 
 .search-box {
@@ -503,6 +507,7 @@
   flex: 1;
   padding: 28px;
   overflow-y: auto;
+  min-width: 0;
 }
 
 /* Sidebar Overlay */
@@ -554,10 +559,16 @@
 @media (max-width: 768px) {
   .top-header {
     padding: var(--spacing-sm) var(--spacing-md);
+    min-height: 58px;
+  }
+
+  .header-actions {
+    gap: var(--spacing-sm);
   }
   
   .header-buttons {
     gap: var(--spacing-sm);
+    min-width: 0;
   }
   
   .user-name-header {
@@ -567,14 +578,35 @@
   .page-content {
     padding: var(--spacing-md) var(--spacing-sm);
   }
+
+  .user-menu-btn {
+    padding: var(--spacing-xs);
+  }
+
+  .notification-panel {
+    position: fixed;
+    top: 62px;
+    left: var(--spacing-sm);
+    right: var(--spacing-sm);
+    width: auto;
+  }
 }
 
 @media (max-width: 480px) {
   .sidebar {
     width: 100vw;
   }
-  
-  .notification-btn {
+
+  .top-header {
+    padding-inline: 10px;
+  }
+
+  .user-menu-btn {
+    border: none;
+    background: transparent;
+  }
+
+  .dropdown-arrow {
     display: none;
   }
 }

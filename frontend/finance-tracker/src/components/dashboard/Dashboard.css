@@ -717,13 +717,14 @@
 
 @media (max-width: 768px) {
   .dashboard {
-    gap: var(--spacing-xl);
+    gap: var(--spacing-lg);
   }
   
   .dashboard-header {
     flex-direction: column;
     align-items: stretch;
     gap: var(--spacing-md);
+    padding: var(--spacing-lg);
   }
   
   .dashboard-title {
@@ -731,7 +732,7 @@
   }
   
   .stats-grid {
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-template-columns: 1fr;
     gap: var(--spacing-md);
   }
   
@@ -754,12 +755,13 @@
   }
   
   .actions-grid {
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: var(--spacing-md);
   }
   
   .action-card {
-    padding: var(--spacing-lg);
+    min-width: 0;
+    padding: var(--spacing-md);
   }
   
   .action-icon {
@@ -777,6 +779,37 @@
   .tips-section {
     padding: var(--spacing-lg);
   }
+
+  .expense-focus-panel {
+    min-height: auto;
+  }
+
+  .category-donut {
+    width: min(170px, 80vw);
+  }
+
+  .category-rank-meta {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .category-rank-meta strong {
+    grid-column: 2;
+    text-align: left;
+  }
+
+  .date-expense-chart {
+    grid-template-columns: repeat(10, minmax(64px, 1fr));
+    margin-inline: calc(var(--spacing-sm) * -1);
+    padding-inline: var(--spacing-sm);
+  }
+
+  .date-expense-bar-wrap {
+    height: 140px;
+  }
+
+  .goal-summary {
+    padding: var(--spacing-md);
+  }
 }
 
 @media (max-width: 480px) {
@@ -784,16 +817,33 @@
     font-size: var(--font-size-xl);
   }
   
-  .stats-grid {
+  .actions-grid {
     grid-template-columns: 1fr;
   }
-  
-  .actions-grid {
-    grid-template-columns: repeat(2, 1fr);
+
+  .dashboard-header,
+  .chart-card,
+  .recent-section,
+  .quick-actions,
+  .tips-section {
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-md);
+  }
+
+  .expense-intelligence-grid {
+    gap: var(--spacing-md);
+  }
+
+  .category-donut-center strong {
+    font-size: 11px;
+  }
+
+  .tip-card {
+    padding: var(--spacing-md);
   }
   
   .modal-content {
-    margin: var(--spacing-md);
+    margin: var(--spacing-sm);
     max-height: calc(100vh - 2rem);
   }
   
