@@ -5,6 +5,7 @@ import LoginForm from '../components/auth/LoginForm';
 import RegisterForm from '../components/auth/RegisterForm';
 import Dashboard from '../components/dashboard/Dashboard';
 import Transactions from '../components/transactions/Transactions';
+import Monitoring from '../components/monitoring/Monitoring';
 import Layout from '../components/layout/Layout';
 
 const ProtectedRoute = ({ children }) => {
@@ -25,6 +26,7 @@ const AppRoutes = () => {
         <Route index element={<Navigate to="/dashboard" replace />} />
         <Route path="dashboard" element={<Dashboard />} />
         <Route path="transactions" element={<Transactions />} />
+        <Route path="monitoring" element={<Monitoring />} />
       </Route>
     </Routes>
   );

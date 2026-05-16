@@ -10,6 +10,7 @@ import Transactions from './components/transactions/Transactions';
 import Analytics from './components/analytics/Analytics';
 import Categories from './components/categories/Categories';
 import Profile from './components/profile/Profile';
+import Monitoring from './components/monitoring/Monitoring';
 import './styles/global.css';
 
 // Protected Route Component
@@ -59,6 +60,7 @@ function App() {
               <Route path="analytics" element={<Analytics />} />
               <Route path="categories" element={<Categories />} />
               <Route path="profile" element={<Profile />} />
+              <Route path="monitoring" element={<Monitoring />} />
             </Route>
             
             {/* Catch all route */}

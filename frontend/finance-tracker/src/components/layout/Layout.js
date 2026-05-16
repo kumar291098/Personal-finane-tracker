@@ -7,6 +7,7 @@ import {
   ChevronDown,
   CreditCard,
   FolderTree,
+  Gauge,
   LogOut,
   Menu,
   Moon,
@@ -77,6 +78,12 @@ const Layout = () => {
       icon: CreditCard,
       label: 'Transactions',
       description: 'Manage your money'
+    },
+    {
+      path: '/monitoring',
+      icon: Gauge,
+      label: 'Monitoring',
+      description: 'Health & performance'
     },
     {
       path: '/analytics',

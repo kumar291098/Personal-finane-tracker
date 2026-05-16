@@ -36,6 +36,8 @@ public class SecurityConfig {
             .exceptionHandling(exceptions -> exceptions
                 .authenticationEntryPoint(jwtAuthenticationEntryPoint)) // Custom authentication entry point
             .authorizeHttpRequests(auth -> auth
+                .requestMatchers("/api/actuator/health", "/api/actuator/health/**", "/api/actuator/info").permitAll() // Public health checks
+                .requestMatchers("/api/actuator/**").hasRole("USER") // Keep detailed metrics protected
                 .requestMatchers("/api/auth/**", "/api/users/register", "/api/users/login").permitAll() // Allow unauthenticated access
                 .requestMatchers("/api/transactions/**").hasRole("USER") // Require USER role for transaction endpoints
                 .requestMatchers("/api/ai/**").hasRole("USER") // Require USER role for AI assistant endpoints

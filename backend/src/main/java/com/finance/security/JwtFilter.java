@@ -27,7 +27,9 @@ public class JwtFilter extends OncePerRequestFilter {
         "/api/auth/register",
         "/api/auth/refresh",
         "/api/users/register",
-        "/api/users/login"
+        "/api/users/login",
+        "/api/actuator/health",
+        "/api/actuator/info"
     );
 
     @Override
