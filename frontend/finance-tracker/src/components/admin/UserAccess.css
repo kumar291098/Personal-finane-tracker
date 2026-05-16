@@ -1,0 +1,219 @@
+.access-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xl);
+  min-width: 0;
+}
+
+.access-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--spacing-lg);
+}
+
+.access-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  color: #0f766e;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-semibold);
+}
+
+.access-summary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--spacing-md);
+}
+
+.access-summary-item {
+  display: grid;
+  gap: 4px;
+  padding: var(--spacing-lg);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-lg);
+  background: white;
+}
+
+.access-summary-item strong {
+  color: var(--gray-900);
+  font-size: var(--font-size-3xl);
+}
+
+.access-summary-item span {
+  color: var(--gray-600);
+  font-size: var(--font-size-sm);
+}
+
+.access-summary-item.admin {
+  border-left: 4px solid #0f766e;
+}
+
+.access-summary-item.subscriber {
+  border-left: 4px solid #2563eb;
+}
+
+.access-summary-item.free {
+  border-left: 4px solid #64748b;
+}
+
+.access-panel {
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-lg);
+  background: white;
+  overflow: hidden;
+}
+
+.access-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-md);
+  padding: var(--spacing-lg);
+  border-bottom: 1px solid var(--gray-200);
+}
+
+.access-panel-header h2 {
+  margin: 0;
+  color: var(--gray-900);
+  font-size: var(--font-size-xl);
+}
+
+.access-panel-header span {
+  color: var(--gray-500);
+  font-size: var(--font-size-sm);
+}
+
+.access-table {
+  display: grid;
+}
+
+.access-row {
+  display: grid;
+  grid-template-columns: minmax(220px, 1fr) 140px 180px;
+  align-items: center;
+  gap: var(--spacing-md);
+  padding: var(--spacing-md) var(--spacing-lg);
+  border-bottom: 1px solid var(--gray-100);
+}
+
+.access-row:last-child {
+  border-bottom: none;
+}
+
+.access-user {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  min-width: 0;
+}
+
+.access-user strong,
+.access-user small {
+  display: block;
+  overflow-wrap: anywhere;
+}
+
+.access-user strong {
+  color: var(--gray-900);
+}
+
+.access-user small {
+  color: var(--gray-500);
+  font-size: var(--font-size-sm);
+}
+
+.access-avatar {
+  width: 40px;
+  min-width: 40px;
+  height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-lg);
+  background: #f0fdfa;
+  color: #0f766e;
+}
+
+.access-badge {
+  width: fit-content;
+  padding: 6px 10px;
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-bold);
+}
+
+.access-badge.admin {
+  background: #ccfbf1;
+  color: #134e4a;
+}
+
+.access-badge.subscriber {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.access-badge.free {
+  background: #f1f5f9;
+  color: #475569;
+}
+
+.access-row select {
+  width: 100%;
+  min-height: 38px;
+  border: 1px solid var(--gray-300);
+  border-radius: var(--radius-md);
+  background: white;
+  color: var(--gray-800);
+  padding: 0 var(--spacing-sm);
+}
+
+.access-row select:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+.access-alert,
+.access-empty {
+  padding: var(--spacing-md);
+  border-radius: var(--radius-lg);
+}
+
+.access-alert.error {
+  border: 1px solid var(--error-300);
+  background: var(--error-100);
+  color: var(--error-700);
+}
+
+.access-alert.success {
+  border: 1px solid #99f6e4;
+  background: #f0fdfa;
+  color: #0f766e;
+}
+
+.access-empty {
+  color: var(--gray-500);
+}
+
+@media (max-width: 760px) {
+  .access-header,
+  .access-row {
+    grid-template-columns: 1fr;
+  }
+
+  .access-header {
+    flex-direction: column;
+  }
+
+  .access-summary {
+    grid-template-columns: 1fr;
+  }
+}
+
+:root[data-theme='dark'] .access-summary-item,
+:root[data-theme='dark'] .access-panel,
+:root[data-theme='dark'] .access-row select {
+  background: #111827;
+  border-color: #334155;
+}

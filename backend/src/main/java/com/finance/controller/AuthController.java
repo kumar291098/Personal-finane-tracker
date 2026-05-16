@@ -1,6 +1,7 @@
 package com.finance.controller;
 import com.finance.util.JwtUtil;
 import com.finance.dto.LoginRequest;
+import com.finance.model.AccessLevel;
 import com.finance.model.User;
 import com.finance.repository.UserRepository;
 import com.finance.service.EmailService;
@@ -46,13 +47,14 @@ public class AuthController {
     }
 
     // Generate JWT token
-    String token = jwtUtil.generateToken(user.getUsername(), user.getId());
+    String token = jwtUtil.generateToken(user.getUsername(), user.getId(), user.getAccessLevel().name());
 
     // Send token and user info to frontend
     Map<String, Object> response = new HashMap<>();
     response.put("token", token);
     response.put("userId", user.getId());
     response.put("username", user.getUsername());
+    response.put("accessLevel", user.getAccessLevel().name());
 
     return ResponseEntity.ok(response);
     }
@@ -96,12 +98,14 @@ public class AuthController {
         user.setEmail(email);
         user.setPhone(phone);
         user.setPassword(password); // no encoding
+        user.setAccessLevel("demo".equalsIgnoreCase(username) ? AccessLevel.ADMIN : AccessLevel.FREE);
         userRepository.save(user);
 
         response.put("success", true);
         response.put("message", "User registered successfully");
         response.put("userId", user.getId());
         response.put("username", user.getUsername());
+        response.put("accessLevel", user.getAccessLevel().name());
         return response;
     }
 

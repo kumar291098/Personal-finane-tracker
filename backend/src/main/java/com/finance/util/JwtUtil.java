@@ -17,9 +17,14 @@ public class JwtUtil {
     private final Key key = Keys.hmacShaKeyFor(SECRET.getBytes());
 
     public String generateToken(String username, Long userId) {
+        return generateToken(username, userId, "FREE");
+    }
+
+    public String generateToken(String username, Long userId, String accessLevel) {
         return Jwts.builder()
                 .setSubject(username)
                 .claim("userId", userId)
+                .claim("accessLevel", accessLevel)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
                 .signWith(key, SignatureAlgorithm.HS256)
@@ -36,6 +41,11 @@ public class JwtUtil {
 
     public Long extractUserId(String token) {
         return extractClaims(token).get("userId", Long.class);
+    }
+
+    public String extractAccessLevel(String token) {
+        String accessLevel = extractClaims(token).get("accessLevel", String.class);
+        return accessLevel == null || accessLevel.isBlank() ? "FREE" : accessLevel;
     }
 
     public boolean isTokenExpired(String token) {

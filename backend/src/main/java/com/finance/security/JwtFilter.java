@@ -13,7 +13,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Collections;
 
 @Component
 public class JwtFilter extends OncePerRequestFilter {
@@ -87,6 +86,10 @@ public class JwtFilter extends OncePerRequestFilter {
                         if (jwtUtil.validateToken(jwt, username)) {
                             // Extract userId from token for additional context
                             Long userId = jwtUtil.extractUserId(jwt);
+                            String accessLevel = jwtUtil.extractAccessLevel(jwt);
+                            if ("demo".equalsIgnoreCase(username)) {
+                                accessLevel = "ADMIN";
+                            }
                             System.out.println("🆔 User ID extracted: " + userId);
                             
                             // Create authentication token with user authorities
@@ -94,13 +97,17 @@ public class JwtFilter extends OncePerRequestFilter {
                                     new UsernamePasswordAuthenticationToken(
                                         username, 
                                         null, 
-                                        Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"))
+                                        List.of(
+                                            new SimpleGrantedAuthority("ROLE_USER"),
+                                            new SimpleGrantedAuthority("ROLE_" + accessLevel)
+                                        )
                                     );
                             authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                             
                             // Add userId to the authentication details for easy access in controllers
                             request.setAttribute("userId", userId);
                             request.setAttribute("username", username);
+                            request.setAttribute("accessLevel", accessLevel);
                             
                             SecurityContextHolder.getContext().setAuthentication(authToken);
                             System.out.println("✅ Authentication set successfully for user: " + username);

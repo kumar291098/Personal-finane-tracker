@@ -27,6 +27,10 @@ public class User {
 
     private String password;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "access_level")
+    private AccessLevel accessLevel = AccessLevel.FREE;
+
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
@@ -83,6 +87,17 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public AccessLevel getAccessLevel() {
+        if ("demo".equalsIgnoreCase(username)) {
+            return AccessLevel.ADMIN;
+        }
+        return accessLevel == null ? AccessLevel.FREE : accessLevel;
+    }
+
+    public void setAccessLevel(AccessLevel accessLevel) {
+        this.accessLevel = accessLevel == null ? AccessLevel.FREE : accessLevel;
     }
 
     public LocalDateTime getCreatedAt() {

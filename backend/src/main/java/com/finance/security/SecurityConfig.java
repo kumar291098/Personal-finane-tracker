@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Bean;
-import org.springframework.security.authorization.AuthorizationDecision;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -38,10 +37,8 @@ public class SecurityConfig {
                 .authenticationEntryPoint(jwtAuthenticationEntryPoint)) // Custom authentication entry point
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/actuator/health", "/api/actuator/health/**", "/api/actuator/info").permitAll() // Public health checks
-                .requestMatchers("/api/actuator/**").access((authentication, context) ->
-                    new AuthorizationDecision(authentication.get() != null
-                        && authentication.get().isAuthenticated()
-                        && "demo".equals(authentication.get().getName()))) // Admin-only metrics
+                .requestMatchers("/api/actuator/**").hasRole("ADMIN") // Admin-only metrics
+                .requestMatchers("/api/admin/**").hasRole("ADMIN") // Admin-only access management
                 .requestMatchers(
                     "/api/auth/**",
                     "/api/auth/forgot-password",

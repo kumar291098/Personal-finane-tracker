@@ -51,7 +51,8 @@ export const AuthProvider = ({ children }) => {
       const data = await response.json();
       const userData = {
         id: data.userId,
-        username: data.username
+        username: data.username,
+        accessLevel: data.accessLevel || (data.username === 'demo' ? 'ADMIN' : 'FREE')
       };
       setUser(userData);
       setToken(data.token);

@@ -8,6 +8,7 @@ import {
   CreditCard,
   FolderTree,
   Gauge,
+  ShieldCheck,
   LogOut,
   Menu,
   Moon,
@@ -48,7 +49,7 @@ const Layout = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const unreadCount = notifications.filter(notification => notification.unread).length;
-  const isAdmin = user?.username === 'demo';
+  const isAdmin = user?.accessLevel === 'ADMIN' || user?.username === 'demo';
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
@@ -79,6 +80,13 @@ const Layout = () => {
       icon: CreditCard,
       label: 'Transactions',
       description: 'Manage your money'
+    },
+    {
+      path: '/access',
+      icon: ShieldCheck,
+      label: 'Access',
+      description: 'User permissions',
+      adminOnly: true
     },
     {
       path: '/monitoring',
@@ -156,7 +164,7 @@ const Layout = () => {
             </div>
             <div className="user-details">
               <span className="user-name">{user?.username || 'User'}</span>
-              <span className="user-role">Personal Account</span>
+              <span className="user-role">{user?.accessLevel || 'FREE'} Account</span>
             </div>
           </div>
           <button className="logout-btn" onClick={handleLogout}>

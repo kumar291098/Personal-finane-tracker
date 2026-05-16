@@ -11,6 +11,7 @@ import Analytics from './components/analytics/Analytics';
 import Categories from './components/categories/Categories';
 import Profile from './components/profile/Profile';
 import Monitoring from './components/monitoring/Monitoring';
+import UserAccess from './components/admin/UserAccess';
 import './styles/global.css';
 
 // Protected Route Component
@@ -26,7 +27,7 @@ const AdminRoute = ({ children }) => {
     return <Navigate to="/login" />;
   }
 
-  return user?.username === 'demo' ? children : <Navigate to="/dashboard" />;
+  return user?.accessLevel === 'ADMIN' || user?.username === 'demo' ? children : <Navigate to="/dashboard" />;
 };
 
 // Public Route Component (redirect to dashboard if authenticated)
@@ -73,6 +74,11 @@ function App() {
               <Route path="monitoring" element={
                 <AdminRoute>
                   <Monitoring />
+                </AdminRoute>
+              } />
+              <Route path="access" element={
+                <AdminRoute>
+                  <UserAccess />
                 </AdminRoute>
               } />
             </Route>
