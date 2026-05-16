@@ -1,0 +1,214 @@
+.ai-chatbot {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 1300;
+}
+
+.ai-chatbot-toggle {
+  width: 52px;
+  height: 52px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 50%;
+  background: #0f766e;
+  color: white;
+  cursor: pointer;
+  box-shadow: 0 16px 32px rgba(15, 118, 110, 0.26);
+}
+
+.ai-chatbot-panel {
+  position: absolute;
+  right: 0;
+  bottom: 68px;
+  width: min(380px, calc(100vw - 32px));
+  height: min(560px, calc(100vh - 120px));
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-xl);
+  background: white;
+  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.22);
+}
+
+.ai-chatbot-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-md);
+  padding: var(--spacing-md);
+  border-bottom: 1px solid var(--gray-200);
+  background: #f8fafc;
+}
+
+.ai-chatbot-title {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  min-width: 0;
+}
+
+.ai-chatbot-avatar {
+  width: 38px;
+  min-width: 38px;
+  height: 38px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-lg);
+  background: #ccfbf1;
+  color: #0f766e;
+}
+
+.ai-chatbot-title h2 {
+  margin: 0;
+  color: var(--gray-900);
+  font-size: var(--font-size-base);
+}
+
+.ai-chatbot-title p {
+  margin: 2px 0 0;
+  color: var(--gray-500);
+  font-size: var(--font-size-xs);
+}
+
+.ai-chatbot-close {
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-lg);
+  background: white;
+  color: var(--gray-600);
+  cursor: pointer;
+}
+
+.ai-chatbot-messages {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-md);
+  overflow-y: auto;
+  background: #f8fafc;
+}
+
+.ai-message {
+  max-width: 86%;
+  padding: 10px 12px;
+  border-radius: var(--radius-lg);
+  font-size: var(--font-size-sm);
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+  white-space: pre-line;
+}
+
+.ai-message.assistant {
+  align-self: flex-start;
+  border: 1px solid var(--gray-200);
+  background: white;
+  color: var(--gray-800);
+}
+
+.ai-message.user {
+  align-self: flex-end;
+  background: #0f766e;
+  color: white;
+}
+
+.ai-message.loading {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+
+.ai-message.loading svg {
+  animation: ai-spin 1s linear infinite;
+}
+
+.ai-chatbot-form {
+  display: flex;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-md);
+  border-top: 1px solid var(--gray-200);
+  background: white;
+}
+
+.ai-chatbot-form input {
+  flex: 1;
+  min-width: 0;
+  min-height: 42px;
+  padding: 10px 12px;
+  border: 1px solid var(--gray-300);
+  border-radius: var(--radius-lg);
+  outline: none;
+}
+
+.ai-chatbot-form input:focus {
+  border-color: #0f766e;
+  box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.12);
+}
+
+.ai-chatbot-form button {
+  width: 42px;
+  min-width: 42px;
+  height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: var(--radius-lg);
+  background: #0f766e;
+  color: white;
+  cursor: pointer;
+}
+
+.ai-chatbot-form button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+@keyframes ai-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 480px) {
+  .ai-chatbot {
+    right: 16px;
+    bottom: 16px;
+  }
+
+  .ai-chatbot-panel {
+    right: -8px;
+    bottom: 64px;
+    height: min(520px, calc(100vh - 96px));
+  }
+}
+
+:root[data-theme='dark'] .ai-chatbot-panel,
+:root[data-theme='dark'] .ai-chatbot-form,
+:root[data-theme='dark'] .ai-message.assistant,
+:root[data-theme='dark'] .ai-chatbot-close {
+  background: #0f172a;
+  border-color: #334155;
+  color: #e2e8f0;
+}
+
+:root[data-theme='dark'] .ai-chatbot-header,
+:root[data-theme='dark'] .ai-chatbot-messages {
+  background: #020617;
+  border-color: #334155;
+}
+
+:root[data-theme='dark'] .ai-chatbot-form input {
+  background: #020617;
+  border-color: #334155;
+  color: #e2e8f0;
+}

@@ -134,7 +134,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  max-width: 420px;
+  max-width: 560px;
   width: 100%;
 }
 
@@ -157,6 +157,11 @@
   flex: 1;
   min-width: 0;
   padding-right: 12px;
+}
+
+.search-submit-btn {
+  min-height: 42px;
+  white-space: nowrap;
 }
 
 .transactions-page,
@@ -450,6 +455,12 @@
   .sort-select,
   .transactions-controls .btn {
     width: 100%;
+  }
+
+  .transactions-page .search-box {
+    align-items: stretch;
+    flex-direction: column;
+    max-width: none;
   }
 
   .payment-simulator-card {

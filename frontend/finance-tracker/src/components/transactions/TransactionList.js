@@ -1,62 +1,73 @@
 import React from 'react';
-import { formatCurrency } from '../../utils/transactionUtils';
+import {
+  ArrowDown,
+  ArrowUp,
+  ArrowUpDown,
+  Banknote,
+  BookOpen,
+  Briefcase,
+  Car,
+  ChartLine,
+  Clapperboard,
+  Edit3,
+  GraduationCap,
+  HandHeart,
+  HeartPulse,
+  Plane,
+  ReceiptText,
+  ShoppingBag,
+  Trash2,
+  Utensils,
+  Zap
+} from 'lucide-react';
+import { formatCurrency, formatDate } from '../../utils/transactionUtils';
 import './TransactionList.css';
 
-const TransactionList = ({ 
-  transactions, 
-  onEdit, 
-  onDelete, 
-  sortBy, 
-  sortOrder, 
-  onSort 
-}) => {
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-IN', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-      timeZone: 'Asia/Kolkata'
-    });
-  };
+const categoryIcons = {
+  Salary: Briefcase,
+  Freelance: BookOpen,
+  Investment: ChartLine,
+  Food: Utensils,
+  'Food & Dining': Utensils,
+  Transportation: Car,
+  Shopping: ShoppingBag,
+  Entertainment: Clapperboard,
+  Utilities: Zap,
+  Healthcare: HeartPulse,
+  Education: GraduationCap,
+  Donation: HandHeart,
+  Travel: Plane,
+  Income: Banknote,
+  Expense: ReceiptText
+};
 
+const TransactionList = ({
+  transactions,
+  onEdit,
+  onDelete,
+  sortBy,
+  sortOrder,
+  onSort
+}) => {
   const formatAmount = (amount, type) => {
     const formatted = formatCurrency(amount);
-    
     return type === 'INCOME' ? `+${formatted}` : `-${formatted}`;
   };
 
   const getCategoryIcon = (category) => {
-    const iconMap = {
-      'Salary': '💼',
-      'Freelance': '💻',
-      'Investment': '📈',
-      'Food': '🍔',
-      'Food & Dining': '🍔',
-      'Transportation': '🚗',
-      'Shopping': '🛍️',
-      'Entertainment': '🎬',
-      'Utilities': '⚡',
-      'Healthcare': '🏥',
-      'Education': '📚',
-      'Donation': '🤝',
-      'Travel': '✈️',
-      'Income': '💰',
-      'Expense': '💸'
-    };
-    
-    return iconMap[category] || '📝';
+    const Icon = categoryIcons[category] || ReceiptText;
+    return <Icon size={16} />;
   };
 
   const getSortIcon = (field) => {
-    if (sortBy !== field) return '↕️';
-    return sortOrder === 'asc' ? '↑' : '↓';
+    if (sortBy !== field) return <ArrowUpDown size={14} />;
+    return sortOrder === 'asc' ? <ArrowUp size={14} /> : <ArrowDown size={14} />;
   };
 
   if (!transactions || transactions.length === 0) {
     return (
       <div className="transaction-list-empty">
-        <div className="empty-icon">📝</div>
+        <div className="empty-icon"><ReceiptText size={28} /></div>
         <h3>No transactions found</h3>
         <p>Try adjusting your filters or add some transactions.</p>
       </div>
@@ -65,63 +76,46 @@ const TransactionList = ({
 
   return (
     <div className="transaction-list">
-      {/* Desktop Table View */}
       <div className="transaction-table-container">
         <table className="transaction-table">
           <thead>
             <tr>
               <th>
-                <button 
-                  className="sort-header"
-                  onClick={() => onSort('date')}
-                >
-                  Date {getSortIcon('date')}
+                <button className="sort-header" onClick={() => onSort('date')}>
+                  Date <span className="sort-icon">{getSortIcon('date')}</span>
                 </button>
               </th>
               <th>
-                <button 
-                  className="sort-header"
-                  onClick={() => onSort('description')}
-                >
-                  Description {getSortIcon('description')}
+                <button className="sort-header" onClick={() => onSort('description')}>
+                  Description <span className="sort-icon">{getSortIcon('description')}</span>
                 </button>
               </th>
               <th>
-                <button 
-                  className="sort-header"
-                  onClick={() => onSort('category')}
-                >
-                  Category {getSortIcon('category')}
+                <button className="sort-header" onClick={() => onSort('category')}>
+                  Category <span className="sort-icon">{getSortIcon('category')}</span>
                 </button>
               </th>
               <th>
-                <button 
-                  className="sort-header"
-                  onClick={() => onSort('amount')}
-                >
-                  Amount {getSortIcon('amount')}
+                <button className="sort-header" onClick={() => onSort('amount')}>
+                  Amount <span className="sort-icon">{getSortIcon('amount')}</span>
                 </button>
               </th>
               <th>Actions</th>
             </tr>
           </thead>
           <tbody>
-            {transactions.map((transaction) => (
-              <tr 
-                key={transaction.id} 
+            {transactions.map(transaction => (
+              <tr
+                key={transaction.id}
                 className={`transaction-row ${transaction.type.toLowerCase()}`}
               >
-                <td className="date-cell">
-                  {formatDate(transaction.transactionDate)}
-                </td>
+                <td className="date-cell">{formatDate(transaction.transactionDate)}</td>
                 <td className="description-cell">
                   <div className="description-content">
                     <span className="category-icon">
                       {getCategoryIcon(transaction.category)}
                     </span>
-                    <span className="description-text">
-                      {transaction.description}
-                    </span>
+                    <span className="description-text">{transaction.description}</span>
                   </div>
                 </td>
                 <td className="category-cell">
@@ -134,19 +128,19 @@ const TransactionList = ({
                 </td>
                 <td className="actions-cell">
                   <div className="action-buttons">
-                    <button 
+                    <button
                       className="action-btn edit-btn"
                       onClick={() => onEdit(transaction)}
                       title="Edit transaction"
                     >
-                      ✏️
+                      <Edit3 size={16} />
                     </button>
-                    <button 
+                    <button
                       className="action-btn delete-btn"
                       onClick={() => onDelete(transaction.id)}
                       title="Delete transaction"
                     >
-                      🗑️
+                      <Trash2 size={16} />
                     </button>
                   </div>
                 </td>
@@ -156,11 +150,10 @@ const TransactionList = ({
         </table>
       </div>
 
-      {/* Mobile Card View */}
       <div className="transaction-cards">
-        {transactions.map((transaction) => (
-          <div 
-            key={transaction.id} 
+        {transactions.map(transaction => (
+          <div
+            key={transaction.id}
             className={`transaction-card ${transaction.type.toLowerCase()}`}
           >
             <div className="card-header">
@@ -168,38 +161,28 @@ const TransactionList = ({
                 {getCategoryIcon(transaction.category)}
               </div>
               <div className="card-info">
-                <div className="card-description">
-                  {transaction.description}
-                </div>
-                <div className="card-date">
-                  {formatDate(transaction.transactionDate)}
-                </div>
+                <div className="card-description">{transaction.description}</div>
+                <div className="card-date">{formatDate(transaction.transactionDate)}</div>
               </div>
               <div className={`card-amount ${transaction.type.toLowerCase()}`}>
                 {formatAmount(transaction.amount, transaction.type)}
               </div>
             </div>
-            
+
             <div className="card-body">
               <div className="card-category">
                 <span className={`category-badge ${transaction.type.toLowerCase()}`}>
                   {transaction.category}
                 </span>
               </div>
-              
+
               <div className="card-actions">
-                <button 
-                  className="action-btn edit-btn"
-                  onClick={() => onEdit(transaction)}
-                >
-                  <span>✏️</span>
+                <button className="action-btn edit-btn" onClick={() => onEdit(transaction)}>
+                  <Edit3 size={16} />
                   Edit
                 </button>
-                <button 
-                  className="action-btn delete-btn"
-                  onClick={() => onDelete(transaction.id)}
-                >
-                  <span>🗑️</span>
+                <button className="action-btn delete-btn" onClick={() => onDelete(transaction.id)}>
+                  <Trash2 size={16} />
                   Delete
                 </button>
               </div>

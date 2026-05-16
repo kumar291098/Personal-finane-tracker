@@ -38,6 +38,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/auth/**", "/api/users/register", "/api/users/login").permitAll() // Allow unauthenticated access
                 .requestMatchers("/api/transactions/**").hasRole("USER") // Require USER role for transaction endpoints
+                .requestMatchers("/api/ai/**").hasRole("USER") // Require USER role for AI assistant endpoints
                 .anyRequest().authenticated()) // All other endpoints require authentication
             .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class); // Add JWT filter
 

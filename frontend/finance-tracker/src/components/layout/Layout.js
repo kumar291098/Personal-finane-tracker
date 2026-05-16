@@ -17,6 +17,7 @@ import {
   X
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import AiChatbot from '../ai/AiChatbot';
 import './Layout.css';
 
 const Layout = () => {
@@ -259,6 +260,8 @@ const Layout = () => {
           onClick={() => setSidebarOpen(false)}
         />
       )}
+
+      <AiChatbot />
     </div>
   );
 };
