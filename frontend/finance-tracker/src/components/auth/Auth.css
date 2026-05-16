@@ -652,3 +652,14 @@
     gap: var(--spacing-sm);
   }
 }
+
+/* Dark Mode Overrides for Auth */
+:root[data-theme='dark'] .auth-card,
+:root[data-theme='dark'] .auth-container {
+  background-color: #111827;
+  border-color: #334155;
+}
+:root[data-theme='dark'] .auth-card h2,
+:root[data-theme='dark'] .auth-title {
+  color: var(--gray-900);
+}
