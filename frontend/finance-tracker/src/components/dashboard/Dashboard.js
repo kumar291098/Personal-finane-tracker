@@ -121,17 +121,6 @@ const Dashboard = () => {
       .slice(0, 5);
   };
 
-  const getMonthlyData = () => {
-    const [currentYear, currentMonth] = getISTDateString().split('-').map(Number);
-
-    return transactions.filter(t => {
-      const transactionDate = new Date(t.transactionDate);
-      const transactionParts = getISTDateString(transactionDate).split('-').map(Number);
-      return transactionParts[0] === currentYear &&
-             transactionParts[1] === currentMonth;
-    });
-  };
-
   const getRangeStartDate = () => {
     const now = new Date();
     const startDate = new Date();
@@ -410,7 +399,7 @@ const Dashboard = () => {
               <h3 className="chart-title">Income vs Expenses</h3>
               <p className="chart-subtitle">Monthly comparison</p>
             </div>
-            <IncomeExpenseChart transactions={getMonthlyData()} />
+            <IncomeExpenseChart transactions={transactions} />
           </div>
 
           <div className="chart-card">

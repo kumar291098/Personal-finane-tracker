@@ -1,51 +1,26 @@
 import React from 'react';
+import { ArrowDownRight, ArrowUpRight, TrendingUp } from 'lucide-react';
 import { formatCurrency } from '../../utils/transactionUtils';
 import './Charts.css';
 
 const IncomeExpenseChart = ({ transactions }) => {
-  // Calculate monthly data
-  const monthlyData = transactions.reduce((acc, transaction) => {
-    const date = new Date(transaction.transactionDate);
-    const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
-    
-    if (!acc[monthKey]) {
-      acc[monthKey] = { income: 0, expense: 0, month: monthKey };
-    }
-    
-    if (transaction.type === 'INCOME') {
-      acc[monthKey].income += transaction.amount;
-    } else {
-      acc[monthKey].expense += transaction.amount;
-    }
-    
-    return acc;
-  }, {});
-
-  // Convert to array and sort by month
-  const chartData = Object.values(monthlyData)
-    .sort((a, b) => a.month.localeCompare(b.month))
-    .slice(-6); // Show last 6 months
-
-  const maxAmount = Math.max(
-    ...chartData.flatMap(d => [d.income, d.expense]),
-    1000 // Minimum scale
+  const chartData = getMonthlyChartData(transactions);
+  const totals = chartData.reduce(
+    (result, item) => ({
+      income: result.income + item.income,
+      expense: result.expense + item.expense
+    }),
+    { income: 0, expense: 0 }
   );
-
-  const formatMonth = (monthKey) => {
-    const [year, month] = monthKey.split('-');
-    const date = new Date(year, month - 1);
-    return date.toLocaleDateString('en-IN', {
-      month: 'short',
-      year: '2-digit',
-      timeZone: 'Asia/Kolkata'
-    });
-  };
+  const net = totals.income - totals.expense;
+  const savingsRate = totals.income > 0 ? Math.max((net / totals.income) * 100, 0) : 0;
+  const maxAmount = Math.max(...chartData.flatMap(item => [item.income, item.expense]), 1);
 
   if (chartData.length === 0) {
     return (
-      <div className="chart-container">
+      <div className="chart-container income-expense-shell">
         <div className="chart-empty">
-          <div className="empty-icon">📈</div>
+          <TrendingUp size={34} />
           <p>No data available for comparison</p>
         </div>
       </div>
@@ -53,52 +28,83 @@ const IncomeExpenseChart = ({ transactions }) => {
   }
 
   return (
-    <div className="chart-container">
+    <div className="chart-container income-expense-shell">
+      <div className="cashflow-overview">
+        <div className="cashflow-metric income">
+          <span><ArrowUpRight size={16} /> Income</span>
+          <strong>{formatCurrency(totals.income)}</strong>
+        </div>
+        <div className="cashflow-metric expense">
+          <span><ArrowDownRight size={16} /> Expenses</span>
+          <strong>{formatCurrency(totals.expense)}</strong>
+        </div>
+        <div className={`cashflow-metric net ${net >= 0 ? 'positive' : 'negative'}`}>
+          <span>Net cash flow</span>
+          <strong>{formatSignedCurrency(net)}</strong>
+        </div>
+      </div>
+
+      <div className="cashflow-track">
+        <div className="cashflow-track-header">
+          <span>Savings rate</span>
+          <strong>{savingsRate.toFixed(1)}%</strong>
+        </div>
+        <div className="cashflow-progress">
+          <span style={{ width: `${Math.min(savingsRate, 100)}%` }} />
+        </div>
+      </div>
+
       <div className="income-expense-chart">
-        {/* Chart Bars */}
-        <div className="chart-grid">
+        <div className="cashflow-bars">
           {chartData.map((data, index) => {
-            const incomeHeight = (data.income / maxAmount) * 100;
-            const expenseHeight = (data.expense / maxAmount) * 100;
-            
+            const incomeHeight = Math.max((data.income / maxAmount) * 100, data.income > 0 ? 8 : 0);
+            const expenseHeight = Math.max((data.expense / maxAmount) * 100, data.expense > 0 ? 8 : 0);
+            const monthNet = data.income - data.expense;
+
             return (
-              <div key={data.month} className="chart-column">
-                <div className="chart-bars-container">
-                  <div 
-                    className="chart-bar income-bar"
-                    style={{ 
-                      height: `${incomeHeight}%`,
-                      animationDelay: `${index * 0.1}s`
-                    }}
-                    title={`Income: ${formatCurrency(data.income)}`}
-                  />
-                  <div 
-                    className="chart-bar expense-bar"
-                    style={{ 
-                      height: `${expenseHeight}%`,
-                      animationDelay: `${index * 0.1 + 0.05}s`
-                    }}
-                    title={`Expense: ${formatCurrency(data.expense)}`}
-                  />
-                </div>
-                <div className="chart-label">
-                  {formatMonth(data.month)}
-                </div>
-                <div className="chart-values">
-                  <div className="income-value">
-                    +{formatCurrency(data.income)}
+              <div key={data.month} className="cashflow-month">
+                <div className="cashflow-bars-container">
+                  <div className="cashflow-axis-lines" aria-hidden="true">
+                    <span />
+                    <span />
+                    <span />
                   </div>
-                  <div className="expense-value">
-                    -{formatCurrency(data.expense)}
+                  <div className="cashflow-bar-group">
+                    <div
+                      className="cashflow-bar income"
+                      style={{
+                        height: `${incomeHeight}%`,
+                        animationDelay: `${index * 0.08}s`
+                      }}
+                      title={`Income: ${formatCurrency(data.income)}`}
+                    >
+                      <span>{data.income > 0 ? formatCompactCurrency(data.income) : ''}</span>
+                    </div>
+                    <div
+                      className="cashflow-bar expense"
+                      style={{
+                        height: `${expenseHeight}%`,
+                        animationDelay: `${index * 0.08 + 0.04}s`
+                      }}
+                      title={`Expenses: ${formatCurrency(data.expense)}`}
+                    >
+                      <span>{data.expense > 0 ? formatCompactCurrency(data.expense) : ''}</span>
+                    </div>
                   </div>
+                </div>
+
+                <div className="cashflow-month-footer">
+                  <strong>{formatMonth(data.month)}</strong>
+                  <span className={monthNet >= 0 ? 'positive' : 'negative'}>
+                    {formatSignedCurrency(monthNet)}
+                  </span>
                 </div>
               </div>
             );
           })}
         </div>
 
-        {/* Chart Legend */}
-        <div className="chart-legend horizontal">
+        <div className="chart-legend horizontal cashflow-legend">
           <div className="legend-item">
             <div className="legend-color income-color" />
             <span className="legend-label">Income</span>
@@ -108,24 +114,52 @@ const IncomeExpenseChart = ({ transactions }) => {
             <span className="legend-label">Expenses</span>
           </div>
         </div>
-
-        {/* Summary Stats */}
-        <div className="chart-summary">
-          {chartData.map((data) => {
-            const net = data.income - data.expense;
-            return (
-              <div key={data.month} className="summary-item">
-                <div className="summary-month">{formatMonth(data.month)}</div>
-                <div className={`summary-net ${net >= 0 ? 'positive' : 'negative'}`}>
-                  {net >= 0 ? '+' : ''}{formatCurrency(net)}
-                </div>
-              </div>
-            );
-          })}
-        </div>
       </div>
     </div>
   );
+};
+
+const getMonthlyChartData = (transactions) => {
+  const monthlyData = transactions.reduce((acc, transaction) => {
+    const date = new Date(transaction.transactionDate);
+    const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+
+    if (!acc[monthKey]) {
+      acc[monthKey] = { income: 0, expense: 0, month: monthKey };
+    }
+
+    if (transaction.type === 'INCOME') {
+      acc[monthKey].income += Number(transaction.amount || 0);
+    } else {
+      acc[monthKey].expense += Number(transaction.amount || 0);
+    }
+
+    return acc;
+  }, {});
+
+  return Object.values(monthlyData)
+    .sort((a, b) => a.month.localeCompare(b.month))
+    .slice(-6);
+};
+
+const formatMonth = (monthKey) => {
+  const [year, month] = monthKey.split('-');
+  const date = new Date(year, month - 1);
+  return date.toLocaleDateString('en-IN', {
+    month: 'short',
+    year: '2-digit',
+    timeZone: 'Asia/Kolkata'
+  });
+};
+
+const formatSignedCurrency = (amount) => {
+  return `${amount >= 0 ? '+' : '-'}${formatCurrency(Math.abs(amount))}`;
+};
+
+const formatCompactCurrency = (amount) => {
+  if (amount >= 100000) return `₹${(amount / 100000).toFixed(1)}L`;
+  if (amount >= 1000) return `₹${(amount / 1000).toFixed(amount >= 10000 ? 0 : 1)}k`;
+  return formatCurrency(amount);
 };
 
 export default IncomeExpenseChart;

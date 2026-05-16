@@ -159,107 +159,213 @@
 }
 
 /* Income vs Expense Chart Styles */
-.income-expense-chart {
-  width: 100%;
-  height: 100%;
-  min-height: 360px;
-  display: flex;
+.income-expense-shell {
+  height: auto;
+  min-height: 420px;
   flex-direction: column;
   gap: var(--spacing-md);
+  align-items: stretch;
+  justify-content: flex-start;
+}
+
+.cashflow-overview {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--spacing-sm);
+}
+
+.cashflow-metric {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-lg);
+  background: var(--gray-50);
+}
+
+.cashflow-metric span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--gray-500);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-semibold);
+}
+
+.cashflow-metric strong {
+  color: var(--gray-900);
+  font-size: var(--font-size-lg);
+  overflow-wrap: anywhere;
+}
+
+.cashflow-metric.income strong,
+.cashflow-metric.positive strong {
+  color: var(--success-600);
+}
+
+.cashflow-metric.expense strong,
+.cashflow-metric.negative strong {
+  color: var(--error-600);
+}
+
+.cashflow-track {
+  display: grid;
+  gap: 8px;
+  padding: 12px;
+  border: 1px solid #99f6e4;
+  border-radius: var(--radius-lg);
+  background: #f0fdfa;
+}
+
+.cashflow-track-header {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--spacing-md);
+  color: #0f766e;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-semibold);
+}
+
+.cashflow-progress {
+  height: 10px;
+  overflow: hidden;
+  border-radius: var(--radius-full);
+  background: rgba(15, 118, 110, 0.14);
+}
+
+.cashflow-progress span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #0f766e, #22c55e);
+  transition: width 0.8s ease-out;
+}
+
+.income-expense-chart {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.cashflow-bars {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(112px, 1fr));
+  gap: var(--spacing-md);
+  min-height: 240px;
+}
+
+.cashflow-month {
+  display: grid;
+  grid-template-rows: minmax(190px, 1fr) auto;
+  gap: var(--spacing-sm);
   min-width: 0;
 }
 
-.chart-grid {
-  flex: 1;
+.cashflow-bars-container {
+  position: relative;
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  gap: var(--spacing-lg);
-  padding: var(--spacing-lg) var(--spacing-md) var(--spacing-md);
-  border-bottom: 2px solid var(--gray-200);
-  position: relative;
-  min-width: 0;
-  min-height: 220px;
+  min-height: 190px;
+  padding: 18px 14px 0;
+  overflow: hidden;
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-lg);
+  background:
+    linear-gradient(180deg, rgba(248, 250, 252, 0.9), rgba(241, 245, 249, 0.9));
 }
 
-.chart-column {
-  flex: 0 1 150px;
+.cashflow-axis-lines {
+  position: absolute;
+  inset: 18px 10px 12px;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: var(--spacing-xs);
-  min-height: 220px;
-  min-width: 0;
+  justify-content: space-between;
+  pointer-events: none;
 }
 
-.chart-bars-container {
-  flex: 1;
+.cashflow-axis-lines span {
+  height: 1px;
+  background: rgba(148, 163, 184, 0.24);
+}
+
+.cashflow-bar-group {
+  position: relative;
+  z-index: 1;
   display: flex;
   align-items: flex-end;
   gap: 10px;
-  width: min(110px, 100%);
-  justify-content: center;
-  position: relative;
-  min-height: 165px;
-  padding: 0 14px;
-  border-radius: var(--radius-lg);
-  background: linear-gradient(180deg, #f8fafc 0%, #eef2f7 100%);
+  height: 100%;
+  width: 76px;
 }
 
-.chart-bar {
-  width: 30px;
-  border-radius: var(--radius-lg) var(--radius-lg) 4px 4px;
-  transition: height 0.8s ease-out;
-  animation: growHeight 0.8s ease-out;
+.cashflow-bar {
   position: relative;
+  display: flex;
+  justify-content: center;
+  width: 32px;
   min-height: 4px;
+  border-radius: 10px 10px 5px 5px;
+  animation: growHeight 0.8s ease-out both;
+  transition: transform var(--transition-fast), filter var(--transition-fast);
 }
 
 @keyframes growHeight {
   from { height: 0; }
 }
 
-.income-bar {
-  background: linear-gradient(135deg, var(--success-500), var(--success-400));
-  box-shadow: 0 2px 4px rgba(34, 197, 94, 0.3);
+.cashflow-bar span {
+  position: absolute;
+  top: -22px;
+  color: var(--gray-700);
+  font-size: 10px;
+  font-weight: var(--font-bold);
+  white-space: nowrap;
 }
 
-.expense-bar {
-  background: linear-gradient(135deg, var(--error-500), var(--error-400));
-  box-shadow: 0 2px 4px rgba(239, 68, 68, 0.3);
+.cashflow-bar.income {
+  background: linear-gradient(180deg, #22c55e, #15803d);
+  box-shadow: 0 10px 20px rgba(21, 128, 61, 0.22);
 }
 
-.chart-label {
+.cashflow-bar.expense {
+  background: linear-gradient(180deg, #fb7185, #be123c);
+  box-shadow: 0 10px 20px rgba(190, 18, 60, 0.2);
+}
+
+.cashflow-month-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-xs);
+  min-width: 0;
+  padding: 8px 10px;
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-lg);
+  background: white;
+}
+
+.cashflow-month-footer strong {
+  color: var(--gray-800);
+  font-size: var(--font-size-xs);
+}
+
+.cashflow-month-footer span {
   font-size: var(--font-size-xs);
   font-weight: var(--font-bold);
-  color: var(--gray-700);
-  text-align: center;
-  max-width: 100%;
   overflow-wrap: anywhere;
+  text-align: right;
 }
 
-.chart-values {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-  text-align: center;
-  margin-top: var(--spacing-xs);
-  max-width: 100%;
-  min-width: 0;
-}
-
-.income-value {
-  font-size: var(--font-size-xs);
+.cashflow-month-footer .positive {
   color: var(--success-600);
-  font-weight: var(--font-medium);
-  overflow-wrap: anywhere;
 }
 
-.expense-value {
-  font-size: var(--font-size-xs);
+.cashflow-month-footer .negative {
   color: var(--error-600);
-  font-weight: var(--font-medium);
-  overflow-wrap: anywhere;
 }
 
 .chart-legend.horizontal {
@@ -284,49 +390,6 @@
   background: linear-gradient(135deg, var(--error-500), var(--error-400));
 }
 
-.chart-summary {
-  display: flex;
-  justify-content: center;
-  gap: var(--spacing-sm);
-  padding: var(--spacing-sm);
-  background-color: transparent;
-  border-radius: var(--radius-lg);
-  border: none;
-}
-
-.summary-item {
-  display: inline-flex;
-  flex-direction: row;
-  align-items: center;
-  gap: var(--spacing-sm);
-  text-align: center;
-  max-width: 100%;
-  padding: 8px 12px;
-  border: 1px solid var(--gray-200);
-  border-radius: var(--radius-full);
-  background: var(--gray-50);
-}
-
-.summary-month {
-  font-size: var(--font-size-xs);
-  color: var(--gray-600);
-  font-weight: var(--font-medium);
-}
-
-.summary-net {
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-bold);
-  overflow-wrap: anywhere;
-}
-
-.summary-net.positive {
-  color: var(--success-600);
-}
-
-.summary-net.negative {
-  color: var(--error-600);
-}
-
 /* Responsive Design */
 @media (max-width: 768px) {
   .chart-container {
@@ -335,58 +398,19 @@
     align-items: stretch;
   }
 
-  .income-expense-chart {
-    gap: var(--spacing-sm);
+  .cashflow-overview {
+    grid-template-columns: 1fr;
   }
 
-  .chart-grid {
-    min-height: 230px;
-    overflow-x: auto;
-    overflow-y: hidden;
-    align-items: stretch;
-    justify-content: flex-start;
-    gap: var(--spacing-sm);
-    padding: var(--spacing-md) var(--spacing-xs);
-    border-bottom: 1px solid var(--gray-200);
-  }
-
-  .chart-column {
-    flex: 0 0 92px;
-    min-height: 220px;
-    justify-content: flex-end;
-  }
-  
-  .chart-bars-container {
-    min-height: 130px;
-    max-height: 130px;
-    flex: 0 0 130px;
-    width: 100%;
-    gap: 6px;
-    padding: 0 8px;
-  }
-  
-  .chart-bar {
-    width: 18px;
-  }
-  
-  .chart-values {
+  .cashflow-bars {
     display: flex;
-    min-height: 36px;
+    min-height: 250px;
+    overflow-x: auto;
+    padding-bottom: var(--spacing-xs);
   }
 
-  .income-value,
-  .expense-value {
-    font-size: 10px;
-    line-height: 1.2;
-  }
-  
-  .chart-summary {
-    flex-wrap: wrap;
-    gap: var(--spacing-xs);
-  }
-  
-  .summary-item {
-    min-width: 60px;
+  .cashflow-month {
+    flex: 0 0 122px;
   }
   
   .legend-items {
@@ -399,28 +423,6 @@
   .chart-container {
     min-height: 330px;
   }
-
-  .chart-column {
-    flex-basis: 86px;
-  }
-  
-  .chart-bars-container {
-    min-height: 120px;
-    max-height: 120px;
-    flex-basis: 120px;
-  }
-  
-  .chart-bar {
-    width: 12px;
-  }
-  
-  .chart-grid {
-    gap: var(--spacing-xs);
-  }
-  
-  .chart-column {
-    min-height: 215px;
-  }
   
   .chart-legend.horizontal {
     flex-direction: row;
@@ -429,12 +431,18 @@
     padding: var(--spacing-sm) 0;
   }
   
-  .chart-summary {
-    display: none;
+  .cashflow-bar {
+    width: 28px;
+  }
+
+  .cashflow-bar-group {
+    width: 66px;
+    gap: 8px;
   }
 }
 
 /* Hover Effects */
+.cashflow-bar:hover,
 .chart-bar:hover {
   filter: brightness(1.1);
   transform: scaleY(1.02);
@@ -485,10 +493,22 @@
   border-color: #334155;
 }
 
-:root[data-theme='dark'] .chart-bars-container,
-:root[data-theme='dark'] .summary-item {
+:root[data-theme='dark'] .cashflow-bars-container,
+:root[data-theme='dark'] .cashflow-month-footer,
+:root[data-theme='dark'] .cashflow-metric,
+:root[data-theme='dark'] .cashflow-track,
+:root[data-theme='dark'] .chart-bars-container {
   background: #0f172a;
   border-color: #334155;
+}
+
+:root[data-theme='dark'] .cashflow-track {
+  background: #102a2a;
+  border-color: #0f766e;
+}
+
+:root[data-theme='dark'] .cashflow-bar span {
+  color: #e2e8f0;
 }
 
 :root[data-theme='dark'] .chart-bar-wrapper {
