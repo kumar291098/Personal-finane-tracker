@@ -19,6 +19,16 @@ const ProtectedRoute = ({ children }) => {
   return isAuthenticated ? children : <Navigate to="/login" />;
 };
 
+const AdminRoute = ({ children }) => {
+  const { user, isAuthenticated } = useAuth();
+
+  if (!isAuthenticated) {
+    return <Navigate to="/login" />;
+  }
+
+  return user?.username === 'demo' ? children : <Navigate to="/dashboard" />;
+};
+
 // Public Route Component (redirect to dashboard if authenticated)
 const PublicRoute = ({ children }) => {
   const { isAuthenticated } = useAuth();
@@ -60,7 +70,11 @@ function App() {
               <Route path="analytics" element={<Analytics />} />
               <Route path="categories" element={<Categories />} />
               <Route path="profile" element={<Profile />} />
-              <Route path="monitoring" element={<Monitoring />} />
+              <Route path="monitoring" element={
+                <AdminRoute>
+                  <Monitoring />
+                </AdminRoute>
+              } />
             </Route>
             
             {/* Catch all route */}

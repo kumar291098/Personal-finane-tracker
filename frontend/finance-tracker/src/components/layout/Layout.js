@@ -48,6 +48,7 @@ const Layout = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const unreadCount = notifications.filter(notification => notification.unread).length;
+  const isAdmin = user?.username === 'demo';
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
@@ -83,7 +84,8 @@ const Layout = () => {
       path: '/monitoring',
       icon: Gauge,
       label: 'Monitoring',
-      description: 'Health & performance'
+      description: 'Health & performance',
+      adminOnly: true
     },
     {
       path: '/analytics',
@@ -124,7 +126,7 @@ const Layout = () => {
 
         <nav className="sidebar-nav">
           <ul className="nav-list">
-            {menuItems.map((item) => {
+            {menuItems.filter(item => !item.adminOnly || isAdmin).map((item) => {
               const Icon = item.icon;
               return (
                 <li key={item.path} className="nav-item">

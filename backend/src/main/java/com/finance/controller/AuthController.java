@@ -3,20 +3,37 @@ import com.finance.util.JwtUtil;
 import com.finance.dto.LoginRequest;
 import com.finance.model.User;
 import com.finance.repository.UserRepository;
+import com.finance.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestClientException;
+import org.springframework.web.client.RestClientResponseException;
 
+import java.security.SecureRandom;
+import java.time.LocalDateTime;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
 
+    private static final SecureRandom OTP_RANDOM = new SecureRandom();
+    private static final Map<String, PasswordResetOtp> PASSWORD_RESET_OTPS = new ConcurrentHashMap<>();
+    private static final int OTP_EXPIRY_MINUTES = 10;
+
     @Autowired
     private UserRepository userRepository;
     @Autowired
     private JwtUtil jwtUtil;
+    @Autowired
+    private EmailService emailService;
+
+    @Value("${app.password-reset.expose-otp:false}")
+    private boolean exposeOtp;
     // 🔐 Login endpoint
     @PostMapping("/login")
     public ResponseEntity<?> loginUser(@RequestBody LoginRequest request) {
@@ -88,13 +105,12 @@ public class AuthController {
         return response;
     }
 
-    @PostMapping("/forgot-password")
-    public ResponseEntity<?> forgotPassword(@RequestBody Map<String, String> data) {
+    @PostMapping("/forgot-password/request-otp")
+    public ResponseEntity<?> requestPasswordResetOtp(@RequestBody Map<String, String> data) {
         String identifier = normalize(data.get("identifier"));
-        String newPassword = data.get("newPassword");
 
-        if (identifier == null || newPassword == null || newPassword.trim().length() < 6) {
-            return ResponseEntity.badRequest().body("Enter your email, phone, or username and a password with at least 6 characters.");
+        if (identifier == null) {
+            return ResponseEntity.badRequest().body("Enter your email, phone, or username.");
         }
 
         Optional<User> userResult = userRepository.findByEmail(identifier)
@@ -105,14 +121,93 @@ public class AuthController {
             return ResponseEntity.badRequest().body("No account found for that email, phone, or username.");
         }
 
+        String otp = String.format("%06d", OTP_RANDOM.nextInt(1_000_000));
+        LocalDateTime expiresAt = LocalDateTime.now().plusMinutes(OTP_EXPIRY_MINUTES);
+        PASSWORD_RESET_OTPS.put(identifier.toLowerCase(), new PasswordResetOtp(userResult.get().getId(), otp, expiresAt));
+
+        User user = userResult.get();
+        boolean sentByEmail = false;
+        if (user.getEmail() != null && !user.getEmail().isBlank() && emailService.isConfigured()) {
+            try {
+                emailService.sendPasswordResetOtp(user.getEmail(), user.getUsername(), otp, OTP_EXPIRY_MINUTES);
+                sentByEmail = true;
+            } catch (RestClientResponseException brevoError) {
+                PASSWORD_RESET_OTPS.remove(identifier.toLowerCase());
+                String brevoBody = brevoError.getResponseBodyAsString();
+                String brevoMessage = brevoBody == null || brevoBody.isBlank()
+                    ? "No response body from Brevo"
+                    : brevoBody;
+                System.out.println("Brevo OTP email failed. Status: " + brevoError.getStatusCode()
+                    + ", Response: " + brevoMessage);
+                return ResponseEntity.status(HttpStatus.BAD_GATEWAY)
+                    .body("Brevo rejected OTP email. Status: " + brevoError.getStatusCode()
+                        + ". Response: " + brevoMessage);
+            } catch (RestClientException | IllegalStateException emailError) {
+                PASSWORD_RESET_OTPS.remove(identifier.toLowerCase());
+                System.out.println("OTP email failed: " + emailError.getMessage());
+                return ResponseEntity.status(HttpStatus.BAD_GATEWAY)
+                    .body("Unable to send OTP email. Check Brevo API key, sender verification, and Brevo account status.");
+            }
+        } else {
+            System.out.println("Password reset OTP for " + identifier + ": " + otp + " (expires in " + OTP_EXPIRY_MINUTES + " minutes)");
+        }
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", true);
+        response.put("message", sentByEmail
+            ? "OTP sent to your registered email address."
+            : "OTP generated. Email is not configured, so check backend logs.");
+        response.put("expiresInMinutes", OTP_EXPIRY_MINUTES);
+        if (exposeOtp && !sentByEmail) {
+            response.put("otpForTesting", otp);
+        }
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/forgot-password/verify-otp")
+    public ResponseEntity<?> verifyPasswordResetOtp(@RequestBody Map<String, String> data) {
+        String identifier = normalize(data.get("identifier"));
+        String otp = normalize(data.get("otp"));
+        String newPassword = data.get("newPassword");
+
+        if (identifier == null || otp == null || newPassword == null || newPassword.trim().length() < 6) {
+            return ResponseEntity.badRequest().body("Enter identifier, OTP, and a password with at least 6 characters.");
+        }
+
+        PasswordResetOtp resetOtp = PASSWORD_RESET_OTPS.get(identifier.toLowerCase());
+        if (resetOtp == null) {
+            return ResponseEntity.badRequest().body("Request a new OTP before resetting your password.");
+        }
+
+        if (LocalDateTime.now().isAfter(resetOtp.expiresAt())) {
+            PASSWORD_RESET_OTPS.remove(identifier.toLowerCase());
+            return ResponseEntity.badRequest().body("OTP expired. Please request a new OTP.");
+        }
+
+        if (!resetOtp.otp().equals(otp)) {
+            return ResponseEntity.badRequest().body("Invalid OTP.");
+        }
+
+        Optional<User> userResult = userRepository.findById(resetOtp.userId());
+        if (userResult.isEmpty()) {
+            PASSWORD_RESET_OTPS.remove(identifier.toLowerCase());
+            return ResponseEntity.badRequest().body("Account not found.");
+        }
+
         User user = userResult.get();
         user.setPassword(newPassword.trim());
         userRepository.save(user);
+        PASSWORD_RESET_OTPS.remove(identifier.toLowerCase());
 
         Map<String, Object> response = new HashMap<>();
         response.put("success", true);
         response.put("message", "Password reset successfully. You can login now.");
         return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<?> forgotPassword() {
+        return ResponseEntity.badRequest().body("Direct password reset is disabled. Request and verify OTP first.");
     }
 
     private String normalize(String value) {
@@ -121,4 +216,6 @@ public class AuthController {
         }
         return value.trim();
     }
+
+    private record PasswordResetOtp(Long userId, String otp, LocalDateTime expiresAt) {}
 }
