@@ -29,5 +29,7 @@ export const paymentCategories = [
   { id: 12, name: 'Education' },
   { id: 13, name: 'Travel' },
   { id: 15, name: 'Donation' },
+  { id: 16, name: 'Grocery' },
+  { id: 17, name: 'Sports' },
   { id: 14, name: 'Other Expense' }
 ];

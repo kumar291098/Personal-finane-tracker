@@ -16,6 +16,7 @@ import {
   Plane,
   ReceiptText,
   ShoppingBag,
+  Trophy,
   Trash2,
   Utensils,
   Zap
@@ -36,6 +37,8 @@ const categoryIcons = {
   Healthcare: HeartPulse,
   Education: GraduationCap,
   Donation: HandHeart,
+  Grocery: ShoppingBag,
+  Sports: Trophy,
   Travel: Plane,
   Income: Banknote,
   Expense: ReceiptText

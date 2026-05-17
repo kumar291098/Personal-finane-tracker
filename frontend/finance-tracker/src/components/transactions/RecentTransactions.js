@@ -41,6 +41,8 @@ const RecentTransactions = ({ transactions, onRefresh }) => {
       'Healthcare': '🏥',
       'Education': '📚',
       'Donation': '🤝',
+      'Grocery': '🛒',
+      'Sports': '🏏',
       'Travel': '✈️',
       'Income': '💰',
       'Expense': '💸'

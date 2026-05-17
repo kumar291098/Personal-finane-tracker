@@ -28,6 +28,8 @@ const ExpenseChart = ({ transactions }) => {
       'Healthcare': '🏥',
       'Education': '📚',
       'Donation': '🤝',
+      'Grocery': '🛒',
+      'Sports': '🏏',
       'Travel': '���️',
       'Other': '📝'
     };

@@ -23,7 +23,9 @@ const Categories = () => {
     { id: 8, name: 'Utilities', type: 'EXPENSE', icon: '⚡' },
     { id: 9, name: 'Healthcare', type: 'EXPENSE', icon: '🏥' },
     { id: 10, name: 'Education', type: 'EXPENSE', icon: '📚' },
-    { id: 11, name: 'Donation', type: 'EXPENSE', icon: '🤝' }
+    { id: 11, name: 'Donation', type: 'EXPENSE', icon: '🤝' },
+    { id: 12, name: 'Grocery', type: 'EXPENSE', icon: '🛒' },
+    { id: 13, name: 'Sports', type: 'EXPENSE', icon: '🏏' }
   ];
 
   useEffect(() => {
@@ -33,7 +35,7 @@ const Categories = () => {
   }, []);
 
   const availableIcons = [
-    '💼', '💻', '📈', '🍔', '🚗', '🛍️', '🎬', '⚡', '🏥', '📚', '🤝',
+    '💼', '💻', '📈', '🍔', '🚗', '🛍️', '🎬', '⚡', '🏥', '📚', '🤝', '🛒', '🏏',
     '✈️', '🏠', '📱', '💰', '💸', '🎯', '🎨', '🏋️', '📝', '🔧',
     '🌟', '🎵', '📊', '🎮', '☕', '🍕', '🚌', '⛽', '💊', '📖'
   ];

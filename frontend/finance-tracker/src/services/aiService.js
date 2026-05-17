@@ -15,6 +15,8 @@ const categoryAliases = [
   { category: 'Healthcare', terms: ['health', 'healthcare', 'doctor', 'medicine', 'medical'] },
   { category: 'Education', terms: ['education', 'course', 'book', 'tuition', 'class'] },
   { category: 'Donation', terms: ['donation', 'charity'] },
+  { category: 'Grocery', terms: ['grocery', 'groceries', 'supermarket', 'mart', 'vegetables', 'milk'] },
+  { category: 'Sports', terms: ['sports', 'sport', 'gym', 'cricket', 'football', 'badminton'] },
   { category: 'Freelance', terms: ['freelance', 'client'] },
   { category: 'Investment', terms: ['investment', 'invest', 'stock', 'mutual fund'] }
 ];

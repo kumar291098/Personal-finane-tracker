@@ -16,7 +16,7 @@ const TransactionForm = ({ onSubmit, editingTransaction, onCancel }) => {
 
   // Common categories for suggestions
   const categoryOptions = {
-    EXPENSE: ['food', 'transport', 'entertainment', 'shopping', 'bills', 'healthcare', 'education', 'other'],
+    EXPENSE: ['food', 'transport', 'entertainment', 'shopping', 'grocery', 'sports', 'bills', 'healthcare', 'education', 'other'],
     INCOME: ['salary', 'freelance', 'business', 'investment', 'bonus', 'gift', 'other']
   };
 

@@ -22,32 +22,38 @@ public class DataInitializer implements CommandLineRunner {
 
         // Check if categories already exist
         if (categoryRepository.count() == 0) {
-            System.out.println("🏗️ Initializing default categories...");
-            
+            System.out.println("Initializing default categories...");
+
             // Create default income categories
-            Category incomeCategory = new Category("Income", "INCOME", "💰");
-            categoryRepository.save(incomeCategory);
-            
+            categoryRepository.save(new Category("Income", "INCOME", "💰"));
+
             // Create default expense categories
-            Category expenseCategory = new Category("Expense", "EXPENSE", "💸");
-            categoryRepository.save(expenseCategory);
-            
+            categoryRepository.save(new Category("Expense", "EXPENSE", "💸"));
+
             // Create additional common categories
             categoryRepository.save(new Category("Food", "EXPENSE", "🍔"));
             categoryRepository.save(new Category("Transportation", "EXPENSE", "🚗"));
             categoryRepository.save(new Category("Entertainment", "EXPENSE", "🎬"));
             categoryRepository.save(new Category("Utilities", "EXPENSE", "⚡"));
             categoryRepository.save(new Category("Donation", "EXPENSE", "🤝"));
+            categoryRepository.save(new Category("Grocery", "EXPENSE", "🛒"));
+            categoryRepository.save(new Category("Sports", "EXPENSE", "🏏"));
             categoryRepository.save(new Category("Salary", "INCOME", "💼"));
             categoryRepository.save(new Category("Freelance", "INCOME", "💻"));
-            
-            System.out.println("✅ Default categories created successfully!");
+
+            System.out.println("Default categories created successfully!");
         } else {
-            if (!categoryRepository.existsByNameAndType("Donation", "EXPENSE")) {
-                categoryRepository.save(new Category("Donation", "EXPENSE", "🤝"));
-                System.out.println("🤝 Donation category added.");
-            }
-            System.out.println("📋 Categories already exist, skipping initialization.");
+            ensureCategory("Donation", "EXPENSE", "🤝");
+            ensureCategory("Grocery", "EXPENSE", "🛒");
+            ensureCategory("Sports", "EXPENSE", "🏏");
+            System.out.println("Categories already exist, skipping initialization.");
+        }
+    }
+
+    private void ensureCategory(String name, String type, String icon) {
+        if (!categoryRepository.existsByNameAndType(name, type)) {
+            categoryRepository.save(new Category(name, type, icon));
+            System.out.println(name + " category added.");
         }
     }
 }
