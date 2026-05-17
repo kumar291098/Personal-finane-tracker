@@ -50,6 +50,11 @@ const Layout = () => {
   const { user, logout, canAccessPage, isAdmin } = useAuth();
   const navigate = useNavigate();
   const unreadCount = notifications.filter(notification => notification.unread).length;
+
+  const accessLevel = user?.accessLevel || 'FREE';
+  const isSubscriber = accessLevel === 'SUBSCRIBER';
+  const isAdminAccount = accessLevel === 'ADMIN' || user?.username === 'demo';
+  const accountLabel = isAdminAccount ? 'Admin Account' : isSubscriber ? 'Subscriber Member' : 'Free Account';
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
     localStorage.setItem('financeTheme', theme);
@@ -176,8 +181,14 @@ const Layout = () => {
               {user?.username?.charAt(0).toUpperCase() || 'U'}
             </div>
             <div className="user-details">
-              <span className="user-name">{user?.username || 'User'}</span>
-              <span className="user-role">{user?.accessLevel || 'FREE'} Account</span>
+              <span className="user-name">
+                {user?.username || 'User'}
+                {isSubscriber && <Crown size={14} className="member-inline-icon" />}
+              </span>
+              <span className={`user-role ${isSubscriber ? 'subscriber-role' : ''}`}>
+                {isSubscriber && <Crown size={13} />}
+                {accountLabel}
+              </span>
             </div>
           </div>
           <button className="logout-btn" onClick={handleLogout}>
@@ -272,6 +283,12 @@ const Layout = () => {
                     {user?.username?.charAt(0).toUpperCase() || 'U'}
                   </div>
                   <span className="user-name-header">{user?.username || 'User'}</span>
+                  {isSubscriber && (
+                    <span className="member-chip" title="Subscriber Member">
+                      <Crown size={13} />
+                      Member
+                    </span>
+                  )}
                   <span className="dropdown-arrow"><ChevronDown size={14} /></span>
                 </button>
               </div>

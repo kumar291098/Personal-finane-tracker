@@ -195,13 +195,34 @@
 }
 
 .user-name {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   font-weight: var(--font-medium);
   font-size: var(--font-size-sm);
 }
 
 .user-role {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
   font-size: var(--font-size-xs);
   opacity: 0.7;
+}
+
+.subscriber-role {
+  width: fit-content;
+  padding: 3px 7px;
+  border-radius: var(--radius-md);
+  background: #fef3c7;
+  color: #92400e;
+  opacity: 1;
+  font-weight: var(--font-semibold);
+}
+
+.member-inline-icon {
+  color: #f59e0b;
+  fill: #fef3c7;
 }
 
 .logout-btn {
@@ -515,6 +536,18 @@
 .user-name-header {
   font-weight: var(--font-medium);
   font-size: var(--font-size-sm);
+}
+
+.member-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 7px;
+  border-radius: var(--radius-md);
+  background: #fef3c7;
+  color: #92400e;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-bold);
 }
 
 .dropdown-arrow {
