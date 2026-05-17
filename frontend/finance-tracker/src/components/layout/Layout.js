@@ -6,6 +6,7 @@ import {
   ChartNoAxesCombined,
   ChevronDown,
   CreditCard,
+  Crown,
   FolderTree,
   Gauge,
   ShieldCheck,
@@ -110,6 +111,13 @@ const Layout = () => {
       icon: FolderTree,
       label: 'Categories',
       description: 'Organize expenses'
+    },
+    {
+      path: '/subscription',
+      page: 'subscription',
+      icon: Crown,
+      label: 'Subscription',
+      description: 'Upgrade access'
     },
     {
       path: '/profile',

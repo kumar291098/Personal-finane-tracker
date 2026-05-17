@@ -9,6 +9,7 @@ import Dashboard from './components/dashboard/Dashboard';
 import Transactions from './components/transactions/Transactions';
 import Analytics from './components/analytics/Analytics';
 import Categories from './components/categories/Categories';
+import Subscription from './components/subscription/Subscription';
 import Profile from './components/profile/Profile';
 import Monitoring from './components/monitoring/Monitoring';
 import UserAccess from './components/admin/UserAccess';
@@ -80,6 +81,7 @@ function App() {
               <Route path="transactions" element={<PageRoute page="transactions"><Transactions /></PageRoute>} />
               <Route path="analytics" element={<PageRoute page="analytics"><Analytics /></PageRoute>} />
               <Route path="categories" element={<PageRoute page="categories"><Categories /></PageRoute>} />
+              <Route path="subscription" element={<PageRoute page="subscription"><Subscription /></PageRoute>} />
               <Route path="profile" element={<PageRoute page="profile"><Profile /></PageRoute>} />
               <Route path="monitoring" element={
                 <AdminRoute>

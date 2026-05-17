@@ -1,0 +1,120 @@
+.subscription-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xl);
+  min-width: 0;
+}
+
+.subscription-header {
+  display: grid;
+  gap: var(--spacing-xs);
+}
+
+.subscription-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  color: #0f766e;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-semibold);
+}
+
+.subscription-card {
+  display: grid;
+  gap: var(--spacing-lg);
+  max-width: 720px;
+  padding: var(--spacing-xl);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-lg);
+  background: white;
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.06);
+}
+
+.subscription-plan {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--spacing-lg);
+  align-items: flex-start;
+}
+
+.subscription-plan h2 {
+  margin: 0 0 4px;
+  color: var(--gray-900);
+}
+
+.subscription-plan p,
+.subscription-note {
+  margin: 0;
+  color: var(--gray-600);
+}
+
+.subscription-plan strong {
+  color: #0f766e;
+  font-size: var(--font-size-3xl);
+  white-space: nowrap;
+}
+
+.subscription-benefits {
+  display: grid;
+  gap: var(--spacing-sm);
+}
+
+.subscription-benefits span,
+.subscription-status {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  color: var(--gray-700);
+}
+
+.subscription-benefits svg,
+.subscription-status svg {
+  color: #0f766e;
+}
+
+.subscription-pay-btn {
+  width: fit-content;
+  min-width: 220px;
+}
+
+.subscription-alert {
+  max-width: 720px;
+  padding: var(--spacing-md);
+  border-radius: var(--radius-lg);
+}
+
+.subscription-alert.error {
+  border: 1px solid var(--error-300);
+  background: var(--error-100);
+  color: var(--error-700);
+}
+
+.subscription-alert.success {
+  border: 1px solid #99f6e4;
+  background: #f0fdfa;
+  color: #0f766e;
+}
+
+.subscription-status {
+  padding: var(--spacing-md);
+  border: 1px solid #99f6e4;
+  border-radius: var(--radius-lg);
+  background: #f0fdfa;
+  color: #0f766e;
+  font-weight: var(--font-semibold);
+}
+
+@media (max-width: 640px) {
+  .subscription-plan {
+    flex-direction: column;
+  }
+
+  .subscription-pay-btn {
+    width: 100%;
+  }
+}
+
+:root[data-theme='dark'] .subscription-card {
+  background: #111827;
+  border-color: #334155;
+}

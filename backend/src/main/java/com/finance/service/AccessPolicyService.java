@@ -16,13 +16,13 @@ import java.util.Set;
 public class AccessPolicyService {
 
     private static final List<String> ALL_PAGES = List.of(
-        "dashboard", "transactions", "analytics", "categories", "profile", "access", "monitoring"
+        "dashboard", "transactions", "analytics", "categories", "subscription", "profile", "access", "monitoring"
     );
 
     private static final Map<AccessLevel, List<String>> DEFAULT_ALLOWED_PAGES = Map.of(
         AccessLevel.ADMIN, ALL_PAGES,
-        AccessLevel.SUBSCRIBER, List.of("dashboard", "transactions", "analytics", "categories", "profile"),
-        AccessLevel.FREE, List.of("dashboard", "transactions", "profile")
+        AccessLevel.SUBSCRIBER, List.of("dashboard", "transactions", "analytics", "categories", "subscription", "profile"),
+        AccessLevel.FREE, List.of("dashboard", "transactions", "subscription", "profile")
     );
 
     @Autowired
