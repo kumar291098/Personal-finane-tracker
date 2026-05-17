@@ -1,6 +1,8 @@
 package com.finance.security;
 
 import com.finance.util.JwtUtil;
+import com.finance.model.AccessLevel;
+import com.finance.repository.UserRepository;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,9 @@ public class JwtFilter extends OncePerRequestFilter {
 
     @Autowired
     private JwtUtil jwtUtil;
+
+    @Autowired
+    private UserRepository userRepository;
 
     // Allow these paths without JWT
     private static final List<String> PUBLIC_PATHS = List.of(
@@ -86,10 +91,13 @@ public class JwtFilter extends OncePerRequestFilter {
                         if (jwtUtil.validateToken(jwt, username)) {
                             // Extract userId from token for additional context
                             Long userId = jwtUtil.extractUserId(jwt);
-                            String accessLevel = jwtUtil.extractAccessLevel(jwt);
-                            if ("demo".equalsIgnoreCase(username)) {
-                                accessLevel = "ADMIN";
-                            }
+                            final String tokenUsername = username;
+                            final String tokenValue = jwt;
+                            String accessLevel = userRepository.findByUsername(tokenUsername)
+                                .map(user -> user.getAccessLevel().name())
+                                .orElseGet(() -> "demo".equalsIgnoreCase(tokenUsername)
+                                    ? AccessLevel.ADMIN.name()
+                                    : jwtUtil.extractAccessLevel(tokenValue));
                             System.out.println("🆔 User ID extracted: " + userId);
                             
                             // Create authentication token with user authorities

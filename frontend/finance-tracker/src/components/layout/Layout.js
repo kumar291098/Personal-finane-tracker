@@ -46,11 +46,9 @@ const Layout = () => {
       unread: true
     }
   ]);
-  const { user, logout } = useAuth();
+  const { user, logout, canAccessPage, isAdmin } = useAuth();
   const navigate = useNavigate();
   const unreadCount = notifications.filter(notification => notification.unread).length;
-  const isAdmin = user?.accessLevel === 'ADMIN' || user?.username === 'demo';
-
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
     localStorage.setItem('financeTheme', theme);
@@ -71,18 +69,21 @@ const Layout = () => {
   const menuItems = [
     {
       path: '/dashboard',
+      page: 'dashboard',
       icon: BarChart3,
       label: 'Dashboard',
       description: 'Overview & Analytics'
     },
     {
       path: '/transactions',
+      page: 'transactions',
       icon: CreditCard,
       label: 'Transactions',
       description: 'Manage your money'
     },
     {
       path: '/access',
+      page: 'access',
       icon: ShieldCheck,
       label: 'Access',
       description: 'User permissions',
@@ -90,6 +91,7 @@ const Layout = () => {
     },
     {
       path: '/monitoring',
+      page: 'monitoring',
       icon: Gauge,
       label: 'Monitoring',
       description: 'Health & performance',
@@ -97,18 +99,21 @@ const Layout = () => {
     },
     {
       path: '/analytics',
+      page: 'analytics',
       icon: ChartNoAxesCombined,
       label: 'Analytics',
       description: 'Insights & Reports'
     },
     {
       path: '/categories',
+      page: 'categories',
       icon: FolderTree,
       label: 'Categories',
       description: 'Organize expenses'
     },
     {
       path: '/profile',
+      page: 'profile',
       icon: Settings,
       label: 'Profile',
       description: 'Account settings'
@@ -134,7 +139,7 @@ const Layout = () => {
 
         <nav className="sidebar-nav">
           <ul className="nav-list">
-            {menuItems.filter(item => !item.adminOnly || isAdmin).map((item) => {
+            {menuItems.filter(item => (item.adminOnly ? isAdmin : canAccessPage(item.page))).map((item) => {
               const Icon = item.icon;
               return (
                 <li key={item.path} className="nav-item">

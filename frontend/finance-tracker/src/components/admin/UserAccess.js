@@ -1,7 +1,13 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { RefreshCw, ShieldCheck, UserCog } from 'lucide-react';
+import { RefreshCw, ShieldCheck, SlidersHorizontal, UserCog } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
-import { fetchUsersForAccess, updateUserAccess } from '../../services/adminService';
+import { APP_PAGES } from '../../config/pages';
+import {
+  fetchAccessPolicies,
+  fetchUsersForAccess,
+  updateAccessPolicy,
+  updateUserAccess
+} from '../../services/adminService';
 import './UserAccess.css';
 
 const ACCESS_LEVELS = [
@@ -13,27 +19,33 @@ const ACCESS_LEVELS = [
 const UserAccess = () => {
   const { token, user } = useAuth();
   const [users, setUsers] = useState([]);
+  const [policies, setPolicies] = useState([]);
   const [loading, setLoading] = useState(true);
   const [savingUserId, setSavingUserId] = useState(null);
+  const [savingPolicy, setSavingPolicy] = useState('');
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
 
-  const loadUsers = useCallback(async () => {
+  const loadAccessData = useCallback(async () => {
     setLoading(true);
     setError('');
     try {
-      const data = await fetchUsersForAccess(token);
-      setUsers(data);
+      const [userData, policyData] = await Promise.all([
+        fetchUsersForAccess(token),
+        fetchAccessPolicies(token)
+      ]);
+      setUsers(userData);
+      setPolicies(policyData.policies || []);
     } catch (err) {
-      setError(err.message || 'Unable to load users.');
+      setError(err.message || 'Unable to load access controls.');
     } finally {
       setLoading(false);
     }
   }, [token]);
 
   useEffect(() => {
-    loadUsers();
-  }, [loadUsers]);
+    loadAccessData();
+  }, [loadAccessData]);
 
   const counts = useMemo(() => users.reduce((summary, item) => ({
     ...summary,
@@ -55,6 +67,30 @@ const UserAccess = () => {
     }
   };
 
+  const handlePolicyToggle = async (policy, pageKey) => {
+    const currentlyAllowed = policy.allowedPages.includes(pageKey);
+    const nextPages = currentlyAllowed
+      ? policy.allowedPages.filter(page => page !== pageKey)
+      : [...policy.allowedPages, pageKey];
+
+    setSavingPolicy(policy.accessLevel);
+    setError('');
+    setMessage('');
+    try {
+      const updatedPolicy = await updateAccessPolicy(token, policy.accessLevel, nextPages);
+      setPolicies(prev => prev.map(item =>
+        item.accessLevel === updatedPolicy.accessLevel ? updatedPolicy : item
+      ));
+      setMessage(`${updatedPolicy.accessLevel} page access updated.`);
+    } catch (err) {
+      setError(err.message || 'Unable to update page access.');
+    } finally {
+      setSavingPolicy('');
+    }
+  };
+
+  const pageOptions = APP_PAGES.filter(page => !['access', 'monitoring'].includes(page.key));
+
   return (
     <div className="access-page">
       <div className="access-header">
@@ -63,7 +99,7 @@ const UserAccess = () => {
           <h1 className="page-title">User Access</h1>
           <p className="page-subtitle">Manage who is admin, subscriber, or free user.</p>
         </div>
-        <button className="btn btn-secondary" onClick={loadUsers} disabled={loading}>
+        <button className="btn btn-secondary" onClick={loadAccessData} disabled={loading}>
           <RefreshCw size={16} className={loading ? 'spin-icon' : ''} />
           Refresh
         </button>
@@ -86,6 +122,48 @@ const UserAccess = () => {
 
       {error && <div className="access-alert error">{error}</div>}
       {message && <div className="access-alert success">{message}</div>}
+
+      <div className="access-panel">
+        <div className="access-panel-header">
+          <div>
+            <h2>Page Access</h2>
+            <span>Choose pages visible to each account level.</span>
+          </div>
+          <SlidersHorizontal size={18} />
+        </div>
+
+        {loading ? (
+          <div className="access-empty">Loading page access...</div>
+        ) : (
+          <div className="policy-grid">
+            {policies
+              .filter(policy => policy.accessLevel !== 'ADMIN')
+              .map(policy => (
+                <div className="policy-card" key={policy.accessLevel}>
+                  <div className="policy-card-header">
+                    <span className={`access-badge ${policy.accessLevel.toLowerCase()}`}>
+                      {policy.accessLevel}
+                    </span>
+                    <small>{policy.allowedPages.length} pages enabled</small>
+                  </div>
+                  <div className="policy-options">
+                    {pageOptions.map(page => (
+                      <label className="policy-option" key={`${policy.accessLevel}-${page.key}`}>
+                        <input
+                          type="checkbox"
+                          checked={policy.allowedPages.includes(page.key)}
+                          disabled={savingPolicy === policy.accessLevel || page.key === 'profile'}
+                          onChange={() => handlePolicyToggle(policy, page.key)}
+                        />
+                        <span>{page.label}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+              ))}
+          </div>
+        )}
+      </div>
 
       <div className="access-panel">
         <div className="access-panel-header">

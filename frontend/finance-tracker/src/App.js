@@ -21,13 +21,23 @@ const ProtectedRoute = ({ children }) => {
 };
 
 const AdminRoute = ({ children }) => {
-  const { user, isAuthenticated } = useAuth();
+  const { isAdmin, isAuthenticated } = useAuth();
 
   if (!isAuthenticated) {
     return <Navigate to="/login" />;
   }
 
-  return user?.accessLevel === 'ADMIN' || user?.username === 'demo' ? children : <Navigate to="/dashboard" />;
+  return isAdmin ? children : <Navigate to="/dashboard" />;
+};
+
+const PageRoute = ({ page, children }) => {
+  const { canAccessPage, isAuthenticated } = useAuth();
+
+  if (!isAuthenticated) {
+    return <Navigate to="/login" />;
+  }
+
+  return canAccessPage(page) ? children : <Navigate to="/dashboard" />;
 };
 
 // Public Route Component (redirect to dashboard if authenticated)
@@ -66,11 +76,11 @@ function App() {
               </ProtectedRoute>
             }>
               <Route index element={<Navigate to="/dashboard" />} />
-              <Route path="dashboard" element={<Dashboard />} />
-              <Route path="transactions" element={<Transactions />} />
-              <Route path="analytics" element={<Analytics />} />
-              <Route path="categories" element={<Categories />} />
-              <Route path="profile" element={<Profile />} />
+              <Route path="dashboard" element={<PageRoute page="dashboard"><Dashboard /></PageRoute>} />
+              <Route path="transactions" element={<PageRoute page="transactions"><Transactions /></PageRoute>} />
+              <Route path="analytics" element={<PageRoute page="analytics"><Analytics /></PageRoute>} />
+              <Route path="categories" element={<PageRoute page="categories"><Categories /></PageRoute>} />
+              <Route path="profile" element={<PageRoute page="profile"><Profile /></PageRoute>} />
               <Route path="monitoring" element={
                 <AdminRoute>
                   <Monitoring />

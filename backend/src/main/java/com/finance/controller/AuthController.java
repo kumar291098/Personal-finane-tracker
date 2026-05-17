@@ -4,6 +4,7 @@ import com.finance.dto.LoginRequest;
 import com.finance.model.AccessLevel;
 import com.finance.model.User;
 import com.finance.repository.UserRepository;
+import com.finance.service.AccessPolicyService;
 import com.finance.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,6 +33,8 @@ public class AuthController {
     private JwtUtil jwtUtil;
     @Autowired
     private EmailService emailService;
+    @Autowired
+    private AccessPolicyService accessPolicyService;
 
     @Value("${app.password-reset.expose-otp:false}")
     private boolean exposeOtp;
@@ -55,6 +58,7 @@ public class AuthController {
     response.put("userId", user.getId());
     response.put("username", user.getUsername());
     response.put("accessLevel", user.getAccessLevel().name());
+    response.put("allowedPages", accessPolicyService.getAllowedPages(user.getAccessLevel()));
 
     return ResponseEntity.ok(response);
     }
@@ -106,6 +110,7 @@ public class AuthController {
         response.put("userId", user.getId());
         response.put("username", user.getUsername());
         response.put("accessLevel", user.getAccessLevel().name());
+        response.put("allowedPages", accessPolicyService.getAllowedPages(user.getAccessLevel()));
         return response;
     }
 

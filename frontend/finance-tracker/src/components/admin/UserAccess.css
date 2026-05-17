@@ -74,6 +74,11 @@
   border-bottom: 1px solid var(--gray-200);
 }
 
+.access-panel-header > div {
+  display: grid;
+  gap: 4px;
+}
+
 .access-panel-header h2 {
   margin: 0;
   color: var(--gray-900);
@@ -83,6 +88,65 @@
 .access-panel-header span {
   color: var(--gray-500);
   font-size: var(--font-size-sm);
+}
+
+.policy-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: var(--spacing-md);
+  padding: var(--spacing-lg);
+}
+
+.policy-card {
+  display: grid;
+  gap: var(--spacing-md);
+  padding: var(--spacing-md);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-lg);
+  background: var(--gray-50);
+}
+
+.policy-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-sm);
+}
+
+.policy-card-header small {
+  color: var(--gray-500);
+  font-size: var(--font-size-xs);
+}
+
+.policy-options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--spacing-sm);
+}
+
+.policy-option {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  min-height: 38px;
+  padding: 8px 10px;
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-md);
+  background: white;
+  color: var(--gray-700);
+  font-size: var(--font-size-sm);
+  cursor: pointer;
+}
+
+.policy-option input {
+  width: 16px;
+  height: 16px;
+  accent-color: #0f766e;
+}
+
+.policy-option:has(input:disabled) {
+  cursor: not-allowed;
+  opacity: 0.65;
 }
 
 .access-table {
@@ -213,7 +277,13 @@
 
 :root[data-theme='dark'] .access-summary-item,
 :root[data-theme='dark'] .access-panel,
-:root[data-theme='dark'] .access-row select {
+:root[data-theme='dark'] .access-row select,
+:root[data-theme='dark'] .policy-option {
   background: #111827;
+  border-color: #334155;
+}
+
+:root[data-theme='dark'] .policy-card {
+  background: #0f172a;
   border-color: #334155;
 }

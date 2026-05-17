@@ -2,6 +2,7 @@ package com.finance.config;
 
 import com.finance.model.Category;
 import com.finance.repository.CategoryRepository;
+import com.finance.service.AccessPolicyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -12,8 +13,13 @@ public class DataInitializer implements CommandLineRunner {
     @Autowired
     private CategoryRepository categoryRepository;
 
+    @Autowired
+    private AccessPolicyService accessPolicyService;
+
     @Override
     public void run(String... args) throws Exception {
+        accessPolicyService.ensureDefaults();
+
         // Check if categories already exist
         if (categoryRepository.count() == 0) {
             System.out.println("🏗️ Initializing default categories...");
