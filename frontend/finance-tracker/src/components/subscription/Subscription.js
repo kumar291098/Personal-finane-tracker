@@ -172,7 +172,7 @@ const Subscription = () => {
                 <div className="upi-payment-form">
                   <h3>Pay with UPI QR</h3>
                   {plan.upiId && <p>UPI ID: <strong>{plan.upiId}</strong></p>}
-                  <p>After payment, enter UTR or transaction ID. Admin will verify and activate subscriber access.</p>
+                  <p>Enter a demo reference to activate automatically. UPI UTRs are sent to admin review.</p>
                   <input
                     className="input"
                     value={reference}
@@ -183,7 +183,7 @@ const Subscription = () => {
                   />
                   <button className="btn btn-primary" type="submit" disabled={paying}>
                     {paying ? <RefreshCw size={18} className="spin-icon" /> : <CheckCircle2 size={18} />}
-                    Submit for review
+                    Verify reference
                   </button>
                 </div>
               </form>

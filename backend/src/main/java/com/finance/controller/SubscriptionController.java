@@ -164,6 +164,12 @@ public class SubscriptionController {
             ));
         }
 
+        if (demoSubscriptionReferenceService.isDemoReference(reference)) {
+            return ResponseEntity.badRequest().body(
+                "Invalid or expired demo reference. Generate a new reference from the thank you page."
+            );
+        }
+
         SubscriptionPayment payment = new SubscriptionPayment();
         payment.setUserId(userId);
         payment.setOrderId("UPI_" + userId + "_" + System.currentTimeMillis());

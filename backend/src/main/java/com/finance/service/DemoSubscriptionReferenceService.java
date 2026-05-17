@@ -33,4 +33,12 @@ public class DemoSubscriptionReferenceService {
         LocalDateTime expiresAt = references.remove(normalized);
         return expiresAt != null && LocalDateTime.now().isBefore(expiresAt);
     }
+
+    public boolean isDemoReference(String reference) {
+        if (reference == null) {
+            return false;
+        }
+
+        return reference.trim().toUpperCase().startsWith("TEST-SUB-");
+    }
 }

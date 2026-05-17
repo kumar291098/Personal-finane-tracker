@@ -38,14 +38,14 @@ const DemoSubscriptionThanks = () => {
       <section className="demo-thanks-card">
         <span className="demo-thanks-icon"><Crown size={30} /></span>
         <h1>Thank you for subscribing</h1>
-        <p>Use this demo reference on the Subscription page to activate subscriber access for one month.</p>
+        <p>Use this demo reference on the Subscription page. A valid reference activates subscriber access automatically.</p>
 
         {error && <div className="demo-thanks-alert">{error}</div>}
 
         <div className="demo-reference-box">
           <span>Demo reference</span>
           <strong>{loading ? 'Generating...' : reference}</strong>
-          <small>Expires in {expiresInMinutes} minutes. This is not a bank UTR.</small>
+          <small>Expires in {expiresInMinutes} minutes. Wrong or expired references are denied.</small>
         </div>
 
         <div className="demo-thanks-actions">
