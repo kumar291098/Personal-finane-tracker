@@ -31,23 +31,3 @@ export const updateProfile = async (token, profile) => {
 
   return readResponse(response, 'Unable to update profile.');
 };
-
-export const requestProfileUpdateOtp = async (token, profile) => {
-  const response = await fetch(`${API_BASE_URL}/profile/request-update-otp`, {
-    method: 'POST',
-    headers: headers(token),
-    body: JSON.stringify(profile)
-  });
-
-  return readResponse(response, 'Unable to send profile OTP.');
-};
-
-export const verifyProfileUpdateOtp = async (token, otp) => {
-  const response = await fetch(`${API_BASE_URL}/profile/verify-update-otp`, {
-    method: 'POST',
-    headers: headers(token),
-    body: JSON.stringify({ otp })
-  });
-
-  return readResponse(response, 'Unable to verify profile OTP.');
-};

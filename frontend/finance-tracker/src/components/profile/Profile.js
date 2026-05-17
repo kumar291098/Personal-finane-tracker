@@ -3,9 +3,7 @@ import { AlertTriangle, Lock, Settings, ShieldCheck, User } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import {
   fetchProfile,
-  requestProfileUpdateOtp,
-  updateProfile,
-  verifyProfileUpdateOtp
+  updateProfile
 } from '../../services/profileService';
 import './Profile.css';
 
@@ -29,9 +27,6 @@ const Profile = () => {
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
   const [savingProfile, setSavingProfile] = useState(false);
-  const [otpRequired, setOtpRequired] = useState(false);
-  const [otp, setOtp] = useState('');
-  const [originalProfile, setOriginalProfile] = useState(null);
   const [profileData, setProfileData] = useState(defaultProfile(user));
   const [passwordData, setPasswordData] = useState({
     currentPassword: '',
@@ -63,7 +58,6 @@ const Profile = () => {
         const data = await fetchProfile(token);
         const normalized = normalizeProfile(data);
         setProfileData(normalized);
-        setOriginalProfile(normalized);
       } catch (err) {
         setError(err.message || 'Unable to load profile.');
       }
@@ -88,50 +82,19 @@ const Profile = () => {
     }));
   };
 
-  const hasSensitiveChange = () =>
-    originalProfile
-      && (profileData.username !== originalProfile.username || profileData.email !== originalProfile.email);
-
   const handleProfileSubmit = async (event) => {
     event.preventDefault();
     setSavingProfile(true);
     setError('');
     setMessage('');
     try {
-      if (hasSensitiveChange()) {
-        const result = await requestProfileUpdateOtp(token, profileData);
-        setOtpRequired(true);
-        showMessage(result.message || 'OTP sent. Verify to update username or email.');
-      } else {
-        const result = await updateProfile(token, profileData);
-        const normalized = normalizeProfile(result);
-        setProfileData(normalized);
-        setOriginalProfile(normalized);
-        updateSession(result);
-        showMessage(result.message || 'Profile updated successfully.');
-      }
-    } catch (err) {
-      setError(err.message || 'Unable to update profile.');
-    } finally {
-      setSavingProfile(false);
-    }
-  };
-
-  const handleOtpSubmit = async (event) => {
-    event.preventDefault();
-    setSavingProfile(true);
-    setError('');
-    try {
-      const result = await verifyProfileUpdateOtp(token, otp);
+      const result = await updateProfile(token, profileData);
       const normalized = normalizeProfile(result);
       setProfileData(normalized);
-      setOriginalProfile(normalized);
       updateSession(result);
-      setOtp('');
-      setOtpRequired(false);
-      showMessage(result.message || 'Profile updated after OTP verification.');
+      showMessage(result.message || 'Profile updated successfully.');
     } catch (err) {
-      setError(err.message || 'Unable to verify OTP.');
+      setError(err.message || 'Unable to update profile.');
     } finally {
       setSavingProfile(false);
     }
@@ -276,21 +239,10 @@ const Profile = () => {
 
                 <div className="form-actions">
                   <button type="submit" className="btn btn-primary" disabled={savingProfile}>
-                    {hasSensitiveChange() ? 'Send OTP & Save' : 'Save Changes'}
+                    Save Changes
                   </button>
                 </div>
               </form>
-
-              {otpRequired && (
-                <form onSubmit={handleOtpSubmit} className="profile-otp-box">
-                  <div>
-                    <h3>Verify profile change</h3>
-                    <p>Enter the OTP sent to your email to update username or email.</p>
-                  </div>
-                  <ProfileField label="OTP" value={otp} onChange={setOtp} required minLength={6} maxLength={6} placeholder="6-digit OTP" />
-                  <button type="submit" className="btn btn-primary" disabled={savingProfile}>Verify OTP & Update</button>
-                </form>
-              )}
             </div>
           )}
 

@@ -61,35 +61,6 @@ public class EmailService {
                 .toBodilessEntity();
     }
 
-    public void sendProfileUpdateOtp(String recipientEmail, String username, String otp, int expiryMinutes) {
-        if (!isConfigured()) {
-            throw new IllegalStateException("Brevo email service is not configured.");
-        }
-
-        Map<String, Object> body = Map.of(
-                "sender", Map.of(
-                        "name", senderName,
-                        "email", senderEmail
-                ),
-                "to", List.of(Map.of(
-                        "email", recipientEmail,
-                        "name", username == null || username.isBlank() ? recipientEmail : username
-                )),
-                "subject", "Your FinanceTracker profile update OTP",
-                "htmlContent", buildProfileUpdateOtpEmailHtml(username, otp, expiryMinutes),
-                "textContent", "Your FinanceTracker profile update OTP is " + otp
-                        + ". It expires in " + expiryMinutes + " minutes."
-        );
-
-        restClient.post()
-                .uri("/smtp/email")
-                .header("api-key", brevoApiKey)
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(body)
-                .retrieve()
-                .toBodilessEntity();
-    }
-
     private String buildOtpEmailHtml(String username, String otp, int expiryMinutes) {
         String displayName = username == null || username.isBlank() ? "there" : username;
         return """
@@ -104,17 +75,4 @@ public class EmailService {
                 """.formatted(displayName, otp, expiryMinutes);
     }
 
-    private String buildProfileUpdateOtpEmailHtml(String username, String otp, int expiryMinutes) {
-        String displayName = username == null || username.isBlank() ? "there" : username;
-        return """
-                <div style="font-family:Arial,sans-serif;line-height:1.5;color:#0f172a">
-                  <h2>FinanceTracker profile update</h2>
-                  <p>Hi %s,</p>
-                  <p>Use this OTP to confirm your username or email change:</p>
-                  <p style="font-size:28px;font-weight:700;letter-spacing:6px;color:#0f766e">%s</p>
-                  <p>This OTP expires in %d minutes.</p>
-                  <p>If you did not request this, keep your current profile unchanged.</p>
-                </div>
-                """.formatted(displayName, otp, expiryMinutes);
-    }
 }

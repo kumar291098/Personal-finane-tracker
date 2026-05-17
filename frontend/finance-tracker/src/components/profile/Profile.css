@@ -218,29 +218,6 @@
   border-top: 1px solid var(--gray-200);
 }
 
-.profile-otp-box {
-  display: grid;
-  gap: var(--spacing-md);
-  margin-top: var(--spacing-xl);
-  padding: var(--spacing-xl);
-  border: 1px solid #99f6e4;
-  border-radius: var(--radius-lg);
-  background: #f0fdfa;
-}
-
-.profile-otp-box h3,
-.profile-otp-box p {
-  margin: 0;
-}
-
-.profile-otp-box h3 {
-  color: #0f766e;
-}
-
-.profile-otp-box p {
-  color: var(--gray-600);
-}
-
 .preference-section {
   margin-bottom: var(--spacing-xl);
 }
@@ -481,9 +458,4 @@
   background-color: #102a2a;
   border-color: #0f766e;
   color: #99f6e4;
-}
-
-:root[data-theme='dark'] .profile-otp-box {
-  background: #0f172a;
-  border-color: #0f766e;
 }

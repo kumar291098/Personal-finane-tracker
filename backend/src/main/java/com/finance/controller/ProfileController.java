@@ -3,7 +3,6 @@ package com.finance.controller;
 import com.finance.model.User;
 import com.finance.repository.UserRepository;
 import com.finance.service.AccessPolicyService;
-import com.finance.service.EmailService;
 import com.finance.util.JwtUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,38 +15,25 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestClientException;
 
-import java.security.SecureRandom;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
 
 @RestController
 @RequestMapping("/api/profile")
 public class ProfileController {
 
-    private static final SecureRandom OTP_RANDOM = new SecureRandom();
-    private static final int OTP_EXPIRY_MINUTES = 10;
-    private static final Map<Long, PendingProfileUpdate> PENDING_UPDATES = new ConcurrentHashMap<>();
-
     @Autowired
     private UserRepository userRepository;
-
-    @Autowired
-    private EmailService emailService;
 
     @Autowired
     private JwtUtil jwtUtil;
 
     @Autowired
     private AccessPolicyService accessPolicyService;
-
-    @Value("${app.password-reset.expose-otp:false}")
-    private boolean exposeOtp;
 
     @GetMapping
     public ResponseEntity<?> getProfile(HttpServletRequest request) {
@@ -69,35 +55,8 @@ public class ProfileController {
         User user = userResult.get();
         String username = normalize(data.get("username"));
         String email = normalize(data.get("email"));
-        if (isChanged(username, user.getUsername()) || isChanged(email, user.getEmail())) {
-            return ResponseEntity.badRequest().body("Username or email changes require OTP verification.");
-        }
 
-        ResponseEntity<?> conflict = validateNonSensitiveUniqueness(user, data);
-        if (conflict != null) {
-            return conflict;
-        }
-
-        applyNonSensitiveFields(user, data);
-        userRepository.save(user);
-        return ResponseEntity.ok(toProfileResponse(user, "Profile updated successfully."));
-    }
-
-    @PostMapping("/request-update-otp")
-    public ResponseEntity<?> requestProfileUpdateOtp(HttpServletRequest request, @RequestBody Map<String, String> data) {
-        Optional<User> userResult = currentUser(request);
-        if (userResult.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Login required.");
-        }
-
-        User user = userResult.get();
-        String nextUsername = normalize(data.get("username"));
-        String nextEmail = normalize(data.get("email"));
-        if (!isChanged(nextUsername, user.getUsername()) && !isChanged(nextEmail, user.getEmail())) {
-            return ResponseEntity.badRequest().body("Change username or email before requesting OTP.");
-        }
-
-        ResponseEntity<?> conflict = validateSensitiveUniqueness(user, nextUsername, nextEmail);
+        ResponseEntity<?> conflict = validateSensitiveUniqueness(user, username, email);
         if (conflict != null) {
             return conflict;
         }
@@ -107,80 +66,13 @@ public class ProfileController {
             return conflict;
         }
 
-        String otp = String.format("%06d", OTP_RANDOM.nextInt(1_000_000));
-        PENDING_UPDATES.put(user.getId(), new PendingProfileUpdate(data, otp, LocalDateTime.now().plusMinutes(OTP_EXPIRY_MINUTES)));
-
-        String recipientEmail = nextEmail != null ? nextEmail : user.getEmail();
-        boolean sent = false;
-        if (recipientEmail != null && emailService.isConfigured()) {
-            try {
-                emailService.sendProfileUpdateOtp(recipientEmail, user.getUsername(), otp, OTP_EXPIRY_MINUTES);
-                sent = true;
-            } catch (RestClientException | IllegalStateException error) {
-                PENDING_UPDATES.remove(user.getId());
-                return ResponseEntity.status(HttpStatus.BAD_GATEWAY)
-                    .body("Unable to send profile OTP. Check email service configuration.");
-            }
-        } else {
-            System.out.println("Profile update OTP for " + user.getUsername() + ": " + otp
-                + " (expires in " + OTP_EXPIRY_MINUTES + " minutes)");
-        }
-
-        Map<String, Object> response = new HashMap<>();
-        response.put("success", true);
-        response.put("message", sent ? "OTP sent to your email." : "OTP generated. Check backend logs.");
-        response.put("expiresInMinutes", OTP_EXPIRY_MINUTES);
-        if (exposeOtp && !sent) {
-            response.put("otpForTesting", otp);
-        }
-        return ResponseEntity.ok(response);
-    }
-
-    @PostMapping("/verify-update-otp")
-    public ResponseEntity<?> verifyProfileUpdateOtp(HttpServletRequest request, @RequestBody Map<String, String> data) {
-        Optional<User> userResult = currentUser(request);
-        if (userResult.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Login required.");
-        }
-
-        User user = userResult.get();
-        PendingProfileUpdate pending = PENDING_UPDATES.get(user.getId());
-        if (pending == null) {
-            return ResponseEntity.badRequest().body("Request OTP before updating username or email.");
-        }
-
-        if (LocalDateTime.now().isAfter(pending.expiresAt())) {
-            PENDING_UPDATES.remove(user.getId());
-            return ResponseEntity.badRequest().body("OTP expired. Please request a new OTP.");
-        }
-
-        if (!pending.otp().equals(normalize(data.get("otp")))) {
-            return ResponseEntity.badRequest().body("Invalid OTP.");
-        }
-
-        Map<String, String> pendingData = pending.data();
-        String nextUsername = normalize(pendingData.get("username"));
-        String nextEmail = normalize(pendingData.get("email"));
-        ResponseEntity<?> conflict = validateSensitiveUniqueness(user, nextUsername, nextEmail);
-        if (conflict != null) {
-            return conflict;
-        }
-
-        conflict = validateNonSensitiveUniqueness(user, pendingData);
-        if (conflict != null) {
-            return conflict;
-        }
-
-        if (nextUsername != null) {
-            user.setUsername(nextUsername);
-        }
-        user.setEmail(nextEmail);
-        applyNonSensitiveFields(user, pendingData);
+        user.setUsername(username);
+        user.setEmail(email);
+        applyNonSensitiveFields(user, data);
         userRepository.save(user);
-        PENDING_UPDATES.remove(user.getId());
 
         String token = jwtUtil.generateToken(user.getUsername(), user.getId(), user.getAccessLevel().name());
-        return ResponseEntity.ok(toProfileResponse(user, "Profile updated after OTP verification.", token));
+        return ResponseEntity.ok(toProfileResponse(user, "Profile updated successfully.", token));
     }
 
     private Optional<User> currentUser(HttpServletRequest request) {
@@ -229,10 +121,6 @@ public class ProfileController {
         user.setDateOfBirth(dateOfBirth == null ? null : LocalDate.parse(dateOfBirth));
     }
 
-    private boolean isChanged(String next, String current) {
-        return next != null && !next.equals(current == null ? "" : current);
-    }
-
     private String normalize(String value) {
         if (value == null || value.trim().isEmpty()) {
             return null;
@@ -265,6 +153,4 @@ public class ProfileController {
         }
         return response;
     }
-
-    private record PendingProfileUpdate(Map<String, String> data, String otp, LocalDateTime expiresAt) {}
 }
