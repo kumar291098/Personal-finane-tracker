@@ -88,6 +88,7 @@ export const AuthProvider = ({ children }) => {
       const userData = {
         id: data.userId,
         username: data.username,
+        firstName: data.firstName || '',
         accessLevel: data.accessLevel || (data.username === 'demo' ? 'ADMIN' : 'FREE'),
         subscriberUntil: data.subscriberUntil || '',
         allowedPages: data.allowedPages || []
@@ -141,6 +142,7 @@ export const AuthProvider = ({ children }) => {
       ...(user || {}),
       id: sessionData.id || user?.id,
       username: sessionData.username || user?.username,
+      firstName: sessionData.firstName || user?.firstName || '',
       accessLevel: sessionData.accessLevel || user?.accessLevel,
       subscriberUntil: sessionData.subscriberUntil || user?.subscriberUntil || '',
       allowedPages: sessionData.allowedPages || user?.allowedPages || []

@@ -115,6 +115,8 @@ const Dashboard = () => {
     return 'Good Evening';
   };
 
+  const displayName = user?.firstName?.trim() || user?.username || 'User';
+
   const getRecentTransactions = () => {
     return transactions
       .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
@@ -229,7 +231,7 @@ const Dashboard = () => {
         <div className="welcome-section">
           <p className="dashboard-kicker">Personal Finance</p>
           <h1 className="dashboard-title">
-            {getGreeting()}, {user?.username}
+            {getGreeting()}, {displayName}
           </h1>
           <p className="dashboard-subtitle">
             A clear view of your balance, cash flow, and recent activity.

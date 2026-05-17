@@ -57,6 +57,7 @@ public class AuthController {
     response.put("token", token);
     response.put("userId", user.getId());
     response.put("username", user.getUsername());
+    response.put("firstName", user.getFirstName() == null ? "" : user.getFirstName());
     response.put("accessLevel", user.getAccessLevel().name());
     response.put("subscriberUntil", user.getSubscriberUntil() == null ? "" : user.getSubscriberUntil().toString());
     response.put("allowedPages", accessPolicyService.getAllowedPages(user.getAccessLevel()));
@@ -110,6 +111,7 @@ public class AuthController {
         response.put("message", "User registered successfully");
         response.put("userId", user.getId());
         response.put("username", user.getUsername());
+        response.put("firstName", user.getFirstName() == null ? "" : user.getFirstName());
         response.put("accessLevel", user.getAccessLevel().name());
         response.put("subscriberUntil", user.getSubscriberUntil() == null ? "" : user.getSubscriberUntil().toString());
         response.put("allowedPages", accessPolicyService.getAllowedPages(user.getAccessLevel()));
