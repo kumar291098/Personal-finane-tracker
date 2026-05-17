@@ -2,14 +2,15 @@ package com.finance.controller;
 
 import com.finance.model.AccessLevel;
 import com.finance.model.SubscriptionPayment;
+import com.finance.model.SubscriptionSettings;
 import com.finance.model.User;
 import com.finance.repository.SubscriptionPaymentRepository;
 import com.finance.repository.UserRepository;
 import com.finance.service.AccessPolicyService;
 import com.finance.service.RazorpayService;
+import com.finance.service.SubscriptionSettingsService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
 import java.util.Optional;
+import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("/api/subscription")
@@ -39,27 +41,22 @@ public class SubscriptionController {
     @Autowired
     private AccessPolicyService accessPolicyService;
 
-    @Value("${subscription.subscriber.amount-paise:9900}")
-    private int subscriberAmountPaise;
-
-    @Value("${subscription.upi.id:}")
-    private String upiId;
-
-    @Value("${subscription.upi.qr-image-url:}")
-    private String upiQrImageUrl;
+    @Autowired
+    private SubscriptionSettingsService subscriptionSettingsService;
 
     @GetMapping("/plan")
     public Map<String, Object> getPlan(HttpServletRequest request) {
         String accessLevel = (String) request.getAttribute("accessLevel");
+        SubscriptionSettings settings = subscriptionSettingsService.getSettings();
         return Map.of(
             "name", "Subscriber",
-            "amountPaise", subscriberAmountPaise,
+            "amountPaise", settings.getAmountPaise(),
             "currency", CURRENCY,
             "currentAccessLevel", accessLevel == null ? AccessLevel.FREE.name() : accessLevel,
             "paymentConfigured", razorpayService.isConfigured(),
-            "manualUpiEnabled", isManualUpiConfigured(),
-            "upiId", upiId == null ? "" : upiId,
-            "upiQrImageUrl", upiQrImageUrl == null ? "" : upiQrImageUrl
+            "manualUpiEnabled", isManualUpiConfigured(settings),
+            "upiId", settings.getUpiId() == null ? "" : settings.getUpiId(),
+            "upiQrImageUrl", settings.getUpiQrImageUrl() == null ? "" : settings.getUpiQrImageUrl()
         );
     }
 
@@ -85,8 +82,9 @@ public class SubscriptionController {
             return ResponseEntity.badRequest().body("This account already has advanced access.");
         }
 
+        SubscriptionSettings settings = subscriptionSettingsService.getSettings();
         Map order = razorpayService.createOrder(
-            subscriberAmountPaise,
+            settings.getAmountPaise(),
             CURRENCY,
             "subscriber_user_" + userId + "_" + System.currentTimeMillis()
         );
@@ -95,14 +93,14 @@ public class SubscriptionController {
         SubscriptionPayment payment = new SubscriptionPayment();
         payment.setUserId(userId);
         payment.setOrderId(orderId);
-        payment.setAmountPaise(subscriberAmountPaise);
+        payment.setAmountPaise(settings.getAmountPaise());
         payment.setCurrency(CURRENCY);
         subscriptionPaymentRepository.save(payment);
 
         return ResponseEntity.ok(Map.of(
             "orderId", orderId,
             "keyId", razorpayService.getKeyId(),
-            "amountPaise", subscriberAmountPaise,
+            "amountPaise", settings.getAmountPaise(),
             "currency", CURRENCY,
             "name", "FinanceTracker Subscriber",
             "description", "Advanced finance access"
@@ -113,7 +111,8 @@ public class SubscriptionController {
     public ResponseEntity<?> createManualUpiRequest(
             @RequestBody Map<String, String> data,
             HttpServletRequest request) {
-        if (!isManualUpiConfigured()) {
+        SubscriptionSettings settings = subscriptionSettingsService.getSettings();
+        if (!isManualUpiConfigured(settings)) {
             return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE)
                 .body("Manual UPI payment is not configured.");
         }
@@ -142,7 +141,7 @@ public class SubscriptionController {
         payment.setUserId(userId);
         payment.setOrderId("UPI_" + userId + "_" + System.currentTimeMillis());
         payment.setPaymentId(reference.trim());
-        payment.setAmountPaise(subscriberAmountPaise);
+        payment.setAmountPaise(settings.getAmountPaise());
         payment.setCurrency(CURRENCY);
         payment.setStatus("PENDING_REVIEW");
         subscriptionPaymentRepository.save(payment);
@@ -183,17 +182,20 @@ public class SubscriptionController {
         User user = userRepository.findById(userId)
             .orElseThrow(() -> new IllegalStateException("User account not found."));
         user.setAccessLevel(AccessLevel.SUBSCRIBER);
+        user.setSubscriberUntil(LocalDateTime.now().plusMonths(1));
         userRepository.save(user);
 
         return ResponseEntity.ok(Map.of(
             "success", true,
-            "message", "Subscription activated.",
+            "message", "Subscription activated for one month.",
             "accessLevel", user.getAccessLevel().name(),
-            "allowedPages", accessPolicyService.getAllowedPages(user.getAccessLevel())
+            "allowedPages", accessPolicyService.getAllowedPages(user.getAccessLevel()),
+            "subscriberUntil", user.getSubscriberUntil().toString()
         ));
     }
 
-    private boolean isManualUpiConfigured() {
-        return (upiId != null && !upiId.isBlank()) || (upiQrImageUrl != null && !upiQrImageUrl.isBlank());
+    private boolean isManualUpiConfigured(SubscriptionSettings settings) {
+        return (settings.getUpiId() != null && !settings.getUpiId().isBlank())
+            || (settings.getUpiQrImageUrl() != null && !settings.getUpiQrImageUrl().isBlank());
     }
 }

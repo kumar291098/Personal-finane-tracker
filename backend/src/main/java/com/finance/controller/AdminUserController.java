@@ -2,9 +2,11 @@ package com.finance.controller;
 
 import com.finance.model.AccessLevel;
 import com.finance.model.SubscriptionPayment;
+import com.finance.model.SubscriptionSettings;
 import com.finance.model.User;
 import com.finance.repository.SubscriptionPaymentRepository;
 import com.finance.repository.UserRepository;
+import com.finance.service.SubscriptionSettingsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +21,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
+import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("/api/admin/users")
@@ -29,6 +32,9 @@ public class AdminUserController {
 
     @Autowired
     private SubscriptionPaymentRepository subscriptionPaymentRepository;
+
+    @Autowired
+    private SubscriptionSettingsService subscriptionSettingsService;
 
     @GetMapping
     public List<Map<String, Object>> listUsers() {
@@ -62,12 +68,40 @@ public class AdminUserController {
 
         User user = userResult.get();
         user.setAccessLevel(AccessLevel.SUBSCRIBER);
+        user.setSubscriberUntil(LocalDateTime.now().plusMonths(1));
         userRepository.save(user);
 
         payment.setStatus("APPROVED");
         subscriptionPaymentRepository.save(payment);
 
         return ResponseEntity.ok(toSubscriptionRequestResponse(payment));
+    }
+
+    @GetMapping("/subscription-settings")
+    public Map<String, Object> getSubscriptionSettings() {
+        return toSubscriptionSettingsResponse(subscriptionSettingsService.getSettings());
+    }
+
+    @PatchMapping("/subscription-settings")
+    public ResponseEntity<?> updateSubscriptionSettings(@RequestBody Map<String, Object> data) {
+        Integer amountPaise;
+        try {
+            amountPaise = Integer.parseInt(String.valueOf(data.getOrDefault("amountPaise", "0")));
+        } catch (NumberFormatException error) {
+            return ResponseEntity.badRequest().body("Subscription fee must be a valid amount in paise.");
+        }
+
+        if (amountPaise <= 0) {
+            return ResponseEntity.badRequest().body("Subscription fee must be greater than zero.");
+        }
+
+        SubscriptionSettings settings = subscriptionSettingsService.updateSettings(
+            amountPaise,
+            String.valueOf(data.getOrDefault("upiId", "")),
+            String.valueOf(data.getOrDefault("upiQrImageUrl", ""))
+        );
+
+        return ResponseEntity.ok(toSubscriptionSettingsResponse(settings));
     }
 
     @PatchMapping("/subscription-requests/{paymentId}/reject")
@@ -116,6 +150,7 @@ public class AdminUserController {
             "email", user.getEmail() == null ? "" : user.getEmail(),
             "phone", user.getPhone() == null ? "" : user.getPhone(),
             "accessLevel", user.getAccessLevel().name(),
+            "subscriberUntil", user.getSubscriberUntil() == null ? "" : user.getSubscriberUntil().toString(),
             "createdAt", user.getCreatedAt() == null ? "" : user.getCreatedAt().toString(),
             "updatedAt", user.getUpdatedAt() == null ? "" : user.getUpdatedAt().toString()
         );
@@ -133,6 +168,15 @@ public class AdminUserController {
             "currency", payment.getCurrency(),
             "status", payment.getStatus(),
             "createdAt", payment.getCreatedAt() == null ? "" : payment.getCreatedAt().toString()
+        );
+    }
+
+    private Map<String, Object> toSubscriptionSettingsResponse(SubscriptionSettings settings) {
+        return Map.of(
+            "amountPaise", settings.getAmountPaise(),
+            "upiId", settings.getUpiId() == null ? "" : settings.getUpiId(),
+            "upiQrImageUrl", settings.getUpiQrImageUrl() == null ? "" : settings.getUpiQrImageUrl(),
+            "updatedAt", settings.getUpdatedAt() == null ? "" : settings.getUpdatedAt().toString()
         );
     }
 }

@@ -89,6 +89,7 @@ export const AuthProvider = ({ children }) => {
         id: data.userId,
         username: data.username,
         accessLevel: data.accessLevel || (data.username === 'demo' ? 'ADMIN' : 'FREE'),
+        subscriberUntil: data.subscriberUntil || '',
         allowedPages: data.allowedPages || []
       };
       setUser(userData);

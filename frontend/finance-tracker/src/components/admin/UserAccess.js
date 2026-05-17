@@ -5,8 +5,10 @@ import { APP_PAGES } from '../../config/pages';
 import {
   fetchAccessPolicies,
   fetchSubscriptionRequests,
+  fetchSubscriptionSettings,
   fetchUsersForAccess,
   reviewSubscriptionRequest,
+  updateSubscriptionSettings,
   updateAccessPolicy,
   updateUserAccess
 } from '../../services/adminService';
@@ -23,9 +25,15 @@ const UserAccess = () => {
   const [users, setUsers] = useState([]);
   const [policies, setPolicies] = useState([]);
   const [subscriptionRequests, setSubscriptionRequests] = useState([]);
+  const [subscriptionSettings, setSubscriptionSettings] = useState({
+    amountPaise: 9900,
+    upiId: '',
+    upiQrImageUrl: ''
+  });
   const [loading, setLoading] = useState(true);
   const [savingUserId, setSavingUserId] = useState(null);
   const [savingPolicy, setSavingPolicy] = useState('');
+  const [savingSettings, setSavingSettings] = useState(false);
   const [reviewingRequestId, setReviewingRequestId] = useState(null);
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
@@ -38,10 +46,18 @@ const UserAccess = () => {
         fetchUsersForAccess(token),
         fetchAccessPolicies(token)
       ]);
-      const requestData = await fetchSubscriptionRequests(token);
+      const [requestData, settingsData] = await Promise.all([
+        fetchSubscriptionRequests(token),
+        fetchSubscriptionSettings(token)
+      ]);
       setUsers(userData);
       setPolicies(policyData.policies || []);
       setSubscriptionRequests(requestData || []);
+      setSubscriptionSettings({
+        amountPaise: settingsData.amountPaise || 9900,
+        upiId: settingsData.upiId || '',
+        upiQrImageUrl: settingsData.upiQrImageUrl || ''
+      });
     } catch (err) {
       setError(err.message || 'Unable to load access controls.');
     } finally {
@@ -70,6 +86,26 @@ const UserAccess = () => {
       setError(err.message || 'Unable to update access.');
     } finally {
       setSavingUserId(null);
+    }
+  };
+
+  const handleSettingsSubmit = async (event) => {
+    event.preventDefault();
+    setSavingSettings(true);
+    setError('');
+    setMessage('');
+    try {
+      const updatedSettings = await updateSubscriptionSettings(token, subscriptionSettings);
+      setSubscriptionSettings({
+        amountPaise: updatedSettings.amountPaise,
+        upiId: updatedSettings.upiId || '',
+        upiQrImageUrl: updatedSettings.upiQrImageUrl || ''
+      });
+      setMessage('Subscription settings updated.');
+    } catch (err) {
+      setError(err.message || 'Unable to update subscription settings.');
+    } finally {
+      setSavingSettings(false);
     }
   };
 
@@ -146,6 +182,59 @@ const UserAccess = () => {
 
       {error && <div className="access-alert error">{error}</div>}
       {message && <div className="access-alert success">{message}</div>}
+
+      <div className="access-panel">
+        <div className="access-panel-header">
+          <div>
+            <h2>Subscription Settings</h2>
+            <span>Set the fee and QR image shown to users.</span>
+          </div>
+        </div>
+
+        <form className="subscription-settings-form" onSubmit={handleSettingsSubmit}>
+          <label>
+            <span>Fee in rupees</span>
+            <input
+              className="input"
+              type="number"
+              min="1"
+              value={Math.round((subscriptionSettings.amountPaise || 0) / 100)}
+              onChange={(event) => setSubscriptionSettings(prev => ({
+                ...prev,
+                amountPaise: Number(event.target.value || 0) * 100
+              }))}
+              required
+            />
+          </label>
+          <label>
+            <span>UPI ID</span>
+            <input
+              className="input"
+              value={subscriptionSettings.upiId}
+              onChange={(event) => setSubscriptionSettings(prev => ({ ...prev, upiId: event.target.value }))}
+              placeholder="yourupi@bank"
+            />
+          </label>
+          <label>
+            <span>QR image URL</span>
+            <input
+              className="input"
+              type="url"
+              value={subscriptionSettings.upiQrImageUrl}
+              onChange={(event) => setSubscriptionSettings(prev => ({ ...prev, upiQrImageUrl: event.target.value }))}
+              placeholder="https://example.com/upi-qr.png"
+            />
+          </label>
+          {subscriptionSettings.upiQrImageUrl && (
+            <div className="subscription-settings-preview">
+              <img src={subscriptionSettings.upiQrImageUrl} alt="Subscription QR preview" />
+            </div>
+          )}
+          <button className="btn btn-primary" type="submit" disabled={savingSettings}>
+            {savingSettings ? 'Saving...' : 'Save Subscription Settings'}
+          </button>
+        </form>
+      </div>
 
       <div className="access-panel">
         <div className="access-panel-header">
@@ -265,6 +354,7 @@ const UserAccess = () => {
                   <span className={`access-badge ${item.accessLevel.toLowerCase()}`}>
                     {item.accessLevel}
                   </span>
+                  <small>{item.subscriberUntil ? `Until ${new Date(item.subscriberUntil).toLocaleDateString('en-IN')}` : ''}</small>
                   <select
                     value={item.accessLevel}
                     disabled={savingUserId === item.id || isProtectedAdmin || isSelf}

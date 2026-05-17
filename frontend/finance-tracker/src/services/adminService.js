@@ -87,3 +87,31 @@ export const reviewSubscriptionRequest = async (token, requestId, action) => {
 
   return response.json();
 };
+
+export const fetchSubscriptionSettings = async (token) => {
+  const response = await fetch(`${API_BASE_URL}/admin/users/subscription-settings`, {
+    headers: authHeaders(token)
+  });
+
+  if (!response.ok) {
+    const message = await response.text();
+    throw new Error(message || 'Unable to load subscription settings.');
+  }
+
+  return response.json();
+};
+
+export const updateSubscriptionSettings = async (token, settings) => {
+  const response = await fetch(`${API_BASE_URL}/admin/users/subscription-settings`, {
+    method: 'PATCH',
+    headers: authHeaders(token),
+    body: JSON.stringify(settings)
+  });
+
+  if (!response.ok) {
+    const message = await response.text();
+    throw new Error(message || 'Unable to update subscription settings.');
+  }
+
+  return response.json();
+};

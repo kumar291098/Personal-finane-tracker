@@ -149,6 +149,41 @@
   opacity: 0.65;
 }
 
+.subscription-settings-form {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--spacing-md);
+  padding: var(--spacing-lg);
+}
+
+.subscription-settings-form label {
+  display: grid;
+  gap: var(--spacing-xs);
+  color: var(--gray-700);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-semibold);
+}
+
+.subscription-settings-preview {
+  width: 96px;
+  height: 96px;
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: white;
+}
+
+.subscription-settings-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.subscription-settings-form .btn {
+  align-self: end;
+  min-height: 40px;
+}
+
 .subscription-request-list {
   display: grid;
 }
@@ -189,7 +224,7 @@
 
 .access-row {
   display: grid;
-  grid-template-columns: minmax(220px, 1fr) 140px 180px;
+  grid-template-columns: minmax(220px, 1fr) 140px 160px 180px;
   align-items: center;
   gap: var(--spacing-md);
   padding: var(--spacing-md) var(--spacing-lg);
@@ -314,6 +349,10 @@
   }
 
   .access-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .subscription-settings-form {
     grid-template-columns: 1fr;
   }
 }

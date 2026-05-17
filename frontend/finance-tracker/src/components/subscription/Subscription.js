@@ -80,6 +80,7 @@ const Subscription = () => {
           await refreshAccessPolicy(token, {
             ...user,
             accessLevel: result.accessLevel,
+            subscriberUntil: result.subscriberUntil || '',
             allowedPages: result.allowedPages
           });
           setMessage(result.message || 'Subscription activated.');

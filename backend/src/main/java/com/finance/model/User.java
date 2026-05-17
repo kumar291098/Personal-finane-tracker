@@ -31,6 +31,9 @@ public class User {
     @Column(name = "access_level")
     private AccessLevel accessLevel = AccessLevel.FREE;
 
+    @Column(name = "subscriber_until")
+    private LocalDateTime subscriberUntil;
+
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
@@ -93,11 +96,27 @@ public class User {
         if ("demo".equalsIgnoreCase(username)) {
             return AccessLevel.ADMIN;
         }
+        if (accessLevel == AccessLevel.SUBSCRIBER
+                && subscriberUntil != null
+                && subscriberUntil.isBefore(LocalDateTime.now())) {
+            return AccessLevel.FREE;
+        }
         return accessLevel == null ? AccessLevel.FREE : accessLevel;
     }
 
     public void setAccessLevel(AccessLevel accessLevel) {
         this.accessLevel = accessLevel == null ? AccessLevel.FREE : accessLevel;
+        if (this.accessLevel != AccessLevel.SUBSCRIBER) {
+            this.subscriberUntil = null;
+        }
+    }
+
+    public LocalDateTime getSubscriberUntil() {
+        return subscriberUntil;
+    }
+
+    public void setSubscriberUntil(LocalDateTime subscriberUntil) {
+        this.subscriberUntil = subscriberUntil;
     }
 
     public LocalDateTime getCreatedAt() {
