@@ -30,6 +30,8 @@ const formatAmount = (amountPaise) =>
     maximumFractionDigits: 0
   }).format((amountPaise || 0) / 100);
 
+const ACTIVATION_STORAGE_KEY = 'subscriptionActivationSuccess';
+
 const Subscription = () => {
   const { token, user, refreshAccessPolicy } = useAuth();
   const [plan, setPlan] = useState(null);
@@ -38,7 +40,19 @@ const Subscription = () => {
   const [reference, setReference] = useState('');
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
-  const [activation, setActivation] = useState(null);
+  const [activation, setActivation] = useState(() => {
+    const storedActivation = sessionStorage.getItem(ACTIVATION_STORAGE_KEY);
+    if (!storedActivation) {
+      return null;
+    }
+
+    sessionStorage.removeItem(ACTIVATION_STORAGE_KEY);
+    try {
+      return JSON.parse(storedActivation);
+    } catch (error) {
+      return null;
+    }
+  });
 
   const loadPlan = useCallback(async () => {
     setLoading(true);
@@ -87,10 +101,12 @@ const Subscription = () => {
             allowedPages: result.allowedPages
           });
           setMessage(result.message || 'Subscription activated.');
-          setActivation({
+          const activationState = {
             title: 'Thank you for subscribing',
             detail: 'Your subscriber access is active for one month.'
-          });
+          };
+          sessionStorage.setItem(ACTIVATION_STORAGE_KEY, JSON.stringify(activationState));
+          setActivation(activationState);
           setPlan(prev => ({ ...prev, currentAccessLevel: result.accessLevel }));
           setPaying(false);
         },
@@ -123,10 +139,12 @@ const Subscription = () => {
           subscriberUntil: result.subscriberUntil || '',
           allowedPages: result.allowedPages || []
         });
-        setActivation({
+        const activationState = {
           title: 'Thank you for subscribing',
           detail: 'Your demo reference was verified successfully. Subscriber access is active for one month.'
-        });
+        };
+        sessionStorage.setItem(ACTIVATION_STORAGE_KEY, JSON.stringify(activationState));
+        setActivation(activationState);
         setPlan(prev => ({ ...prev, currentAccessLevel: result.accessLevel }));
       }
     } catch (err) {
@@ -148,7 +166,7 @@ const Subscription = () => {
 
       {error && <div className="subscription-alert error">{error}</div>}
       {message && <div className="subscription-alert success">{message}</div>}
-      {activation && (
+      {(activation || message?.toLowerCase().includes('activated')) && (
         <section className="subscription-thankyou">
           <span className="subscription-thankyou-mark">
             <CheckCircle2 size={52} />
@@ -157,8 +175,8 @@ const Subscription = () => {
             <Crown size={16} />
             Subscriber activated
           </span>
-          <h2>{activation.title}</h2>
-          <p>{activation.detail}</p>
+          <h2>{activation?.title || 'Thank you for subscribing'}</h2>
+          <p>{activation?.detail || 'Your subscriber access is active for one month.'}</p>
           <div className="subscription-thankyou-row">
             <span><BadgeCheck size={18} /> Verified reference</span>
             <span><Sparkles size={18} /> Advanced access unlocked</span>

@@ -43,6 +43,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/actuator/**").hasRole("ADMIN") // Admin-only metrics
                 .requestMatchers("/api/admin/**").hasRole("ADMIN") // Admin-only access management
                 .requestMatchers(
+                    "/error",
                     "/api/auth/**",
                     "/api/auth/forgot-password",
                     "/api/auth/forgot-password/request-otp",
