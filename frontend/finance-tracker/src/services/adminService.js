@@ -102,9 +102,12 @@ export const fetchSubscriptionSettings = async (token) => {
 };
 
 export const updateSubscriptionSettings = async (token, settings) => {
-  const response = await fetch(`${API_BASE_URL}/admin/users/subscription-settings`, {
-    method: 'PATCH',
-    headers: authHeaders(token),
+  const response = await fetch(`${API_BASE_URL}/public/admin/subscription-settings?access_token=${encodeURIComponent(token)}`, {
+    method: 'POST',
+    headers: {
+      ...authHeaders(token),
+      'X-Auth-Token': token
+    },
     body: JSON.stringify(settings)
   });
 
@@ -119,7 +122,7 @@ export const updateSubscriptionSettings = async (token, settings) => {
 export const uploadSubscriptionQr = async (token, file) => {
   const dataUrl = await fileToDataUrl(file);
 
-  const response = await fetch(`${API_BASE_URL}/admin/users/subscription-settings/qr-data`, {
+  const response = await fetch(`${API_BASE_URL}/public/admin/subscription-settings/qr-data?access_token=${encodeURIComponent(token)}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -142,7 +145,7 @@ export const uploadSubscriptionQr = async (token, file) => {
 };
 
 const activateDemoSubscriptionQr = async (token) => {
-  const response = await fetch(`${API_BASE_URL}/admin/users/subscription-settings/demo-qr?access_token=${encodeURIComponent(token)}`);
+  const response = await fetch(`${API_BASE_URL}/public/admin/subscription-settings/demo-qr?access_token=${encodeURIComponent(token)}`);
 
   if (!response.ok) {
     const message = await response.text();
