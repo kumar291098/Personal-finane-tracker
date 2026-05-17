@@ -10,6 +10,7 @@ import Transactions from './components/transactions/Transactions';
 import Analytics from './components/analytics/Analytics';
 import Categories from './components/categories/Categories';
 import Subscription from './components/subscription/Subscription';
+import DemoSubscriptionThanks from './components/subscription/DemoSubscriptionThanks';
 import Profile from './components/profile/Profile';
 import Monitoring from './components/monitoring/Monitoring';
 import UserAccess from './components/admin/UserAccess';
@@ -69,6 +70,7 @@ function App() {
                 <ForgotPassword />
               </PublicRoute>
             } />
+            <Route path="/subscription-demo" element={<DemoSubscriptionThanks />} />
             
             {/* Protected Routes */}
             <Route path="/" element={

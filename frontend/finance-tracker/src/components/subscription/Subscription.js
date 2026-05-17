@@ -109,6 +109,15 @@ const Subscription = () => {
       const result = await submitManualUpiPayment(token, reference);
       setReference('');
       setMessage(result.message || 'Payment reference submitted for review.');
+      if (result.accessLevel === 'SUBSCRIBER') {
+        await refreshAccessPolicy(token, {
+          ...user,
+          accessLevel: result.accessLevel,
+          subscriberUntil: result.subscriberUntil || '',
+          allowedPages: result.allowedPages || []
+        });
+        setPlan(prev => ({ ...prev, currentAccessLevel: result.accessLevel }));
+      }
     } catch (err) {
       setError(err.message || 'Unable to submit payment reference.');
     } finally {

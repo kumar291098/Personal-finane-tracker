@@ -61,3 +61,15 @@ export const submitManualUpiPayment = async (token, reference) => {
 
   return response.json();
 };
+
+export const fetchDemoSubscriptionReference = async () => {
+  const apiRoot = API_BASE_URL.replace(/\/api$/, '');
+  const response = await fetch(`${apiRoot}/api/public/subscription/demo-reference`);
+
+  if (!response.ok) {
+    const message = await response.text();
+    throw new Error(message || 'Unable to generate demo reference.');
+  }
+
+  return response.json();
+};

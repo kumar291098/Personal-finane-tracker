@@ -7,6 +7,7 @@ import com.finance.model.User;
 import com.finance.repository.SubscriptionPaymentRepository;
 import com.finance.repository.UserRepository;
 import com.finance.service.AccessPolicyService;
+import com.finance.service.DemoSubscriptionReferenceService;
 import com.finance.service.RazorpayService;
 import com.finance.service.SubscriptionSettingsService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -43,6 +44,9 @@ public class SubscriptionController {
 
     @Autowired
     private SubscriptionSettingsService subscriptionSettingsService;
+
+    @Autowired
+    private DemoSubscriptionReferenceService demoSubscriptionReferenceService;
 
     @GetMapping("/plan")
     public Map<String, Object> getPlan(HttpServletRequest request) {
@@ -135,6 +139,29 @@ public class SubscriptionController {
         String reference = data.get("reference");
         if (reference == null || reference.trim().length() < 6) {
             return ResponseEntity.badRequest().body("Enter the UPI transaction ID or UTR after payment.");
+        }
+
+        if (demoSubscriptionReferenceService.consumeReference(reference)) {
+            SubscriptionPayment payment = new SubscriptionPayment();
+            payment.setUserId(userId);
+            payment.setOrderId("DEMO_" + userId + "_" + System.currentTimeMillis());
+            payment.setPaymentId(reference.trim().toUpperCase());
+            payment.setAmountPaise(settings.getAmountPaise());
+            payment.setCurrency(CURRENCY);
+            payment.setStatus("DEMO_APPROVED");
+            subscriptionPaymentRepository.save(payment);
+
+            user.setAccessLevel(AccessLevel.SUBSCRIBER);
+            user.setSubscriberUntil(LocalDateTime.now().plusMonths(1));
+            userRepository.save(user);
+
+            return ResponseEntity.ok(Map.of(
+                "success", true,
+                "message", "Demo subscription activated for one month.",
+                "accessLevel", user.getAccessLevel().name(),
+                "allowedPages", accessPolicyService.getAllowedPages(user.getAccessLevel()),
+                "subscriberUntil", user.getSubscriberUntil().toString()
+            ));
         }
 
         SubscriptionPayment payment = new SubscriptionPayment();
