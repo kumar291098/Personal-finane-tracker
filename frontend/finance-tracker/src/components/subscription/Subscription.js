@@ -7,6 +7,7 @@ import {
   submitManualUpiPayment,
   verifySubscriptionPayment
 } from '../../services/subscriptionService';
+import { resolveMediaUrl } from '../../utils/mediaUrl';
 import './Subscription.css';
 
 const loadRazorpayCheckout = () => new Promise((resolve, reject) => {
@@ -154,7 +155,7 @@ const Subscription = () => {
               <form className="upi-payment-box" onSubmit={submitManualPayment}>
                 <div className="upi-qr-wrap">
                   {plan.upiQrImageUrl ? (
-                    <img src={plan.upiQrImageUrl} alt="UPI payment QR code" />
+                    <img src={resolveMediaUrl(plan.upiQrImageUrl)} alt="UPI payment QR code" />
                   ) : (
                     <div className="upi-qr-placeholder">QR</div>
                   )}

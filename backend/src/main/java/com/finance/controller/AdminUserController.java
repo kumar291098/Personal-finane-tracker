@@ -15,7 +15,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import java.io.IOException;
+import java.util.Base64;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
@@ -104,6 +109,33 @@ public class AdminUserController {
         return ResponseEntity.ok(toSubscriptionSettingsResponse(settings));
     }
 
+    @PostMapping("/subscription-settings/qr")
+    public ResponseEntity<?> uploadSubscriptionQr(@RequestParam("file") MultipartFile file) {
+        if (file.isEmpty()) {
+            return ResponseEntity.badRequest().body("Choose a QR image to upload.");
+        }
+
+        String contentType = file.getContentType();
+        if (contentType == null || !List.of("image/png", "image/jpeg", "image/webp").contains(contentType)) {
+            return ResponseEntity.badRequest().body("Upload a PNG, JPG, or WEBP image.");
+        }
+
+        try {
+            String dataUrl = "data:" + contentType + ";base64,"
+                + Base64.getEncoder().encodeToString(file.getBytes());
+            SubscriptionSettings current = subscriptionSettingsService.getSettings();
+            SubscriptionSettings updated = subscriptionSettingsService.updateSettings(
+                current.getAmountPaise(),
+                current.getUpiId(),
+                dataUrl
+            );
+
+            return ResponseEntity.ok(toSubscriptionSettingsResponse(updated));
+        } catch (IOException error) {
+            return ResponseEntity.internalServerError().body("Unable to save QR image.");
+        }
+    }
+
     @PatchMapping("/subscription-requests/{paymentId}/reject")
     public ResponseEntity<?> rejectSubscriptionRequest(@PathVariable Long paymentId) {
         return subscriptionPaymentRepository.findById(paymentId)
@@ -179,4 +211,5 @@ public class AdminUserController {
             "updatedAt", settings.getUpdatedAt() == null ? "" : settings.getUpdatedAt().toString()
         );
     }
+
 }

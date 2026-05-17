@@ -115,3 +115,23 @@ export const updateSubscriptionSettings = async (token, settings) => {
 
   return response.json();
 };
+
+export const uploadSubscriptionQr = async (token, file) => {
+  const formData = new FormData();
+  formData.append('file', file);
+
+  const response = await fetch(`${API_BASE_URL}/admin/users/subscription-settings/qr`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${token}`
+    },
+    body: formData
+  });
+
+  if (!response.ok) {
+    const message = await response.text();
+    throw new Error(message || 'Unable to upload QR image.');
+  }
+
+  return response.json();
+};

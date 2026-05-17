@@ -9,9 +9,11 @@ import {
   fetchUsersForAccess,
   reviewSubscriptionRequest,
   updateSubscriptionSettings,
+  uploadSubscriptionQr,
   updateAccessPolicy,
   updateUserAccess
 } from '../../services/adminService';
+import { resolveMediaUrl } from '../../utils/mediaUrl';
 import './UserAccess.css';
 
 const ACCESS_LEVELS = [
@@ -106,6 +108,29 @@ const UserAccess = () => {
       setError(err.message || 'Unable to update subscription settings.');
     } finally {
       setSavingSettings(false);
+    }
+  };
+
+  const handleQrUpload = async (event) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    setSavingSettings(true);
+    setError('');
+    setMessage('');
+    try {
+      const updatedSettings = await uploadSubscriptionQr(token, file);
+      setSubscriptionSettings({
+        amountPaise: updatedSettings.amountPaise,
+        upiId: updatedSettings.upiId || '',
+        upiQrImageUrl: updatedSettings.upiQrImageUrl || ''
+      });
+      setMessage('QR image uploaded.');
+    } catch (err) {
+      setError(err.message || 'Unable to upload QR image.');
+    } finally {
+      setSavingSettings(false);
+      event.target.value = '';
     }
   };
 
@@ -225,9 +250,19 @@ const UserAccess = () => {
               placeholder="https://example.com/upi-qr.png"
             />
           </label>
+          <label>
+            <span>Upload QR image</span>
+            <input
+              className="input"
+              type="file"
+              accept="image/png,image/jpeg,image/webp"
+              onChange={handleQrUpload}
+              disabled={savingSettings}
+            />
+          </label>
           {subscriptionSettings.upiQrImageUrl && (
             <div className="subscription-settings-preview">
-              <img src={subscriptionSettings.upiQrImageUrl} alt="Subscription QR preview" />
+              <img src={resolveMediaUrl(subscriptionSettings.upiQrImageUrl)} alt="Subscription QR preview" />
             </div>
           )}
           <button className="btn btn-primary" type="submit" disabled={savingSettings}>

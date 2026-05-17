@@ -38,6 +38,7 @@ public class SecurityConfig {
                 .authenticationEntryPoint(jwtAuthenticationEntryPoint)) // Custom authentication entry point
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // Allow browser CORS preflight requests
+                .requestMatchers("/api/public/**").permitAll() // Public assets such as uploaded QR image
                 .requestMatchers("/api/actuator/health", "/api/actuator/health/**", "/api/actuator/info").permitAll() // Public health checks
                 .requestMatchers("/api/actuator/**").hasRole("ADMIN") // Admin-only metrics
                 .requestMatchers("/api/admin/**").hasRole("ADMIN") // Admin-only access management

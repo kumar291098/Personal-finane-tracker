@@ -20,7 +20,7 @@ public class SubscriptionSettings {
 
     private String upiId;
 
-    @Column(length = 1000)
+    @Column(columnDefinition = "TEXT")
     private String upiQrImageUrl;
 
     @UpdateTimestamp
