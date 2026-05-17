@@ -60,3 +60,30 @@ export const updateAccessPolicy = async (token, accessLevel, allowedPages) => {
 
   return response.json();
 };
+
+export const fetchSubscriptionRequests = async (token) => {
+  const response = await fetch(`${API_BASE_URL}/admin/users/subscription-requests`, {
+    headers: authHeaders(token)
+  });
+
+  if (!response.ok) {
+    const message = await response.text();
+    throw new Error(message || 'Unable to load subscription requests.');
+  }
+
+  return response.json();
+};
+
+export const reviewSubscriptionRequest = async (token, requestId, action) => {
+  const response = await fetch(`${API_BASE_URL}/admin/users/subscription-requests/${requestId}/${action}`, {
+    method: 'PATCH',
+    headers: authHeaders(token)
+  });
+
+  if (!response.ok) {
+    const message = await response.text();
+    throw new Error(message || 'Unable to review subscription request.');
+  }
+
+  return response.json();
+};

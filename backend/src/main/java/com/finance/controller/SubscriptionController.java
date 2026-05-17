@@ -42,6 +42,12 @@ public class SubscriptionController {
     @Value("${subscription.subscriber.amount-paise:9900}")
     private int subscriberAmountPaise;
 
+    @Value("${subscription.upi.id:}")
+    private String upiId;
+
+    @Value("${subscription.upi.qr-image-url:}")
+    private String upiQrImageUrl;
+
     @GetMapping("/plan")
     public Map<String, Object> getPlan(HttpServletRequest request) {
         String accessLevel = (String) request.getAttribute("accessLevel");
@@ -50,7 +56,10 @@ public class SubscriptionController {
             "amountPaise", subscriberAmountPaise,
             "currency", CURRENCY,
             "currentAccessLevel", accessLevel == null ? AccessLevel.FREE.name() : accessLevel,
-            "paymentConfigured", razorpayService.isConfigured()
+            "paymentConfigured", razorpayService.isConfigured(),
+            "manualUpiEnabled", isManualUpiConfigured(),
+            "upiId", upiId == null ? "" : upiId,
+            "upiQrImageUrl", upiQrImageUrl == null ? "" : upiQrImageUrl
         );
     }
 
@@ -100,6 +109,50 @@ public class SubscriptionController {
         ));
     }
 
+    @PostMapping("/manual-requests")
+    public ResponseEntity<?> createManualUpiRequest(
+            @RequestBody Map<String, String> data,
+            HttpServletRequest request) {
+        if (!isManualUpiConfigured()) {
+            return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE)
+                .body("Manual UPI payment is not configured.");
+        }
+
+        Long userId = (Long) request.getAttribute("userId");
+        if (userId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Login required.");
+        }
+
+        Optional<User> userResult = userRepository.findById(userId);
+        if (userResult.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User account not found.");
+        }
+
+        User user = userResult.get();
+        if (user.getAccessLevel() == AccessLevel.ADMIN || user.getAccessLevel() == AccessLevel.SUBSCRIBER) {
+            return ResponseEntity.badRequest().body("This account already has advanced access.");
+        }
+
+        String reference = data.get("reference");
+        if (reference == null || reference.trim().length() < 6) {
+            return ResponseEntity.badRequest().body("Enter the UPI transaction ID or UTR after payment.");
+        }
+
+        SubscriptionPayment payment = new SubscriptionPayment();
+        payment.setUserId(userId);
+        payment.setOrderId("UPI_" + userId + "_" + System.currentTimeMillis());
+        payment.setPaymentId(reference.trim());
+        payment.setAmountPaise(subscriberAmountPaise);
+        payment.setCurrency(CURRENCY);
+        payment.setStatus("PENDING_REVIEW");
+        subscriptionPaymentRepository.save(payment);
+
+        return ResponseEntity.ok(Map.of(
+            "success", true,
+            "message", "Payment reference submitted. Admin will review and activate subscriber access."
+        ));
+    }
+
     @PostMapping("/verify")
     public ResponseEntity<?> verifyPayment(
             @RequestBody Map<String, String> data,
@@ -138,5 +191,9 @@ public class SubscriptionController {
             "accessLevel", user.getAccessLevel().name(),
             "allowedPages", accessPolicyService.getAllowedPages(user.getAccessLevel())
         ));
+    }
+
+    private boolean isManualUpiConfigured() {
+        return (upiId != null && !upiId.isBlank()) || (upiQrImageUrl != null && !upiQrImageUrl.isBlank());
     }
 }

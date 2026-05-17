@@ -149,6 +149,40 @@
   opacity: 0.65;
 }
 
+.subscription-request-list {
+  display: grid;
+}
+
+.subscription-request-row {
+  display: grid;
+  grid-template-columns: minmax(220px, 1fr) 120px auto;
+  align-items: center;
+  gap: var(--spacing-md);
+  padding: var(--spacing-md) var(--spacing-lg);
+  border-bottom: 1px solid var(--gray-100);
+}
+
+.subscription-request-row:last-child {
+  border-bottom: none;
+}
+
+.subscription-request-row strong,
+.subscription-request-row small {
+  display: block;
+  overflow-wrap: anywhere;
+}
+
+.subscription-request-row small {
+  color: var(--gray-500);
+  font-size: var(--font-size-sm);
+}
+
+.subscription-request-actions {
+  display: flex;
+  gap: var(--spacing-sm);
+  justify-content: flex-end;
+}
+
 .access-table {
   display: grid;
 }
@@ -264,6 +298,15 @@
   .access-header,
   .access-row {
     grid-template-columns: 1fr;
+  }
+
+  .subscription-request-row {
+    grid-template-columns: 1fr;
+    align-items: stretch;
+  }
+
+  .subscription-request-actions {
+    justify-content: stretch;
   }
 
   .access-header {

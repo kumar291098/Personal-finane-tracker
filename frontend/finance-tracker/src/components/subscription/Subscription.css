@@ -104,17 +104,89 @@
   font-weight: var(--font-semibold);
 }
 
+.upi-payment-box {
+  display: grid;
+  grid-template-columns: 180px minmax(0, 1fr);
+  gap: var(--spacing-lg);
+  padding: var(--spacing-lg);
+  border: 1px solid #99f6e4;
+  border-radius: var(--radius-lg);
+  background: #f0fdfa;
+}
+
+.upi-qr-wrap {
+  width: 180px;
+  height: 180px;
+  border: 1px solid #5eead4;
+  border-radius: var(--radius-lg);
+  background: white;
+  overflow: hidden;
+}
+
+.upi-qr-wrap img,
+.upi-qr-placeholder {
+  width: 100%;
+  height: 100%;
+}
+
+.upi-qr-wrap img {
+  object-fit: contain;
+}
+
+.upi-qr-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #0f766e;
+  font-weight: var(--font-bold);
+  font-size: var(--font-size-3xl);
+}
+
+.upi-payment-form {
+  display: grid;
+  gap: var(--spacing-md);
+}
+
+.upi-payment-form h3,
+.upi-payment-form p {
+  margin: 0;
+}
+
+.upi-payment-form h3 {
+  color: var(--gray-900);
+}
+
+.upi-payment-form p {
+  color: var(--gray-600);
+}
+
 @media (max-width: 640px) {
   .subscription-plan {
     flex-direction: column;
   }
 
-  .subscription-pay-btn {
+  .subscription-pay-btn,
+  .upi-payment-form .btn {
     width: 100%;
+  }
+
+  .upi-payment-box {
+    grid-template-columns: 1fr;
+  }
+
+  .upi-qr-wrap {
+    width: min(100%, 240px);
+    height: auto;
+    aspect-ratio: 1;
   }
 }
 
 :root[data-theme='dark'] .subscription-card {
   background: #111827;
   border-color: #334155;
+}
+
+:root[data-theme='dark'] .upi-payment-box {
+  background: #0f172a;
+  border-color: #0f766e;
 }

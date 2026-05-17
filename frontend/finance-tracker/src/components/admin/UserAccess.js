@@ -4,7 +4,9 @@ import { useAuth } from '../../context/AuthContext';
 import { APP_PAGES } from '../../config/pages';
 import {
   fetchAccessPolicies,
+  fetchSubscriptionRequests,
   fetchUsersForAccess,
+  reviewSubscriptionRequest,
   updateAccessPolicy,
   updateUserAccess
 } from '../../services/adminService';
@@ -20,9 +22,11 @@ const UserAccess = () => {
   const { token, user } = useAuth();
   const [users, setUsers] = useState([]);
   const [policies, setPolicies] = useState([]);
+  const [subscriptionRequests, setSubscriptionRequests] = useState([]);
   const [loading, setLoading] = useState(true);
   const [savingUserId, setSavingUserId] = useState(null);
   const [savingPolicy, setSavingPolicy] = useState('');
+  const [reviewingRequestId, setReviewingRequestId] = useState(null);
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
 
@@ -34,8 +38,10 @@ const UserAccess = () => {
         fetchUsersForAccess(token),
         fetchAccessPolicies(token)
       ]);
+      const requestData = await fetchSubscriptionRequests(token);
       setUsers(userData);
       setPolicies(policyData.policies || []);
+      setSubscriptionRequests(requestData || []);
     } catch (err) {
       setError(err.message || 'Unable to load access controls.');
     } finally {
@@ -64,6 +70,24 @@ const UserAccess = () => {
       setError(err.message || 'Unable to update access.');
     } finally {
       setSavingUserId(null);
+    }
+  };
+
+  const handleReviewRequest = async (requestId, action) => {
+    setReviewingRequestId(requestId);
+    setError('');
+    setMessage('');
+    try {
+      await reviewSubscriptionRequest(token, requestId, action);
+      setSubscriptionRequests(prev => prev.filter(item => item.id !== requestId));
+      setMessage(action === 'approve' ? 'Subscription approved.' : 'Subscription request rejected.');
+      if (action === 'approve') {
+        setUsers(await fetchUsersForAccess(token));
+      }
+    } catch (err) {
+      setError(err.message || 'Unable to review subscription request.');
+    } finally {
+      setReviewingRequestId(null);
     }
   };
 
@@ -161,6 +185,55 @@ const UserAccess = () => {
                   </div>
                 </div>
               ))}
+          </div>
+        )}
+      </div>
+
+      <div className="access-panel">
+        <div className="access-panel-header">
+          <div>
+            <h2>UPI Subscription Requests</h2>
+            <span>Approve only after matching UTR/reference with your bank or UPI app.</span>
+          </div>
+          <span>{subscriptionRequests.length} pending</span>
+        </div>
+
+        {loading ? (
+          <div className="access-empty">Loading requests...</div>
+        ) : subscriptionRequests.length === 0 ? (
+          <div className="access-empty">No pending UPI subscription requests.</div>
+        ) : (
+          <div className="subscription-request-list">
+            {subscriptionRequests.map(item => (
+              <div className="subscription-request-row" key={item.id}>
+                <div>
+                  <strong>{item.username}</strong>
+                  <small>{item.email || 'No email'} | UTR: {item.reference}</small>
+                </div>
+                <span>{new Intl.NumberFormat('en-IN', {
+                  style: 'currency',
+                  currency: 'INR'
+                }).format(item.amountPaise / 100)}</span>
+                <div className="subscription-request-actions">
+                  <button
+                    type="button"
+                    className="btn btn-success btn-sm"
+                    disabled={reviewingRequestId === item.id}
+                    onClick={() => handleReviewRequest(item.id, 'approve')}
+                  >
+                    Approve
+                  </button>
+                  <button
+                    type="button"
+                    className="btn btn-error btn-sm"
+                    disabled={reviewingRequestId === item.id}
+                    onClick={() => handleReviewRequest(item.id, 'reject')}
+                  >
+                    Reject
+                  </button>
+                </div>
+              </div>
+            ))}
           </div>
         )}
       </div>

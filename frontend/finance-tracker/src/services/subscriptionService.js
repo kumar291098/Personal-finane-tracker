@@ -46,3 +46,18 @@ export const verifySubscriptionPayment = async (token, paymentResponse) => {
 
   return response.json();
 };
+
+export const submitManualUpiPayment = async (token, reference) => {
+  const response = await fetch(`${API_BASE_URL}/subscription/manual-requests`, {
+    method: 'POST',
+    headers: authHeaders(token),
+    body: JSON.stringify({ reference })
+  });
+
+  if (!response.ok) {
+    const message = await response.text();
+    throw new Error(message || 'Unable to submit payment reference.');
+  }
+
+  return response.json();
+};

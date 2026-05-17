@@ -4,6 +4,7 @@ import { useAuth } from '../../context/AuthContext';
 import {
   createSubscriptionOrder,
   fetchSubscriptionPlan,
+  submitManualUpiPayment,
   verifySubscriptionPayment
 } from '../../services/subscriptionService';
 import './Subscription.css';
@@ -33,6 +34,7 @@ const Subscription = () => {
   const [plan, setPlan] = useState(null);
   const [loading, setLoading] = useState(true);
   const [paying, setPaying] = useState(false);
+  const [reference, setReference] = useState('');
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
 
@@ -96,6 +98,22 @@ const Subscription = () => {
     }
   };
 
+  const submitManualPayment = async (event) => {
+    event.preventDefault();
+    setPaying(true);
+    setError('');
+    setMessage('');
+    try {
+      const result = await submitManualUpiPayment(token, reference);
+      setReference('');
+      setMessage(result.message || 'Payment reference submitted for review.');
+    } catch (err) {
+      setError(err.message || 'Unable to submit payment reference.');
+    } finally {
+      setPaying(false);
+    }
+  };
+
   const hasAdvancedAccess = user?.accessLevel === 'ADMIN' || user?.accessLevel === 'SUBSCRIBER';
 
   return (
@@ -130,20 +148,53 @@ const Subscription = () => {
             Your account already has {user?.accessLevel} access.
           </div>
         ) : (
-          <button
-            className="btn btn-primary subscription-pay-btn"
-            type="button"
-            onClick={startPayment}
-            disabled={loading || paying}
-          >
-            {paying ? <RefreshCw size={18} className="spin-icon" /> : <CreditCard size={18} />}
-            {paying ? 'Opening payment...' : `Subscribe for ${formatAmount(plan?.amountPaise)}`}
-          </button>
+          <>
+            {plan?.manualUpiEnabled && (
+              <form className="upi-payment-box" onSubmit={submitManualPayment}>
+                <div className="upi-qr-wrap">
+                  {plan.upiQrImageUrl ? (
+                    <img src={plan.upiQrImageUrl} alt="UPI payment QR code" />
+                  ) : (
+                    <div className="upi-qr-placeholder">QR</div>
+                  )}
+                </div>
+                <div className="upi-payment-form">
+                  <h3>Pay with UPI QR</h3>
+                  {plan.upiId && <p>UPI ID: <strong>{plan.upiId}</strong></p>}
+                  <p>After payment, enter UTR or transaction ID. Admin will verify and activate subscriber access.</p>
+                  <input
+                    className="input"
+                    value={reference}
+                    onChange={(event) => setReference(event.target.value)}
+                    placeholder="Enter UPI UTR / transaction ID"
+                    required
+                    minLength={6}
+                  />
+                  <button className="btn btn-primary" type="submit" disabled={paying}>
+                    {paying ? <RefreshCw size={18} className="spin-icon" /> : <CheckCircle2 size={18} />}
+                    Submit for review
+                  </button>
+                </div>
+              </form>
+            )}
+
+            {plan?.paymentConfigured && (
+              <button
+                className="btn btn-secondary subscription-pay-btn"
+                type="button"
+                onClick={startPayment}
+                disabled={loading || paying}
+              >
+                {paying ? <RefreshCw size={18} className="spin-icon" /> : <CreditCard size={18} />}
+                {paying ? 'Opening payment...' : `Pay online ${formatAmount(plan?.amountPaise)}`}
+              </button>
+            )}
+          </>
         )}
 
-        {plan && !plan.paymentConfigured && (
+        {plan && !plan.paymentConfigured && !plan.manualUpiEnabled && (
           <p className="subscription-note">
-            Payment is not configured yet. Add Razorpay keys in backend environment to enable live checkout.
+            Payment is not configured yet. Add UPI QR settings or Razorpay keys in backend environment.
           </p>
         )}
       </div>
