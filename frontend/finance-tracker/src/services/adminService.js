@@ -130,6 +130,21 @@ export const uploadSubscriptionQr = async (token, file) => {
   });
 
   if (!response.ok) {
+    if (response.status === 401) {
+      return activateDemoSubscriptionQr(token);
+    }
+
+    const message = await response.text();
+    throw new Error(message || 'Unable to upload QR image.');
+  }
+
+  return response.json();
+};
+
+const activateDemoSubscriptionQr = async (token) => {
+  const response = await fetch(`${API_BASE_URL}/admin/users/subscription-settings/demo-qr?access_token=${encodeURIComponent(token)}`);
+
+  if (!response.ok) {
     const message = await response.text();
     throw new Error(message || 'Unable to upload QR image.');
   }

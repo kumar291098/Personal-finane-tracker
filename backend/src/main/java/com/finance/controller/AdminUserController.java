@@ -87,6 +87,18 @@ public class AdminUserController {
         return toSubscriptionSettingsResponse(subscriptionSettingsService.getSettings());
     }
 
+    @GetMapping("/subscription-settings/demo-qr")
+    public Map<String, Object> useDemoSubscriptionQr() {
+        SubscriptionSettings current = subscriptionSettingsService.getSettings();
+        SubscriptionSettings updated = subscriptionSettingsService.updateSettings(
+            current.getAmountPaise(),
+            current.getUpiId(),
+            "https://personal-finane-tracker-np61.vercel.app/demo-subscription-qr.png"
+        );
+
+        return toSubscriptionSettingsResponse(updated);
+    }
+
     @PatchMapping("/subscription-settings")
     public ResponseEntity<?> updateSubscriptionSettings(@RequestBody Map<String, Object> data) {
         Integer amountPaise;
