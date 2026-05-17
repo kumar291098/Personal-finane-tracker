@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { CheckCircle2, Crown, CreditCard, RefreshCw } from 'lucide-react';
+import { BadgeCheck, CheckCircle2, Crown, CreditCard, RefreshCw, Sparkles } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import {
   createSubscriptionOrder,
@@ -38,6 +38,7 @@ const Subscription = () => {
   const [reference, setReference] = useState('');
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
+  const [activation, setActivation] = useState(null);
 
   const loadPlan = useCallback(async () => {
     setLoading(true);
@@ -59,6 +60,7 @@ const Subscription = () => {
     setPaying(true);
     setError('');
     setMessage('');
+    setActivation(null);
     try {
       await loadRazorpayCheckout();
       const order = await createSubscriptionOrder(token);
@@ -85,6 +87,10 @@ const Subscription = () => {
             allowedPages: result.allowedPages
           });
           setMessage(result.message || 'Subscription activated.');
+          setActivation({
+            title: 'Thank you for subscribing',
+            detail: 'Your subscriber access is active for one month.'
+          });
           setPlan(prev => ({ ...prev, currentAccessLevel: result.accessLevel }));
           setPaying(false);
         },
@@ -105,6 +111,7 @@ const Subscription = () => {
     setPaying(true);
     setError('');
     setMessage('');
+    setActivation(null);
     try {
       const result = await submitManualUpiPayment(token, reference);
       setReference('');
@@ -115,6 +122,10 @@ const Subscription = () => {
           accessLevel: result.accessLevel,
           subscriberUntil: result.subscriberUntil || '',
           allowedPages: result.allowedPages || []
+        });
+        setActivation({
+          title: 'Thank you for subscribing',
+          detail: 'Your demo reference was verified successfully. Subscriber access is active for one month.'
         });
         setPlan(prev => ({ ...prev, currentAccessLevel: result.accessLevel }));
       }
@@ -137,6 +148,23 @@ const Subscription = () => {
 
       {error && <div className="subscription-alert error">{error}</div>}
       {message && <div className="subscription-alert success">{message}</div>}
+      {activation && (
+        <section className="subscription-thankyou">
+          <span className="subscription-thankyou-mark">
+            <CheckCircle2 size={52} />
+          </span>
+          <span className="subscription-thankyou-badge">
+            <Crown size={16} />
+            Subscriber activated
+          </span>
+          <h2>{activation.title}</h2>
+          <p>{activation.detail}</p>
+          <div className="subscription-thankyou-row">
+            <span><BadgeCheck size={18} /> Verified reference</span>
+            <span><Sparkles size={18} /> Advanced access unlocked</span>
+          </div>
+        </section>
+      )}
 
       <div className="subscription-card">
         <div className="subscription-plan">
