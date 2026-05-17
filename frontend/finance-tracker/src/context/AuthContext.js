@@ -136,6 +136,26 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem('user');
   };
 
+  const updateSession = (sessionData) => {
+    const nextUser = {
+      ...(user || {}),
+      id: sessionData.id || user?.id,
+      username: sessionData.username || user?.username,
+      accessLevel: sessionData.accessLevel || user?.accessLevel,
+      subscriberUntil: sessionData.subscriberUntil || user?.subscriberUntil || '',
+      allowedPages: sessionData.allowedPages || user?.allowedPages || []
+    };
+
+    setUser(nextUser);
+    setAllowedPages(nextUser.allowedPages);
+    localStorage.setItem('user', JSON.stringify(nextUser));
+
+    if (sessionData.token) {
+      setToken(sessionData.token);
+      localStorage.setItem('token', sessionData.token);
+    }
+  };
+
   const isAdmin = user?.accessLevel === 'ADMIN' || user?.username === 'demo';
   const canAccessPage = (pageKey) => {
     if (isAdmin) return true;
@@ -149,6 +169,7 @@ export const AuthProvider = ({ children }) => {
     login,
     register,
     logout,
+    updateSession,
     refreshAccessPolicy,
     canAccessPage,
     isAdmin,

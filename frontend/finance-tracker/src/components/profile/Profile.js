@@ -1,6 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { AlertTriangle, Lock, Settings, ShieldCheck, User } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import {
+  fetchProfile,
+  requestProfileUpdateOtp,
+  updateProfile,
+  verifyProfileUpdateOtp
+} from '../../services/profileService';
 import './Profile.css';
 
 const defaultPreferences = {
@@ -18,23 +24,15 @@ const defaultPreferences = {
 };
 
 const Profile = () => {
-  const { user, logout } = useAuth();
+  const { user, token, logout, updateSession } = useAuth();
   const [activeTab, setActiveTab] = useState('profile');
   const [message, setMessage] = useState('');
-  const [profileData, setProfileData] = useState(() => {
-    const savedProfile = readStorage('financeProfile', {});
-    return {
-      username: user?.username || '',
-      email: '',
-      firstName: '',
-      lastName: '',
-      phone: '',
-      dateOfBirth: '',
-      currency: 'INR',
-      timezone: 'Asia/Kolkata',
-      ...savedProfile
-    };
-  });
+  const [error, setError] = useState('');
+  const [savingProfile, setSavingProfile] = useState(false);
+  const [otpRequired, setOtpRequired] = useState(false);
+  const [otp, setOtp] = useState('');
+  const [originalProfile, setOriginalProfile] = useState(null);
+  const [profileData, setProfileData] = useState(defaultProfile(user));
   const [passwordData, setPasswordData] = useState({
     currentPassword: '',
     newPassword: '',
@@ -57,7 +55,25 @@ const Profile = () => {
     applyTheme(preferences.theme);
   }, [preferences.theme]);
 
+  useEffect(() => {
+    const loadProfile = async () => {
+      if (!token) return;
+      setError('');
+      try {
+        const data = await fetchProfile(token);
+        const normalized = normalizeProfile(data);
+        setProfileData(normalized);
+        setOriginalProfile(normalized);
+      } catch (err) {
+        setError(err.message || 'Unable to load profile.');
+      }
+    };
+
+    loadProfile();
+  }, [token]);
+
   const showMessage = (text) => {
+    setError('');
     setMessage(text);
     window.setTimeout(() => setMessage(''), 2500);
   };
@@ -72,10 +88,53 @@ const Profile = () => {
     }));
   };
 
-  const handleProfileSubmit = (event) => {
+  const hasSensitiveChange = () =>
+    originalProfile
+      && (profileData.username !== originalProfile.username || profileData.email !== originalProfile.email);
+
+  const handleProfileSubmit = async (event) => {
     event.preventDefault();
-    localStorage.setItem('financeProfile', JSON.stringify(profileData));
-    showMessage('Profile information saved on this device.');
+    setSavingProfile(true);
+    setError('');
+    setMessage('');
+    try {
+      if (hasSensitiveChange()) {
+        const result = await requestProfileUpdateOtp(token, profileData);
+        setOtpRequired(true);
+        showMessage(result.message || 'OTP sent. Verify to update username or email.');
+      } else {
+        const result = await updateProfile(token, profileData);
+        const normalized = normalizeProfile(result);
+        setProfileData(normalized);
+        setOriginalProfile(normalized);
+        updateSession(result);
+        showMessage(result.message || 'Profile updated successfully.');
+      }
+    } catch (err) {
+      setError(err.message || 'Unable to update profile.');
+    } finally {
+      setSavingProfile(false);
+    }
+  };
+
+  const handleOtpSubmit = async (event) => {
+    event.preventDefault();
+    setSavingProfile(true);
+    setError('');
+    try {
+      const result = await verifyProfileUpdateOtp(token, otp);
+      const normalized = normalizeProfile(result);
+      setProfileData(normalized);
+      setOriginalProfile(normalized);
+      updateSession(result);
+      setOtp('');
+      setOtpRequired(false);
+      showMessage(result.message || 'Profile updated after OTP verification.');
+    } catch (err) {
+      setError(err.message || 'Unable to verify OTP.');
+    } finally {
+      setSavingProfile(false);
+    }
   };
 
   const handlePasswordSubmit = (event) => {
@@ -134,6 +193,12 @@ const Profile = () => {
           {message}
         </div>
       )}
+      {error && (
+        <div className="profile-message error">
+          <AlertTriangle size={18} />
+          {error}
+        </div>
+      )}
 
       <div className="profile-content">
         <div className="profile-sidebar">
@@ -180,6 +245,19 @@ const Profile = () => {
 
                 <div className="form-row">
                   <div className="form-group">
+                    <label className="form-label">Gender</label>
+                    <select
+                      value={profileData.gender}
+                      onChange={(event) => setProfileData(prev => ({ ...prev, gender: event.target.value }))}
+                      className="form-select"
+                    >
+                      <option value="">Prefer not to say</option>
+                      <option value="Male">Male</option>
+                      <option value="Female">Female</option>
+                      <option value="Other">Other</option>
+                    </select>
+                  </div>
+                  <div className="form-group">
                     <label className="form-label">Currency</label>
                     <select
                       value={profileData.currency}
@@ -194,26 +272,25 @@ const Profile = () => {
                       <option value="CAD">CAD - Canadian Dollar</option>
                     </select>
                   </div>
-                  <div className="form-group">
-                    <label className="form-label">Timezone</label>
-                    <select
-                      value={profileData.timezone}
-                      onChange={(event) => setProfileData(prev => ({ ...prev, timezone: event.target.value }))}
-                      className="form-select"
-                    >
-                      <option value="Asia/Kolkata">IST - India Standard Time</option>
-                      <option value="UTC">UTC</option>
-                      <option value="EST">EST - Eastern Time</option>
-                      <option value="PST">PST - Pacific Time</option>
-                      <option value="GMT">GMT - Greenwich Mean Time</option>
-                    </select>
-                  </div>
                 </div>
 
                 <div className="form-actions">
-                  <button type="submit" className="btn btn-primary">Save Changes</button>
+                  <button type="submit" className="btn btn-primary" disabled={savingProfile}>
+                    {hasSensitiveChange() ? 'Send OTP & Save' : 'Save Changes'}
+                  </button>
                 </div>
               </form>
+
+              {otpRequired && (
+                <form onSubmit={handleOtpSubmit} className="profile-otp-box">
+                  <div>
+                    <h3>Verify profile change</h3>
+                    <p>Enter the OTP sent to your email to update username or email.</p>
+                  </div>
+                  <ProfileField label="OTP" value={otp} onChange={setOtp} required minLength={6} maxLength={6} placeholder="6-digit OTP" />
+                  <button type="submit" className="btn btn-primary" disabled={savingProfile}>Verify OTP & Update</button>
+                </form>
+              )}
             </div>
           )}
 
@@ -359,6 +436,28 @@ const readStorage = (key, fallback) => {
     return fallback;
   }
 };
+
+const defaultProfile = (user) => ({
+  username: user?.username || '',
+  email: '',
+  firstName: '',
+  lastName: '',
+  phone: '',
+  gender: '',
+  dateOfBirth: '',
+  currency: 'INR'
+});
+
+const normalizeProfile = (data) => ({
+  username: data.username || '',
+  email: data.email || '',
+  firstName: data.firstName || '',
+  lastName: data.lastName || '',
+  phone: data.phone || '',
+  gender: data.gender || '',
+  dateOfBirth: data.dateOfBirth || '',
+  currency: data.currency || 'INR'
+});
 
 const resolveTheme = (theme) => {
   if (theme === 'auto') {
