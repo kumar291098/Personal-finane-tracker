@@ -1,14 +1,16 @@
 package com.finance.security;
 
-import com.finance.util.JwtUtil;
 import com.finance.model.AccessLevel;
 import com.finance.repository.UserRepository;
-import jakarta.servlet.*;
-import jakarta.servlet.http.*;
+import com.finance.util.JwtUtil;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -25,7 +27,6 @@ public class JwtFilter extends OncePerRequestFilter {
     @Autowired
     private UserRepository userRepository;
 
-    // Allow these paths without JWT
     private static final List<String> PUBLIC_PATHS = List.of(
         "/api/auth/login",
         "/api/auth/register",
@@ -47,100 +48,92 @@ public class JwtFilter extends OncePerRequestFilter {
         String path = request.getRequestURI();
         String method = request.getMethod();
 
-        System.out.println("🔍 JWT Filter - Processing request: " + method + " " + path);
+        System.out.println("JWT Filter - Processing request: " + method + " " + path);
 
-        // ✅ Skip JWT check for OPTIONS preflight requests
         if ("OPTIONS".equals(method)) {
-            System.out.println("✅ Skipping OPTIONS request");
+            System.out.println("Skipping OPTIONS request");
             filterChain.doFilter(request, response);
             return;
         }
 
-        // ✅ Skip JWT check for public paths
         if (isPublicPath(path)) {
-            System.out.println("✅ Public path, skipping JWT check: " + path);
+            System.out.println("Public path, skipping JWT check: " + path);
             filterChain.doFilter(request, response);
             return;
         }
 
-        System.out.println("🔐 Protected path, checking JWT: " + path);
-
-        final String authHeader = request.getHeader("Authorization");
-        System.out.println("📋 Authorization header: " + (authHeader != null ? "Present" : "Missing"));
-        
-        String username = null;
-        String jwt = null;
-
-        // Only process if we have a proper Authorization header
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            jwt = authHeader.substring(7);
-            System.out.println("🎫 JWT token extracted, length: " + jwt.length());
-            
-            try {
-                username = jwtUtil.extractUsername(jwt);
-                System.out.println("👤 Username extracted: " + username);
-                
-                // Check token expiration
-                if (jwtUtil.isTokenExpired(jwt)) {
-                    System.out.println("⏰ Token expired");
-                    // Don't set authentication, let Spring Security handle it
-                } else {
-                    System.out.println("✅ Token is valid and not expired");
-                    
-                    // Validate token and set authentication
-                    if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                        if (jwtUtil.validateToken(jwt, username)) {
-                            // Extract userId from token for additional context
-                            Long userId = jwtUtil.extractUserId(jwt);
-                            final String tokenUsername = username;
-                            final String tokenValue = jwt;
-                            String accessLevel = userRepository.findByUsername(tokenUsername)
-                                .map(user -> user.getAccessLevel().name())
-                                .orElseGet(() -> "demo".equalsIgnoreCase(tokenUsername)
-                                    ? AccessLevel.ADMIN.name()
-                                    : jwtUtil.extractAccessLevel(tokenValue));
-                            System.out.println("🆔 User ID extracted: " + userId);
-                            
-                            // Create authentication token with user authorities
-                            UsernamePasswordAuthenticationToken authToken =
-                                    new UsernamePasswordAuthenticationToken(
-                                        username, 
-                                        null, 
-                                        List.of(
-                                            new SimpleGrantedAuthority("ROLE_USER"),
-                                            new SimpleGrantedAuthority("ROLE_" + accessLevel)
-                                        )
-                                    );
-                            authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                            
-                            // Add userId to the authentication details for easy access in controllers
-                            request.setAttribute("userId", userId);
-                            request.setAttribute("username", username);
-                            request.setAttribute("accessLevel", accessLevel);
-                            
-                            SecurityContextHolder.getContext().setAuthentication(authToken);
-                            System.out.println("✅ Authentication set successfully for user: " + username);
-                        } else {
-                            System.out.println("❌ Token validation failed");
-                        }
-                    }
-                }
-                
-            } catch (Exception e) {
-                System.out.println("❌ Token parsing error: " + e.getMessage());
-                // Don't set authentication, let Spring Security handle the error
-            }
-        } else {
-            System.out.println("❌ Missing or invalid Authorization header");
-            // Don't set authentication, let Spring Security handle it
+        String jwt = resolveToken(request);
+        if (jwt == null) {
+            System.out.println("Missing JWT token");
+            filterChain.doFilter(request, response);
+            return;
         }
 
-        System.out.println("➡️ Proceeding to next filter/controller");
+        try {
+            String username = jwtUtil.extractUsername(jwt);
+            if (jwtUtil.isTokenExpired(jwt)) {
+                System.out.println("Token expired for user: " + username);
+                filterChain.doFilter(request, response);
+                return;
+            }
+
+            if (username != null
+                    && SecurityContextHolder.getContext().getAuthentication() == null
+                    && jwtUtil.validateToken(jwt, username)) {
+                Long userId = jwtUtil.extractUserId(jwt);
+                String tokenValue = jwt;
+                String accessLevel = userRepository.findByUsername(username)
+                    .map(user -> user.getAccessLevel().name())
+                    .orElseGet(() -> "demo".equalsIgnoreCase(username)
+                        ? AccessLevel.ADMIN.name()
+                        : jwtUtil.extractAccessLevel(tokenValue));
+
+                UsernamePasswordAuthenticationToken authToken =
+                        new UsernamePasswordAuthenticationToken(
+                            username,
+                            null,
+                            List.of(
+                                new SimpleGrantedAuthority("ROLE_USER"),
+                                new SimpleGrantedAuthority("ROLE_" + accessLevel)
+                            )
+                        );
+                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+
+                request.setAttribute("userId", userId);
+                request.setAttribute("username", username);
+                request.setAttribute("accessLevel", accessLevel);
+
+                SecurityContextHolder.getContext().setAuthentication(authToken);
+                System.out.println("Authentication set for user: " + username);
+            }
+        } catch (Exception error) {
+            System.out.println("Token parsing error: " + error.getMessage());
+        }
+
         filterChain.doFilter(request, response);
     }
 
+    private String resolveToken(HttpServletRequest request) {
+        String authHeader = request.getHeader("Authorization");
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            return authHeader.substring(7).trim();
+        }
+
+        String fallbackHeader = request.getHeader("X-Auth-Token");
+        if (fallbackHeader != null && !fallbackHeader.isBlank()) {
+            return fallbackHeader.trim();
+        }
+
+        String queryToken = request.getParameter("access_token");
+        if (queryToken != null && !queryToken.isBlank()) {
+            return queryToken.trim();
+        }
+
+        return null;
+    }
+
     private boolean isPublicPath(String path) {
-        return PUBLIC_PATHS.stream().anyMatch(publicPath -> 
+        return PUBLIC_PATHS.stream().anyMatch(publicPath ->
             path.equals(publicPath) || path.startsWith(publicPath + "/")
         );
     }

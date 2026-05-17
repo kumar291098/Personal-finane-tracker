@@ -120,10 +120,11 @@ export const uploadSubscriptionQr = async (token, file) => {
   const formData = new FormData();
   formData.append('file', file);
 
-  const response = await fetch(`${API_BASE_URL}/admin/users/subscription-settings/qr`, {
+  const response = await fetch(`${API_BASE_URL}/admin/users/subscription-settings/qr?access_token=${encodeURIComponent(token)}`, {
     method: 'POST',
     headers: {
-      Authorization: `Bearer ${token}`
+      Authorization: `Bearer ${token}`,
+      'X-Auth-Token': token
     },
     body: formData
   });
