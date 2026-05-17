@@ -117,16 +117,16 @@ export const updateSubscriptionSettings = async (token, settings) => {
 };
 
 export const uploadSubscriptionQr = async (token, file) => {
-  const formData = new FormData();
-  formData.append('file', file);
+  const dataUrl = await fileToDataUrl(file);
 
-  const response = await fetch(`${API_BASE_URL}/admin/users/subscription-settings/qr?access_token=${encodeURIComponent(token)}`, {
+  const response = await fetch(`${API_BASE_URL}/admin/users/subscription-settings/qr-data`, {
     method: 'POST',
     headers: {
+      'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`,
       'X-Auth-Token': token
     },
-    body: formData
+    body: JSON.stringify({ dataUrl })
   });
 
   if (!response.ok) {
@@ -136,3 +136,10 @@ export const uploadSubscriptionQr = async (token, file) => {
 
   return response.json();
 };
+
+const fileToDataUrl = (file) => new Promise((resolve, reject) => {
+  const reader = new FileReader();
+  reader.onload = () => resolve(reader.result);
+  reader.onerror = () => reject(new Error('Unable to read QR image.'));
+  reader.readAsDataURL(file);
+});

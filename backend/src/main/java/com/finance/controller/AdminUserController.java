@@ -136,6 +136,29 @@ public class AdminUserController {
         }
     }
 
+    @PostMapping("/subscription-settings/qr-data")
+    public ResponseEntity<?> uploadSubscriptionQrData(@RequestBody Map<String, String> data) {
+        String dataUrl = data.getOrDefault("dataUrl", "").trim();
+        if (dataUrl.isBlank()) {
+            return ResponseEntity.badRequest().body("Choose a QR image to upload.");
+        }
+
+        if (!dataUrl.startsWith("data:image/png;base64,")
+                && !dataUrl.startsWith("data:image/jpeg;base64,")
+                && !dataUrl.startsWith("data:image/webp;base64,")) {
+            return ResponseEntity.badRequest().body("Upload a PNG, JPG, or WEBP image.");
+        }
+
+        SubscriptionSettings current = subscriptionSettingsService.getSettings();
+        SubscriptionSettings updated = subscriptionSettingsService.updateSettings(
+            current.getAmountPaise(),
+            current.getUpiId(),
+            dataUrl
+        );
+
+        return ResponseEntity.ok(toSubscriptionSettingsResponse(updated));
+    }
+
     @PatchMapping("/subscription-requests/{paymentId}/reject")
     public ResponseEntity<?> rejectSubscriptionRequest(@PathVariable Long paymentId) {
         return subscriptionPaymentRepository.findById(paymentId)
