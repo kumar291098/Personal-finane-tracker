@@ -114,6 +114,18 @@ const Layout = () => {
     localStorage.setItem('financeTheme', theme);
   }, [theme]);
 
+  useEffect(() => {
+    if (unreadCount === 0) {
+      return undefined;
+    }
+
+    const timer = window.setTimeout(() => {
+      setReadNotificationIds(notifications.map(notification => notification.id));
+    }, 20000);
+
+    return () => window.clearTimeout(timer);
+  }, [notifications, unreadCount]);
+
   const handleLogout = () => {
     logout();
     navigate('/login');

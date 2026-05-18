@@ -23,12 +23,7 @@ const periodOptions = [
 const Analytics = () => {
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [incomeFilter, setIncomeFilter] = useState({
-    period: 'all',
-    startDate: '',
-    endDate: ''
-  });
-  const [expenseFilter, setExpenseFilter] = useState({
+  const [analysisFilter, setAnalysisFilter] = useState({
     period: 'all',
     startDate: '',
     endDate: ''
@@ -114,8 +109,8 @@ const Analytics = () => {
 
   const getTotal = (items) => items.reduce((sum, transaction) => sum + transaction.amount, 0);
 
-  const filterTransactionsByRange = (type, filter) => {
-    const { startDate, endDate } = getDateRange(filter);
+  const filterTransactionsByRange = (type) => {
+    const { startDate, endDate } = getDateRange(analysisFilter);
     return transactions.filter(transaction => {
       const transactionDate = new Date(transaction.transactionDate);
       return transaction.type === type &&
@@ -124,17 +119,16 @@ const Analytics = () => {
     });
   };
 
-  const updateFilter = (type, field, value) => {
-    const setter = type === 'income' ? setIncomeFilter : setExpenseFilter;
-    setter(prev => ({
+  const updateFilter = (field, value) => {
+    setAnalysisFilter(prev => ({
       ...prev,
       [field]: value
     }));
   };
 
   const getAnalytics = () => {
-    const incomeTransactions = filterTransactionsByRange('INCOME', incomeFilter);
-    const expenseTransactions = filterTransactionsByRange('EXPENSE', expenseFilter);
+    const incomeTransactions = filterTransactionsByRange('INCOME');
+    const expenseTransactions = filterTransactionsByRange('EXPENSE');
     const periodTransactions = [...incomeTransactions, ...expenseTransactions];
 
     const income = getTotal(incomeTransactions);
@@ -239,9 +233,57 @@ const Analytics = () => {
       }));
   };
 
+  const getDailyTrend = () => {
+    const grouped = analytics.periodTransactions.reduce((acc, transaction) => {
+      const date = new Date(transaction.transactionDate);
+      const key = date.toISOString().slice(0, 10);
+
+      if (!acc[key]) {
+        acc[key] = { date: key, income: 0, expense: 0, balance: 0 };
+      }
+
+      if (transaction.type === 'INCOME') {
+        acc[key].income += transaction.amount;
+      } else {
+        acc[key].expense += transaction.amount;
+      }
+
+      acc[key].balance = acc[key].income - acc[key].expense;
+      return acc;
+    }, {});
+
+    return Object.values(grouped)
+      .sort((first, second) => first.date.localeCompare(second.date))
+      .slice(-12)
+      .map(item => ({
+        ...item,
+        label: new Date(`${item.date}T00:00:00`).toLocaleDateString('en-IN', {
+          day: '2-digit',
+          month: 'short'
+        })
+      }));
+  };
+
+  const getLinePoints = (items, key, width = 720, height = 220) => {
+    if (items.length === 0) {
+      return '';
+    }
+
+    const maxValue = Math.max(...items.map(item => Math.abs(item[key])), 1);
+    return items.map((item, index) => {
+      const x = items.length === 1 ? width / 2 : (index / (items.length - 1)) * width;
+      const y = height - ((item[key] + maxValue) / (maxValue * 2)) * height;
+      return `${x.toFixed(1)},${Math.max(8, Math.min(height - 8, y)).toFixed(1)}`;
+    }).join(' ');
+  };
+
   const expenseCategoryData = getCategoryChartData('expense');
   const incomeCategoryData = getCategoryChartData('income');
   const monthlyTrend = getMonthlyTrend();
+  const dailyTrend = getDailyTrend();
+  const incomeLinePoints = getLinePoints(dailyTrend, 'income');
+  const expenseLinePoints = getLinePoints(dailyTrend, 'expense');
+  const balanceLinePoints = getLinePoints(dailyTrend, 'balance');
   const categoryTotal = expenseCategoryData.reduce((sum, item) => sum + item.amount, 0);
   const maxTrendAmount = Math.max(
     ...monthlyTrend.flatMap(item => [item.income, item.expense]),
@@ -278,27 +320,29 @@ const Analytics = () => {
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;');
 
-  const exportExcel = () => {
+  const escapeCsvCell = (value) => {
+    const text = String(value ?? '').replace(/"/g, '""');
+    return `"${text}"`;
+  };
+
+  const exportCsv = () => {
     const rows = getExportRows();
+    const headers = ['Date', 'Type', 'Category', 'Description', 'Amount'];
     const summaryRows = [
+      ['FinanceTracker Report'],
       ['Total Income', analytics.income],
       ['Total Expenses', analytics.expenses],
       ['Net Balance', analytics.balance],
-      ['Goal Progress', `${analytics.goal.progress.toFixed(1)}%`]
+      ['Goal Progress', `${analytics.goal.progress.toFixed(1)}%`],
+      [],
+      headers
     ];
-    const html = `
-      <html>
-        <head><meta charset="utf-8" /></head>
-        <body>
-          <table border="1">
-            <tr><th colspan="5">FinanceTracker Report</th></tr>
-            ${summaryRows.map(row => `<tr><td colspan="3">${escapeCell(row[0])}</td><td colspan="2">${escapeCell(row[1])}</td></tr>`).join('')}
-            <tr>${Object.keys(rows[0] || { Date: '', Type: '', Category: '', Description: '', Amount: '' }).map(key => `<th>${key}</th>`).join('')}</tr>
-            ${rows.map(row => `<tr>${Object.values(row).map(value => `<td>${escapeCell(value)}</td>`).join('')}</tr>`).join('')}
-          </table>
-        </body>
-      </html>`;
-    downloadFile(html, `finance-report-${Date.now()}.xls`, 'application/vnd.ms-excel');
+    const csv = [
+      ...summaryRows.map(row => row.map(escapeCsvCell).join(',')),
+      ...rows.map(row => headers.map(header => escapeCsvCell(row[header])).join(','))
+    ].join('\r\n');
+
+    downloadFile(`\uFEFF${csv}`, `finance-report-${Date.now()}.csv`, 'text/csv;charset=utf-8');
   };
 
   const exportPdf = () => {
@@ -366,9 +410,9 @@ const Analytics = () => {
           </p>
         </div>
         <div className="export-actions">
-          <button type="button" className="btn btn-secondary" onClick={exportExcel}>
+          <button type="button" className="btn btn-secondary" onClick={exportCsv}>
             <FileSpreadsheet size={17} />
-            Excel
+            CSV
           </button>
           <button type="button" className="btn btn-primary" onClick={exportPdf}>
             <Printer size={17} />
@@ -378,78 +422,39 @@ const Analytics = () => {
       </div>
 
       <div className="tracking-controls">
-        <div className="filter-card income-filter">
+        <div className="filter-card analysis-filter">
           <div className="filter-heading">
-            <span><TrendingUp size={18} /></span>
+            <span><CalendarDays size={18} /></span>
             <div>
-              <h3>Income Filter</h3>
-              <p>{analytics.incomeCount} income records</p>
+              <h3>Analysis Date Range</h3>
+              <p>{analytics.transactionCount} transactions in this view</p>
             </div>
           </div>
           <select
-            value={incomeFilter.period}
-            onChange={(event) => updateFilter('income', 'period', event.target.value)}
+            value={analysisFilter.period}
+            onChange={(event) => updateFilter('period', event.target.value)}
             className="period-select"
           >
             {periodOptions.map(option => (
               <option key={option.value} value={option.value}>{option.label}</option>
             ))}
           </select>
-          {incomeFilter.period === 'custom' && (
+          {analysisFilter.period === 'custom' && (
             <div className="custom-range">
               <label>
                 From
                 <input
                   type="date"
-                  value={incomeFilter.startDate}
-                  onChange={(event) => updateFilter('income', 'startDate', event.target.value)}
+                  value={analysisFilter.startDate}
+                  onChange={(event) => updateFilter('startDate', event.target.value)}
                 />
               </label>
               <label>
                 To
                 <input
                   type="date"
-                  value={incomeFilter.endDate}
-                  onChange={(event) => updateFilter('income', 'endDate', event.target.value)}
-                />
-              </label>
-            </div>
-          )}
-        </div>
-
-        <div className="filter-card expense-filter">
-          <div className="filter-heading">
-            <span><TrendingDown size={18} /></span>
-            <div>
-              <h3>Expense Filter</h3>
-              <p>{analytics.expenseCount} expense records</p>
-            </div>
-          </div>
-          <select
-            value={expenseFilter.period}
-            onChange={(event) => updateFilter('expense', 'period', event.target.value)}
-            className="period-select"
-          >
-            {periodOptions.map(option => (
-              <option key={option.value} value={option.value}>{option.label}</option>
-            ))}
-          </select>
-          {expenseFilter.period === 'custom' && (
-            <div className="custom-range">
-              <label>
-                From
-                <input
-                  type="date"
-                  value={expenseFilter.startDate}
-                  onChange={(event) => updateFilter('expense', 'startDate', event.target.value)}
-                />
-              </label>
-              <label>
-                To
-                <input
-                  type="date"
-                  value={expenseFilter.endDate}
-                  onChange={(event) => updateFilter('expense', 'endDate', event.target.value)}
+                  value={analysisFilter.endDate}
+                  onChange={(event) => updateFilter('endDate', event.target.value)}
                 />
               </label>
             </div>
@@ -485,7 +490,7 @@ const Analytics = () => {
           icon="📈"
           type="success"
           trend="up"
-          subtitle="Using income filter"
+          subtitle="Selected date range"
         />
         <StatsCard
           title="Total Expenses"
@@ -493,7 +498,7 @@ const Analytics = () => {
           icon="📉"
           type="error"
           trend="down"
-          subtitle="Using expense filter"
+          subtitle="Selected date range"
         />
         <StatsCard
           title="Net Balance"
@@ -501,7 +506,7 @@ const Analytics = () => {
           icon="💰"
           type={analytics.balance >= 0 ? 'success' : 'error'}
           trend={analytics.balance >= 0 ? 'up' : 'down'}
-          subtitle="Filtered income - expenses"
+          subtitle="Income - expenses"
         />
         <StatsCard
           title="Avg Transaction"
@@ -513,6 +518,41 @@ const Analytics = () => {
       </div>
 
       <div className="report-grid">
+        <div className="report-card report-card-wide">
+          <div className="report-card-header">
+            <div>
+              <h3><TrendingUp size={20} /> Cash Flow Line</h3>
+              <p>Daily income, expenses, and net balance for the selected date range.</p>
+            </div>
+          </div>
+          {dailyTrend.length === 0 ? (
+            <div className="empty-analytics">No line chart data available for this range.</div>
+          ) : (
+            <div className="line-chart-wrap">
+              <svg className="line-chart" viewBox="0 0 720 260" role="img" aria-label="Cash flow line chart">
+                <line x1="0" y1="220" x2="720" y2="220" className="line-chart-axis" />
+                <polyline points={incomeLinePoints} className="line-chart-path income" />
+                <polyline points={expenseLinePoints} className="line-chart-path expense" />
+                <polyline points={balanceLinePoints} className="line-chart-path balance" />
+                {dailyTrend.map((item, index) => {
+                  const x = dailyTrend.length === 1 ? 360 : (index / (dailyTrend.length - 1)) * 720;
+                  return (
+                    <g key={item.date}>
+                      <line x1={x} y1="226" x2={x} y2="232" className="line-chart-tick" />
+                      <text x={x} y="250" textAnchor="middle">{item.label}</text>
+                    </g>
+                  );
+                })}
+              </svg>
+            </div>
+          )}
+          <div className="report-legend">
+            <span><i className="legend-income" /> Income</span>
+            <span><i className="legend-expense" /> Expenses</span>
+            <span><i className="legend-balance" /> Balance</span>
+          </div>
+        </div>
+
         <div className="report-card report-card-wide">
           <div className="report-card-header">
             <div>
