@@ -301,8 +301,19 @@ const Register = () => {
         </div>
 
         <div className="auth-demo">
-          <div className="demo-card">
+          <div className="demo-card auth-showcase">
             <h3 className="demo-title">Built For Daily Tracking</h3>
+            <div className="auth-preview-card register-preview">
+              <div className="auth-preview-topline">
+                <span>Starter setup</span>
+                <strong>3 min</strong>
+              </div>
+              <div className="setup-steps">
+                <span><CheckCircle2 size={15} /> Create profile</span>
+                <span><CheckCircle2 size={15} /> Add first transaction</span>
+                <span><CheckCircle2 size={15} /> Review dashboard</span>
+              </div>
+            </div>
             <div className="demo-benefits">
               <div className="benefit-item">
                 <Gauge size={20} />

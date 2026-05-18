@@ -124,12 +124,19 @@ const Subscription = () => {
 
   const submitManualPayment = async (event) => {
     event.preventDefault();
+    const cleanedReference = reference.trim();
+    if (!cleanedReference.toUpperCase().startsWith('TEST-SUB-')) {
+      setError('Enter a valid demo UTR that starts with TEST-SUB-. Invalid UTRs are not sent for admin review.');
+      setMessage('');
+      return;
+    }
+
     setPaying(true);
     setError('');
     setMessage('');
     setActivation(null);
     try {
-      const result = await submitManualUpiPayment(token, reference);
+      const result = await submitManualUpiPayment(token, cleanedReference);
       setReference('');
       setMessage(result.message || 'Payment reference submitted for review.');
       if (result.accessLevel === 'SUBSCRIBER') {
@@ -218,14 +225,14 @@ const Subscription = () => {
                 <div className="upi-payment-form">
                   <h3>Pay with UPI QR</h3>
                   {plan.upiId && <p>UPI ID: <strong>{plan.upiId}</strong></p>}
-                  <p>Enter a demo reference to activate automatically. UPI UTRs are sent to admin review.</p>
+                  <p>Enter the valid demo UTR only. Correct demo UTRs activate automatically; invalid values are rejected here.</p>
                   <input
                     className="input"
                     value={reference}
                     onChange={(event) => setReference(event.target.value)}
-                    placeholder="Enter UPI UTR / transaction ID"
+                    placeholder="TEST-SUB-123456"
                     required
-                    minLength={6}
+                    minLength={15}
                   />
                   <button className="btn btn-primary" type="submit" disabled={paying}>
                     {paying ? <RefreshCw size={18} className="spin-icon" /> : <CheckCircle2 size={18} />}

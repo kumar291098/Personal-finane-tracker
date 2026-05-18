@@ -1,10 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Outlet, NavLink, useNavigate } from 'react-router-dom';
 import {
   BarChart3,
   Bell,
+  BellRing,
   ChartNoAxesCombined,
   ChevronDown,
+  CircleAlert,
+  CircleCheck,
   CreditCard,
   Crown,
   FolderTree,
@@ -27,34 +30,85 @@ const Layout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [theme, setTheme] = useState(() => localStorage.getItem('financeTheme') || 'light');
-  const [notifications, setNotifications] = useState([
-    {
-      id: 1,
-      title: 'Weekly review ready',
-      body: 'Open Analytics to review your spending trend.',
-      unread: true
-    },
-    {
-      id: 2,
-      title: 'Set a monthly goal',
-      body: 'Use Set Goals on the dashboard to track savings.',
-      unread: true
-    },
-    {
-      id: 3,
-      title: 'Keep transactions fresh',
-      body: 'Add recent expenses so your reports stay accurate.',
-      unread: true
-    }
-  ]);
+  const [readNotificationIds, setReadNotificationIds] = useState([]);
   const { user, logout, canAccessPage, isAdmin } = useAuth();
   const navigate = useNavigate();
-  const unreadCount = notifications.filter(notification => notification.unread).length;
-
   const accessLevel = user?.accessLevel || 'FREE';
   const isSubscriber = accessLevel === 'SUBSCRIBER';
   const isAdminAccount = accessLevel === 'ADMIN' || user?.username === 'demo';
   const accountLabel = isAdminAccount ? 'Admin Account' : isSubscriber ? 'Subscriber Member' : 'Free Account';
+  const displayName = [user?.firstName, user?.lastName].filter(Boolean).join(' ').trim() || user?.username || 'User';
+  const notifications = useMemo(() => {
+    const nextNotifications = [];
+    const subscriberUntil = user?.subscriberUntil ? new Date(user.subscriberUntil) : null;
+    const hasSubscriptionDate = subscriberUntil && !Number.isNaN(subscriberUntil.getTime());
+
+    if (!user?.email || !user?.phone) {
+      nextNotifications.push({
+        id: 'profile-incomplete',
+        title: 'Complete your profile',
+        body: 'Add email and phone so account recovery and profile details stay current.',
+        path: '/profile',
+        icon: CircleAlert
+      });
+    }
+
+    if (isSubscriber || isAdminAccount) {
+      nextNotifications.push({
+        id: 'access-active',
+        title: `${accessLevel} access active`,
+        body: hasSubscriptionDate
+          ? `Subscriber access runs until ${subscriberUntil.toLocaleDateString('en-IN')}.`
+          : 'Your current account has advanced access.',
+        path: '/profile',
+        icon: CircleCheck
+      });
+    } else {
+      nextNotifications.push({
+        id: 'subscription-demo',
+        title: 'Demo subscription available',
+        body: 'Use a valid TEST-SUB demo UTR to activate subscriber access automatically.',
+        path: '/subscription',
+        icon: Crown
+      });
+    }
+
+    if (canAccessPage('analytics')) {
+      nextNotifications.push({
+        id: 'analytics-ready',
+        title: 'Analytics ready',
+        body: 'Review category trends and monthly spending from your saved transactions.',
+        path: '/analytics',
+        icon: ChartNoAxesCombined
+      });
+    }
+
+    if (canAccessPage('categories')) {
+      nextNotifications.push({
+        id: 'category-preferences',
+        title: 'Category preferences',
+        body: 'Edit or hide your own categories without affecting other users.',
+        path: '/categories',
+        icon: FolderTree
+      });
+    }
+
+    if (isAdmin) {
+      nextNotifications.push({
+        id: 'ai-cache-monitoring',
+        title: 'AI cache monitoring',
+        body: 'Track Redis cache hits, misses, DB calls, and saved time in Monitoring.',
+        path: '/monitoring',
+        icon: Gauge
+      });
+    }
+
+    return nextNotifications.map(notification => ({
+      ...notification,
+      unread: !readNotificationIds.includes(notification.id)
+    }));
+  }, [accessLevel, canAccessPage, isAdmin, isAdminAccount, isSubscriber, readNotificationIds, user]);
+  const unreadCount = notifications.filter(notification => notification.unread).length;
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
     localStorage.setItem('financeTheme', theme);
@@ -66,10 +120,7 @@ const Layout = () => {
   };
 
   const markNotificationsRead = () => {
-    setNotifications(prev => prev.map(notification => ({
-      ...notification,
-      unread: false
-    })));
+    setReadNotificationIds(notifications.map(notification => notification.id));
   };
 
   const menuItems = [
@@ -251,38 +302,46 @@ const Layout = () => {
                       </button>
                     </div>
                     <div className="notification-list">
-                      {notifications.map(notification => (
-                        <button
-                          type="button"
-                          key={notification.id}
-                          className={`notification-item ${notification.unread ? 'unread' : ''}`}
-                          onClick={() => {
-                            setNotifications(prev => prev.map(item =>
-                              item.id === notification.id ? { ...item, unread: false } : item
-                            ));
-                            if (notification.id === 1) navigate('/analytics');
-                            if (notification.id === 2) navigate('/dashboard');
-                            setNotificationsOpen(false);
-                          }}
-                        >
-                          <span className="notification-dot" />
-                          <span>
-                            <strong>{notification.title}</strong>
-                            <small>{notification.body}</small>
-                          </span>
-                        </button>
-                      ))}
+                      {notifications.map(notification => {
+                        const NotificationIcon = notification.icon || BellRing;
+                        return (
+                          <button
+                            type="button"
+                            key={notification.id}
+                            className={`notification-item ${notification.unread ? 'unread' : ''}`}
+                            onClick={() => {
+                              setReadNotificationIds(prev => [...new Set([...prev, notification.id])]);
+                              navigate(notification.path);
+                              setNotificationsOpen(false);
+                            }}
+                          >
+                            <span className="notification-dot" />
+                            <span className="notification-icon">
+                              <NotificationIcon size={16} />
+                            </span>
+                            <span>
+                              <strong>{notification.title}</strong>
+                              <small>{notification.body}</small>
+                            </span>
+                          </button>
+                        );
+                      })}
                     </div>
                   </div>
                 )}
               </div>
 
               <div className="user-menu">
-                <button className="user-menu-btn">
+                <button
+                  className="user-menu-btn"
+                  type="button"
+                  onClick={() => navigate('/profile')}
+                  title="Open profile"
+                >
                   <div className="user-avatar-small">
-                    {user?.username?.charAt(0).toUpperCase() || 'U'}
+                    {displayName.charAt(0).toUpperCase() || 'U'}
                   </div>
-                  <span className="user-name-header">{user?.username || 'User'}</span>
+                  <span className="user-name-header">{displayName}</span>
                   {isSubscriber && (
                     <span className="member-chip" title="Subscriber Member">
                       <Crown size={13} />

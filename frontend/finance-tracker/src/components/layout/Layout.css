@@ -488,6 +488,18 @@
   background: #0f766e;
 }
 
+.notification-icon {
+  width: 30px;
+  min-width: 30px;
+  height: 30px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-lg);
+  background: #ccfbf1;
+  color: #0f766e;
+}
+
 .notification-item strong {
   display: block;
   margin-bottom: 3px;
@@ -725,4 +737,9 @@
 }
 :root[data-theme='dark'] .notification-item.unread {
   background-color: #1e293b;
+}
+
+:root[data-theme='dark'] .notification-icon {
+  background: #134e4a;
+  color: #99f6e4;
 }
