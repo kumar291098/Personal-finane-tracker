@@ -1,5 +1,5 @@
 -- Insert default categories if they don't exist (table already exists)
-INSERT INTO categories (id, name, type, icon, created_at, updated_at) VALUES 
+INSERT INTO categories (id, name, type, icon, created_at, updated_at) VALUES
 (1, 'Income', 'INCOME', '💰', NOW(), NOW()),
 (2, 'Expense', 'EXPENSE', '💸', NOW(), NOW()),
 (3, 'Food', 'EXPENSE', '🍔', NOW(), NOW()),
@@ -7,7 +7,10 @@ INSERT INTO categories (id, name, type, icon, created_at, updated_at) VALUES
 (5, 'Entertainment', 'EXPENSE', '🎬', NOW(), NOW()),
 (6, 'Utilities', 'EXPENSE', '⚡', NOW(), NOW()),
 (7, 'Salary', 'INCOME', '💼', NOW(), NOW()),
-(8, 'Freelance', 'INCOME', '💻', NOW(), NOW())
+(8, 'Freelance', 'INCOME', '💻', NOW(), NOW()),
+(9, 'Donation', 'EXPENSE', '🤝', NOW(), NOW()),
+(10, 'Grocery', 'EXPENSE', '🛒', NOW(), NOW()),
+(11, 'Sports', 'EXPENSE', '🏏', NOW(), NOW())
 ON CONFLICT (id) DO NOTHING;
 
 -- Reset sequence to ensure proper auto-increment
