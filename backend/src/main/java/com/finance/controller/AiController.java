@@ -4,6 +4,7 @@ import com.finance.dto.AiChatRequest;
 import com.finance.dto.AiChatResponse;
 import com.finance.model.Transaction;
 import com.finance.model.User;
+import com.finance.monitoring.AiCacheMetrics;
 import com.finance.repository.TransactionRepository;
 import com.finance.repository.UserRepository;
 import com.finance.service.AiContextCacheService;
@@ -23,16 +24,19 @@ public class AiController {
     private final TransactionRepository transactionRepository;
     private final UserRepository userRepository;
     private final AiContextCacheService aiContextCacheService;
+    private final AiCacheMetrics aiCacheMetrics;
 
     public AiController(
             FinancialAiService financialAiService,
             TransactionRepository transactionRepository,
             UserRepository userRepository,
-            AiContextCacheService aiContextCacheService) {
+            AiContextCacheService aiContextCacheService,
+            AiCacheMetrics aiCacheMetrics) {
         this.financialAiService = financialAiService;
         this.transactionRepository = transactionRepository;
         this.userRepository = userRepository;
         this.aiContextCacheService = aiContextCacheService;
+        this.aiCacheMetrics = aiCacheMetrics;
     }
 
     @PostMapping("/chat")
@@ -56,8 +60,10 @@ public class AiController {
                                 .map(AiContextCacheService.CachedTransaction::toTransaction)
                                 .toList()))
                 .orElseGet(() -> {
+                    long startNanos = System.nanoTime();
                     User user = userRepository.findById(userId).orElse(null);
                     List<Transaction> transactions = transactionRepository.findByUserId(userId);
+                    aiCacheMetrics.recordDatabaseLoad(System.nanoTime() - startNanos, 2);
                     aiContextCacheService.put(userId, user, transactions);
                     return new AiContext(user, transactions);
                 });

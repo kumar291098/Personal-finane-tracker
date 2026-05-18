@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.finance.model.AccessLevel;
 import com.finance.model.Transaction;
 import com.finance.model.User;
+import com.finance.monitoring.AiCacheMetrics;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -19,29 +20,38 @@ public class AiContextCacheService {
 
     private final Optional<StringRedisTemplate> redisTemplate;
     private final ObjectMapper objectMapper;
+    private final AiCacheMetrics metrics;
     private final boolean redisConfigured;
 
     public AiContextCacheService(
             Optional<StringRedisTemplate> redisTemplate,
             ObjectMapper objectMapper,
+            AiCacheMetrics metrics,
             @Value("${app.redis.url:}") String redisUrl) {
         this.redisTemplate = redisTemplate;
         this.objectMapper = objectMapper;
+        this.metrics = metrics;
         this.redisConfigured = redisUrl != null && !redisUrl.isBlank();
     }
 
     public Optional<CachedAiContext> get(Long userId) {
+        long startNanos = System.nanoTime();
         if (!redisConfigured || redisTemplate.isEmpty()) {
+            metrics.recordCacheDisabled(System.nanoTime() - startNanos);
             return Optional.empty();
         }
 
         try {
             String payload = redisTemplate.get().opsForValue().get(key(userId));
             if (payload == null || payload.isBlank()) {
+                metrics.recordCacheMiss(System.nanoTime() - startNanos);
                 return Optional.empty();
             }
-            return Optional.of(objectMapper.readValue(payload, CachedAiContext.class));
+            CachedAiContext cachedContext = objectMapper.readValue(payload, CachedAiContext.class);
+            metrics.recordCacheHit(System.nanoTime() - startNanos);
+            return Optional.of(cachedContext);
         } catch (Exception error) {
+            metrics.recordCacheError(System.nanoTime() - startNanos);
             return Optional.empty();
         }
     }
@@ -58,7 +68,9 @@ public class AiContextCacheService {
                     .toList();
             String payload = objectMapper.writeValueAsString(new CachedAiContext(cachedUser, cachedTransactions));
             redisTemplate.get().opsForValue().set(key(userId), payload, TTL);
+            metrics.recordCachePut();
         } catch (Exception ignored) {
+            metrics.recordCacheError(0);
             // Redis should improve performance, not break chat if unavailable.
         }
     }
