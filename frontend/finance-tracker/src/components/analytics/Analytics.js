@@ -1,6 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import { BarChart3, CalendarDays, FileSpreadsheet, Flag, PieChart, Printer, TrendingDown, TrendingUp } from 'lucide-react';
 import {
+  Box,
+  Button,
+  Card,
+  CardContent,
+  Chip,
+  FormControl,
+  Grid,
+  InputLabel,
+  LinearProgress,
+  MenuItem,
+  Paper,
+  Select,
+  Stack,
+  TextField,
+  Typography
+} from '@mui/material';
+import {
   CartesianGrid,
   Legend,
   Line,
@@ -396,86 +413,111 @@ const Analytics = () => {
 
   return (
     <div className="analytics-page">
-      <div className="analytics-header">
-        <div className="header-content">
-          <h1 className="page-title">Analytics & Reports</h1>
-          <p className="page-subtitle">
-            Track income, expenses, date ranges, and progress toward your goal.
-          </p>
-        </div>
-        <div className="export-actions">
-          <button type="button" className="btn btn-secondary" onClick={exportCsv}>
-            <FileSpreadsheet size={17} />
-            CSV
-          </button>
-          <button type="button" className="btn btn-primary" onClick={exportPdf}>
-            <Printer size={17} />
-            PDF
-          </button>
-        </div>
-      </div>
+      <Paper className="analytics-mui-header" elevation={0}>
+        <Stack direction={{ xs: 'column', md: 'row' }} alignItems={{ xs: 'stretch', md: 'center' }} justifyContent="space-between" spacing={2}>
+          <Box>
+            <Chip size="small" color="primary" variant="outlined" label="Analytics" sx={{ mb: 1 }} />
+            <Typography variant="h4" component="h1" fontWeight={800} color="text.primary">
+              Analytics & Reports
+            </Typography>
+            <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5, maxWidth: 720 }}>
+              Track income, expenses, date ranges, trends, and progress toward your goal.
+            </Typography>
+          </Box>
+          <Stack direction="row" spacing={1} flexWrap="wrap">
+            <Button variant="outlined" startIcon={<FileSpreadsheet size={17} />} onClick={exportCsv}>
+              CSV
+            </Button>
+            <Button variant="contained" startIcon={<Printer size={17} />} onClick={exportPdf}>
+              PDF
+            </Button>
+          </Stack>
+        </Stack>
+      </Paper>
 
-      <div className="tracking-controls">
-        <div className="filter-card analysis-filter">
-          <div className="filter-heading">
-            <span><CalendarDays size={18} /></span>
-            <div>
-              <h3>Analysis Date Range</h3>
-              <p>{analytics.transactionCount} transactions in this view</p>
-            </div>
-          </div>
-          <select
-            value={analysisFilter.period}
-            onChange={(event) => updateFilter('period', event.target.value)}
-            className="period-select"
-          >
-            {periodOptions.map(option => (
-              <option key={option.value} value={option.value}>{option.label}</option>
-            ))}
-          </select>
-          {analysisFilter.period === 'custom' && (
-            <div className="custom-range">
-              <label>
-                From
-                <input
-                  type="date"
-                  value={analysisFilter.startDate}
-                  onChange={(event) => updateFilter('startDate', event.target.value)}
-                />
-              </label>
-              <label>
-                To
-                <input
-                  type="date"
-                  value={analysisFilter.endDate}
-                  onChange={(event) => updateFilter('endDate', event.target.value)}
-                />
-              </label>
-            </div>
-          )}
-        </div>
+      <Grid container spacing={2}>
+        <Grid item xs={12} md={7}>
+          <Card className="analytics-mui-card" variant="outlined">
+            <CardContent>
+              <Stack spacing={2}>
+                <Stack direction="row" spacing={1.5} alignItems="center">
+                  <span className="analytics-mui-icon"><CalendarDays size={18} /></span>
+                  <Box>
+                    <Typography variant="subtitle1" fontWeight={700}>Analysis Date Range</Typography>
+                    <Typography variant="body2" color="text.secondary">{analytics.transactionCount} transactions in this view</Typography>
+                  </Box>
+                </Stack>
+                <FormControl fullWidth size="small">
+                  <InputLabel id="analysis-period-label">Range</InputLabel>
+                  <Select
+                    labelId="analysis-period-label"
+                    value={analysisFilter.period}
+                    label="Range"
+                    onChange={(event) => updateFilter('period', event.target.value)}
+                  >
+                    {periodOptions.map(option => (
+                      <MenuItem key={option.value} value={option.value}>{option.label}</MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+                {analysisFilter.period === 'custom' && (
+                  <Grid container spacing={1.5}>
+                    <Grid item xs={12} sm={6}>
+                      <TextField
+                        fullWidth
+                        size="small"
+                        type="date"
+                        label="From"
+                        value={analysisFilter.startDate}
+                        onChange={(event) => updateFilter('startDate', event.target.value)}
+                        InputLabelProps={{ shrink: true }}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <TextField
+                        fullWidth
+                        size="small"
+                        type="date"
+                        label="To"
+                        value={analysisFilter.endDate}
+                        onChange={(event) => updateFilter('endDate', event.target.value)}
+                        InputLabelProps={{ shrink: true }}
+                      />
+                    </Grid>
+                  </Grid>
+                )}
+              </Stack>
+            </CardContent>
+          </Card>
+        </Grid>
 
-        <div className="goal-progress-card">
-          <div className="filter-heading">
-            <span><Flag size={18} /></span>
-            <div>
-              <h3>{goal.title || 'Financial Goal'}</h3>
-              <p>{goal.targetDate ? `Target date ${goal.targetDate}` : 'Set a goal from Dashboard'}</p>
-            </div>
-          </div>
-          <div className="goal-progress-values">
-            <span>{formatCurrency(analytics.goal.achievedAmount)} achieved</span>
-            <strong>{analytics.goal.progress.toFixed(0)}%</strong>
-          </div>
-          <div className="goal-progress-track">
-            <div className="goal-progress-fill" style={{ width: `${analytics.goal.progress}%` }} />
-          </div>
-          <div className="goal-progress-footer">
-            <span>Goal: {analytics.goal.targetAmount ? formatCurrency(analytics.goal.targetAmount) : 'Not set'}</span>
-            <span>Left: {analytics.goal.targetAmount ? formatCurrency(analytics.goal.remainingAmount) : formatCurrency(0)}</span>
-          </div>
-        </div>
-      </div>
+        <Grid item xs={12} md={5}>
+          <Card className="analytics-mui-card" variant="outlined">
+            <CardContent>
+              <Stack spacing={2}>
+                <Stack direction="row" spacing={1.5} alignItems="center">
+                  <span className="analytics-mui-icon goal"><Flag size={18} /></span>
+                  <Box>
+                    <Typography variant="subtitle1" fontWeight={700}>{goal.title || 'Financial Goal'}</Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      {goal.targetDate ? `Target date ${goal.targetDate}` : 'Set a goal from Dashboard'}
+                    </Typography>
+                  </Box>
+                </Stack>
+                <Stack direction="row" justifyContent="space-between" spacing={2}>
+                  <Typography variant="body2" color="text.secondary">{formatCurrency(analytics.goal.achievedAmount)} achieved</Typography>
+                  <Typography variant="h6" fontWeight={800} color="primary">{analytics.goal.progress.toFixed(0)}%</Typography>
+                </Stack>
+                <LinearProgress variant="determinate" value={analytics.goal.progress} sx={{ height: 10, borderRadius: 999 }} />
+                <Stack direction="row" justifyContent="space-between" spacing={2}>
+                  <Typography variant="caption" color="text.secondary">Goal: {analytics.goal.targetAmount ? formatCurrency(analytics.goal.targetAmount) : 'Not set'}</Typography>
+                  <Typography variant="caption" color="text.secondary">Left: {analytics.goal.targetAmount ? formatCurrency(analytics.goal.remainingAmount) : formatCurrency(0)}</Typography>
+                </Stack>
+              </Stack>
+            </CardContent>
+          </Card>
+        </Grid>
+      </Grid>
 
       <div className="analytics-stats">
         <StatsCard
@@ -536,7 +578,7 @@ const Analytics = () => {
                     tickLine={false}
                     axisLine={false}
                     tick={{ fill: '#64748b', fontSize: 12 }}
-                    tickFormatter={(value) => `₹${Math.round(value)}`}
+                    tickFormatter={(value) => `INR ${Math.round(value)}`}
                     width={70}
                   />
                   <Tooltip
