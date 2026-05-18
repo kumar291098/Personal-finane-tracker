@@ -285,11 +285,6 @@ const Analytics = () => {
   const incomeCategoryData = getCategoryChartData('income');
   const monthlyTrend = getMonthlyTrend();
   const dailyTrend = getDailyTrend();
-  const categoryTotal = expenseCategoryData.reduce((sum, item) => sum + item.amount, 0);
-  const maxTrendAmount = Math.max(
-    ...monthlyTrend.flatMap(item => [item.income, item.expense]),
-    1
-  );
   const incomeExpenseTotal = Math.max(analytics.income + analytics.expenses, 1);
   const incomeShare = (analytics.income / incomeExpenseTotal) * 100;
   const expenseShare = (analytics.expenses / incomeExpenseTotal) * 100;

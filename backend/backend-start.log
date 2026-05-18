@@ -6275,3 +6275,6 @@ Authentication set for user: demo
 JWT Filter - Processing request: GET /api/transactions/user/1
 Authentication set for user: demo
 2026-05-19T02:12:41.886+05:30  INFO 47816 --- [nio-8080-exec-1] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/transactions/user/1 status=200 durationMs=9
+JWT Filter - Processing request: GET /api/transactions/user/1
+Authentication set for user: demo
+2026-05-19T02:26:13.895+05:30  INFO 47816 --- [nio-8080-exec-8] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/transactions/user/1 status=200 durationMs=43
