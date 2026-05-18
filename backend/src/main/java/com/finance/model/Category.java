@@ -30,7 +30,7 @@ public class Category {
     private Long sourceCategoryId;
 
     @Column(name = "hidden")
-    private boolean hidden = false;
+    private Boolean hidden = false;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
@@ -106,7 +106,7 @@ public class Category {
     }
 
     public boolean isHidden() {
-        return hidden;
+        return Boolean.TRUE.equals(hidden);
     }
 
     public void setHidden(boolean hidden) {

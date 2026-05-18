@@ -2,35 +2,50 @@ package com.finance.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.finance.model.Transaction;
+import com.finance.model.User;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
 @Service
 public class FinancialAiService {
     private final RestClient restClient;
+
+    @Value("${ai.provider:openai}")
+    private String aiProvider;
 
     @Value("${openai.api.key:}")
     private String openAiApiKey;
 
     @Value("${openai.model:gpt-5-mini}")
-    private String model;
+    private String openAiModel;
+
+    @Value("${gemini.api.key:}")
+    private String geminiApiKey;
+
+    @Value("${gemini.model:gemini-2.5-flash}")
+    private String geminiModel;
 
     public FinancialAiService(RestClient.Builder restClientBuilder) {
-        this.restClient = restClientBuilder
-                .baseUrl("https://api.openai.com/v1")
-                .build();
+        this.restClient = restClientBuilder.build();
     }
 
-    public String reply(String message, List<Transaction> transactions) {
+    public String reply(String message, User user, List<Transaction> transactions) {
         if (message == null || message.trim().isEmpty()) {
-            return "Ask me about spending, savings, budgets, or recent transactions.";
+            return "Ask me about spending, savings, budgets, recent transactions, or your membership.";
+        }
+
+        String profileAnswer = answerProfileLookup(message, user);
+        if (profileAnswer != null) {
+            return profileAnswer;
         }
 
         String directAnswer = answerTransactionLookup(message, transactions);
@@ -39,15 +54,56 @@ public class FinancialAiService {
         }
 
         String summary = buildTransactionSummary(transactions);
-        if (openAiApiKey == null || openAiApiKey.isBlank()) {
-            return fallbackReply(message, summary);
-        }
+        String userContext = buildUserContext(user);
 
         try {
-            return callOpenAi(message.trim(), summary);
+            if ("gemini".equalsIgnoreCase(aiProvider)) {
+                if (geminiApiKey == null || geminiApiKey.isBlank()) {
+                    return fallbackReply(message, summary);
+                }
+                return callGemini(message.trim(), summary, userContext);
+            }
+
+            if (openAiApiKey == null || openAiApiKey.isBlank()) {
+                return fallbackReply(message, summary);
+            }
+            return callOpenAi(message.trim(), summary, userContext);
         } catch (Exception error) {
             return "I could not reach the AI service, but here is your current snapshot: " + summary;
         }
+    }
+
+    private String answerProfileLookup(String message, User user) {
+        String normalizedMessage = message.toLowerCase();
+        boolean asksName = normalizedMessage.contains("my name")
+                || normalizedMessage.contains("who am i")
+                || normalizedMessage.contains("whose finance");
+        boolean asksMembership = normalizedMessage.contains("membership")
+                || normalizedMessage.contains("premium")
+                || normalizedMessage.contains("free user")
+                || normalizedMessage.contains("access level")
+                || normalizedMessage.contains("subscription");
+
+        if (!asksName && !asksMembership) {
+            return null;
+        }
+
+        if (user == null) {
+            return "I cannot read the current profile right now.";
+        }
+
+        if (asksName && asksMembership) {
+            return "This finance tracker is for " + getDisplayName(user)
+                    + ". Membership: " + getMembership(user)
+                    + ". Subscription ends: " + formatSubscriptionEnd(user.getSubscriberUntil()) + ".";
+        }
+
+        if (asksName) {
+            return "This finance tracker is for " + getDisplayName(user) + ".";
+        }
+
+        return "Membership: " + getMembership(user)
+                + ". Subscription ends: " + formatSubscriptionEnd(user.getSubscriberUntil()) + ".";
     }
 
     private String answerTransactionLookup(String message, List<Transaction> transactions) {
@@ -115,19 +171,14 @@ public class FinancialAiService {
         return value == null || value.isBlank() ? "No details" : value;
     }
 
-    private String callOpenAi(String message, String summary) {
+    private String callOpenAi(String message, String summary, String userContext) {
         Map<String, Object> requestBody = Map.of(
-                "model", model,
-                "input", """
-                        You are a careful personal finance assistant inside a finance tracker app.
-                        Do not give legal, tax, or investment advice. Use the user's transaction summary only.
-                        Transaction summary: %s
-                        User question: %s
-                        """.formatted(summary, message)
+                "model", openAiModel,
+                "input", buildPrompt(message, summary, userContext)
         );
 
         JsonNode response = restClient.post()
-                .uri("/responses")
+                .uri("https://api.openai.com/v1/responses")
                 .header("Authorization", "Bearer " + openAiApiKey)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(requestBody)
@@ -143,10 +194,49 @@ public class FinancialAiService {
             return outputText.asText();
         }
 
-        return extractTextFromOutput(response);
+        return extractTextFromOpenAiOutput(response);
     }
 
-    private String extractTextFromOutput(JsonNode response) {
+    private String callGemini(String message, String summary, String userContext) {
+        Map<String, Object> requestBody = Map.of(
+                "contents", List.of(
+                        Map.of("parts", List.of(
+                                Map.of("text", buildPrompt(message, summary, userContext))
+                        ))
+                ),
+                "generationConfig", Map.of(
+                        "temperature", 0.2,
+                        "maxOutputTokens", 500
+                )
+        );
+
+        JsonNode response = restClient.post()
+                .uri("https://generativelanguage.googleapis.com/v1beta/models/"
+                        + geminiModel + ":generateContent?key=" + geminiApiKey)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(requestBody)
+                .retrieve()
+                .body(JsonNode.class);
+
+        return extractGeminiText(response);
+    }
+
+    private String buildPrompt(String message, String summary, String userContext) {
+        return """
+                You are a careful personal finance assistant inside a finance tracker app.
+                Answer naturally and helpfully, but do not invent transactions or amounts.
+                Use only the app context, the user's transaction summary, and the current question.
+                If the summary does not contain enough information, say what data is missing.
+                You may answer questions about the current user's name, membership level, and subscription end date from the app context.
+                Do not give legal, tax, or investment advice.
+
+                App context: %s
+                Transaction summary: %s
+                User question: %s
+                """.formatted(userContext, summary, message);
+    }
+
+    private String extractTextFromOpenAiOutput(JsonNode response) {
         JsonNode output = response.get("output");
         if (output == null || !output.isArray()) {
             return "I could not prepare a response right now.";
@@ -162,6 +252,32 @@ public class FinancialAiService {
                         builder.append(text.asText()).append("\n");
                     }
                 });
+            }
+        });
+
+        return builder.isEmpty() ? "I could not prepare a response right now." : builder.toString().trim();
+    }
+
+    private String extractGeminiText(JsonNode response) {
+        if (response == null) {
+            return "I could not prepare a response right now.";
+        }
+
+        JsonNode candidates = response.get("candidates");
+        if (candidates == null || !candidates.isArray() || candidates.isEmpty()) {
+            return "I could not prepare a response right now.";
+        }
+
+        JsonNode parts = candidates.get(0).path("content").path("parts");
+        if (!parts.isArray()) {
+            return "I could not prepare a response right now.";
+        }
+
+        StringBuilder builder = new StringBuilder();
+        parts.forEach(part -> {
+            JsonNode text = part.get("text");
+            if (text != null && !text.asText().isBlank()) {
+                builder.append(text.asText()).append("\n");
             }
         });
 
@@ -199,6 +315,42 @@ public class FinancialAiService {
                 + (topCategories.isBlank() ? "" : ", top expense categories " + topCategories);
     }
 
+    private String buildUserContext(User user) {
+        if (user == null) {
+            return "current user profile unavailable";
+        }
+
+        return "current user name " + nullSafe(getDisplayName(user))
+                + ", username " + nullSafe(user.getUsername())
+                + ", membership " + getMembership(user)
+                + ", subscription ends " + formatSubscriptionEnd(user.getSubscriberUntil());
+    }
+
+    private String getDisplayName(User user) {
+        String displayName = Stream.of(user.getFirstName(), user.getLastName())
+                .filter(value -> value != null && !value.isBlank())
+                .collect(Collectors.joining(" "))
+                .trim();
+
+        if (displayName.isBlank()) {
+            displayName = user.getUsername();
+        }
+
+        return nullSafe(displayName);
+    }
+
+    private String getMembership(User user) {
+        return user.getAccessLevel() == null ? "not set" : user.getAccessLevel().name();
+    }
+
+    private String formatSubscriptionEnd(LocalDateTime subscriberUntil) {
+        if (subscriberUntil == null) {
+            return "not set";
+        }
+
+        return subscriberUntil.format(DateTimeFormatter.ofPattern("dd MMM yyyy HH:mm"));
+    }
+
     private String fallbackReply(String message, String summary) {
         String normalizedMessage = message.toLowerCase();
         if (normalizedMessage.contains("budget")) {
@@ -211,7 +363,8 @@ public class FinancialAiService {
                     + summary + ". If expenses are close to income, reduce the highest flexible category first.";
         }
 
+        String provider = "gemini".equalsIgnoreCase(aiProvider) ? "GEMINI_API_KEY" : "OPENAI_API_KEY";
         return "AI is not configured yet. Current finance snapshot: " + summary
-                + ". Set OPENAI_API_KEY on the backend to enable full AI answers.";
+                + ". Set " + provider + " on the backend to enable full AI answers.";
     }
 }
