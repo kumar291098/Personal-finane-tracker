@@ -1,38 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
+import { categoryService } from '../../services/categoryService';
 import './Categories.css';
 
 const Categories = () => {
   const [categories, setCategories] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [editingCategory, setEditingCategory] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
   const [formData, setFormData] = useState({
     name: '',
     type: 'EXPENSE',
     icon: '📝'
   });
-
-  // Default categories (since we don't have a categories API endpoint yet)
-  const defaultCategories = [
-    { id: 1, name: 'Salary', type: 'INCOME', icon: '💼' },
-    { id: 2, name: 'Freelance', type: 'INCOME', icon: '💻' },
-    { id: 3, name: 'Investment', type: 'INCOME', icon: '📈' },
-    { id: 4, name: 'Food & Dining', type: 'EXPENSE', icon: '🍔' },
-    { id: 5, name: 'Transportation', type: 'EXPENSE', icon: '🚗' },
-    { id: 6, name: 'Shopping', type: 'EXPENSE', icon: '🛍️' },
-    { id: 7, name: 'Entertainment', type: 'EXPENSE', icon: '🎬' },
-    { id: 8, name: 'Utilities', type: 'EXPENSE', icon: '⚡' },
-    { id: 9, name: 'Healthcare', type: 'EXPENSE', icon: '🏥' },
-    { id: 10, name: 'Education', type: 'EXPENSE', icon: '📚' },
-    { id: 11, name: 'Donation', type: 'EXPENSE', icon: '🤝' },
-    { id: 12, name: 'Grocery', type: 'EXPENSE', icon: '🛒' },
-    { id: 13, name: 'Sports', type: 'EXPENSE', icon: '🏏' }
-  ];
-
-  useEffect(() => {
-    // For now, use default categories
-    setCategories(defaultCategories);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   const availableIcons = [
     '💼', '💻', '📈', '🍔', '🚗', '🛍️', '🎬', '⚡', '🏥', '📚', '🤝', '🛒', '🏏',
@@ -40,26 +20,38 @@ const Categories = () => {
     '🌟', '🎵', '📊', '🎮', '☕', '🍕', '🚌', '⛽', '💊', '📖'
   ];
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    
-    if (editingCategory) {
-      // Update existing category
-      setCategories(prev => prev.map(cat => 
-        cat.id === editingCategory.id 
-          ? { ...cat, ...formData }
-          : cat
-      ));
-    } else {
-      // Add new category
-      const newCategory = {
-        id: Date.now(),
-        ...formData
-      };
-      setCategories(prev => [...prev, newCategory]);
+  const fetchCategories = useCallback(async () => {
+    try {
+      setLoading(true);
+      setError('');
+      const data = await categoryService.getCategories();
+      setCategories(Array.isArray(data) ? data : []);
+    } catch (err) {
+      setError(err.message || 'Failed to load categories');
+    } finally {
+      setLoading(false);
     }
-    
-    resetForm();
+  }, []);
+
+  useEffect(() => {
+    fetchCategories();
+  }, [fetchCategories]);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      setError('');
+      if (editingCategory) {
+        await categoryService.updateCategory(editingCategory.id, formData);
+      } else {
+        await categoryService.createCategory(formData);
+      }
+      await fetchCategories();
+      resetForm();
+    } catch (err) {
+      setError(err.message || 'Failed to save category');
+    }
   };
 
   const handleEdit = (category) => {
@@ -67,14 +59,22 @@ const Categories = () => {
     setFormData({
       name: category.name,
       type: category.type,
-      icon: category.icon
+      icon: category.icon || '📝'
     });
     setShowForm(true);
   };
 
-  const handleDelete = (categoryId) => {
-    if (window.confirm('Are you sure you want to delete this category?')) {
-      setCategories(prev => prev.filter(cat => cat.id !== categoryId));
+  const handleDelete = async (categoryId) => {
+    if (!window.confirm('Are you sure you want to delete this category from your preferences?')) {
+      return;
+    }
+
+    try {
+      setError('');
+      await categoryService.deleteCategory(categoryId);
+      await fetchCategories();
+    } catch (err) {
+      setError(err.message || 'Failed to delete category');
     }
   };
 
@@ -91,6 +91,45 @@ const Categories = () => {
   const getIncomeCategories = () => categories.filter(cat => cat.type === 'INCOME');
   const getExpenseCategories = () => categories.filter(cat => cat.type === 'EXPENSE');
 
+  const renderCategoryCard = (category, cardClass) => (
+    <div key={category.id} className={`category-card ${cardClass}`}>
+      <div className="category-icon">{category.icon}</div>
+      <div className="category-info">
+        <h4 className="category-name">{category.name}</h4>
+        <span className="category-type">{category.type === 'INCOME' ? 'Income' : 'Expense'}</span>
+      </div>
+      <div className="category-actions">
+        <button
+          className="action-btn edit-btn"
+          onClick={() => handleEdit(category)}
+          aria-label={`Edit ${category.name}`}
+        >
+          ✏️
+        </button>
+        <button
+          className="action-btn delete-btn"
+          onClick={() => handleDelete(category.id)}
+          aria-label={`Delete ${category.name}`}
+        >
+          🗑️
+        </button>
+      </div>
+    </div>
+  );
+
+  if (loading) {
+    return (
+      <div className="categories-page">
+        <div className="categories-header">
+          <div className="header-content">
+            <h1 className="page-title">Categories</h1>
+            <p className="page-subtitle">Loading your category preferences...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="categories-page">
       <div className="categories-header">
@@ -100,14 +139,16 @@ const Categories = () => {
             Organize your transactions with custom categories
           </p>
         </div>
-        <button 
+        <button
           className="btn btn-primary"
           onClick={() => setShowForm(true)}
         >
-          <span>��</span>
+          <span>＋</span>
           Add Category
         </button>
       </div>
+
+      {error && <div className="form-error">{error}</div>}
 
       <div className="categories-content">
         <div className="category-section">
@@ -118,31 +159,9 @@ const Categories = () => {
             </h3>
             <span className="category-count">{getIncomeCategories().length} categories</span>
           </div>
-          
+
           <div className="categories-grid">
-            {getIncomeCategories().map(category => (
-              <div key={category.id} className="category-card income-card">
-                <div className="category-icon">{category.icon}</div>
-                <div className="category-info">
-                  <h4 className="category-name">{category.name}</h4>
-                  <span className="category-type">Income</span>
-                </div>
-                <div className="category-actions">
-                  <button 
-                    className="action-btn edit-btn"
-                    onClick={() => handleEdit(category)}
-                  >
-                    ✏️
-                  </button>
-                  <button 
-                    className="action-btn delete-btn"
-                    onClick={() => handleDelete(category.id)}
-                  >
-                    🗑️
-                  </button>
-                </div>
-              </div>
-            ))}
+            {getIncomeCategories().map(category => renderCategoryCard(category, 'income-card'))}
           </div>
         </div>
 
@@ -154,44 +173,21 @@ const Categories = () => {
             </h3>
             <span className="category-count">{getExpenseCategories().length} categories</span>
           </div>
-          
+
           <div className="categories-grid">
-            {getExpenseCategories().map(category => (
-              <div key={category.id} className="category-card expense-card">
-                <div className="category-icon">{category.icon}</div>
-                <div className="category-info">
-                  <h4 className="category-name">{category.name}</h4>
-                  <span className="category-type">Expense</span>
-                </div>
-                <div className="category-actions">
-                  <button 
-                    className="action-btn edit-btn"
-                    onClick={() => handleEdit(category)}
-                  >
-                    ✏️
-                  </button>
-                  <button 
-                    className="action-btn delete-btn"
-                    onClick={() => handleDelete(category.id)}
-                  >
-                    🗑️
-                  </button>
-                </div>
-              </div>
-            ))}
+            {getExpenseCategories().map(category => renderCategoryCard(category, 'expense-card'))}
           </div>
         </div>
       </div>
 
-      {/* Category Form Modal */}
       {showForm && (
         <div className="modal-overlay" onClick={resetForm}>
           <div className="modal-content" onClick={e => e.stopPropagation()}>
             <div className="modal-header">
               <h3>{editingCategory ? 'Edit Category' : 'Add New Category'}</h3>
-              <button className="modal-close" onClick={resetForm}>✕</button>
+              <button className="modal-close" onClick={resetForm}>×</button>
             </div>
-            
+
             <form onSubmit={handleSubmit} className="category-form">
               <div className="form-group">
                 <label className="form-label">Category Name</label>

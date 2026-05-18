@@ -2,6 +2,7 @@ package com.finance.model;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "categories")
@@ -19,6 +20,17 @@ public class Category {
 
     @Column(name = "icon")
     private String icon;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    @JsonIgnore
+    private User user;
+
+    @Column(name = "source_category_id")
+    private Long sourceCategoryId;
+
+    @Column(name = "hidden")
+    private boolean hidden = false;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
@@ -75,6 +87,30 @@ public class Category {
 
     public void setIcon(String icon) {
         this.icon = icon;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Long getSourceCategoryId() {
+        return sourceCategoryId;
+    }
+
+    public void setSourceCategoryId(Long sourceCategoryId) {
+        this.sourceCategoryId = sourceCategoryId;
+    }
+
+    public boolean isHidden() {
+        return hidden;
+    }
+
+    public void setHidden(boolean hidden) {
+        this.hidden = hidden;
     }
 
     public LocalDateTime getCreatedAt() {

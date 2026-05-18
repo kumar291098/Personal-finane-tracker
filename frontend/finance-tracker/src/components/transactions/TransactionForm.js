@@ -1,8 +1,33 @@
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { CalendarDays, FileText, IndianRupee } from 'lucide-react';
+import { categoryService } from '../../services/categoryService';
 import { transactionService } from '../../services/transactionService';
 import { getISTDateString } from '../../utils/transactionUtils';
 import './TransactionForm.css';
+
+const DEFAULT_CATEGORIES = {
+  INCOME: [
+    { id: 1, name: 'Salary', icon: '💼' },
+    { id: 7, name: 'Freelance', icon: '💻' },
+    { id: 8, name: 'Investment', icon: '📈' },
+    { id: 9, name: 'Business', icon: '🏢' },
+    { id: 10, name: 'Other Income', icon: '💰' }
+  ],
+  EXPENSE: [
+    { id: 2, name: 'Food & Dining', icon: '🍔' },
+    { id: 3, name: 'Transportation', icon: '🚗' },
+    { id: 4, name: 'Shopping', icon: '🛍️' },
+    { id: 5, name: 'Entertainment', icon: '🎬' },
+    { id: 6, name: 'Utilities', icon: '⚡' },
+    { id: 11, name: 'Healthcare', icon: '🏥' },
+    { id: 12, name: 'Education', icon: '📚' },
+    { id: 13, name: 'Travel', icon: '✈️' },
+    { id: 15, name: 'Donation', icon: '🤝' },
+    { id: 16, name: 'Grocery', icon: '🛒' },
+    { id: 17, name: 'Sports', icon: '🏏' },
+    { id: 14, name: 'Other Expense', icon: '💸' }
+  ]
+};
 
 const TransactionForm = ({ onSuccess, onCancel, transaction = null }) => {
   const [formData, setFormData] = useState({
@@ -15,30 +40,31 @@ const TransactionForm = ({ onSuccess, onCancel, transaction = null }) => {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [userCategories, setUserCategories] = useState([]);
 
-  const categories = {
-    INCOME: [
-      { id: 1, name: 'Salary', icon: '💼' },
-      { id: 7, name: 'Freelance', icon: '💻' },
-      { id: 8, name: 'Investment', icon: '📈' },
-      { id: 9, name: 'Business', icon: '🏢' },
-      { id: 10, name: 'Other Income', icon: '💰' }
-    ],
-    EXPENSE: [
-      { id: 2, name: 'Food & Dining', icon: '🍔' },
-      { id: 3, name: 'Transportation', icon: '🚗' },
-      { id: 4, name: 'Shopping', icon: '🛍️' },
-      { id: 5, name: 'Entertainment', icon: '🎬' },
-      { id: 6, name: 'Utilities', icon: '⚡' },
-      { id: 11, name: 'Healthcare', icon: '🏥' },
-      { id: 12, name: 'Education', icon: '📚' },
-      { id: 13, name: 'Travel', icon: '✈️' },
-      { id: 15, name: 'Donation', icon: '🤝' },
-      { id: 16, name: 'Grocery', icon: '🛒' },
-      { id: 17, name: 'Sports', icon: '🏏' },
-      { id: 14, name: 'Other Expense', icon: '💸' }
-    ]
-  };
+  useEffect(() => {
+    const loadCategories = async () => {
+      try {
+        const data = await categoryService.getCategories();
+        setUserCategories(Array.isArray(data) ? data : []);
+      } catch (err) {
+        console.error('Error fetching categories:', err);
+      }
+    };
+
+    loadCategories();
+  }, []);
+
+  const categories = useMemo(() => {
+    if (userCategories.length === 0) {
+      return DEFAULT_CATEGORIES;
+    }
+
+    return {
+      INCOME: userCategories.filter(category => category.type === 'INCOME'),
+      EXPENSE: userCategories.filter(category => category.type === 'EXPENSE')
+    };
+  }, [userCategories]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -46,19 +72,17 @@ const TransactionForm = ({ onSuccess, onCancel, transaction = null }) => {
       ...prev,
       [name]: value
     }));
-    
-    // Auto-select category when type changes
+
     if (name === 'type') {
-      const defaultCategory = categories[value][0];
+      const defaultCategory = categories[value]?.[0];
       setFormData(prev => ({
         ...prev,
         type: value,
-        category: defaultCategory.name,
-        categoryId: defaultCategory.id
+        category: defaultCategory?.name || '',
+        categoryId: defaultCategory?.id || ''
       }));
     }
-    
-    // Update category name when categoryId changes
+
     if (name === 'categoryId') {
       const selectedCategory = categories[formData.type].find(cat => cat.id === parseInt(value));
       if (selectedCategory) {
@@ -69,7 +93,7 @@ const TransactionForm = ({ onSuccess, onCancel, transaction = null }) => {
         }));
       }
     }
-    
+
     if (error) setError('');
   };
 
@@ -95,9 +119,9 @@ const TransactionForm = ({ onSuccess, onCancel, transaction = null }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!validateForm()) return;
-    
+
     setLoading(true);
     setError('');
 
@@ -113,7 +137,7 @@ const TransactionForm = ({ onSuccess, onCancel, transaction = null }) => {
       } else {
         await transactionService.createTransaction(transactionData);
       }
-      
+
       onSuccess && onSuccess();
     } catch (err) {
       setError(err.message || 'Failed to save transaction');
@@ -136,7 +160,6 @@ const TransactionForm = ({ onSuccess, onCancel, transaction = null }) => {
           </div>
         )}
 
-        {/* Transaction Type */}
         <div className="form-group">
           <label className="form-label">Transaction Type</label>
           <div className="type-selector">
@@ -165,7 +188,6 @@ const TransactionForm = ({ onSuccess, onCancel, transaction = null }) => {
           </div>
         </div>
 
-        {/* Amount */}
         <div className="form-group">
           <label htmlFor="amount" className="form-label">
             Amount
@@ -187,7 +209,6 @@ const TransactionForm = ({ onSuccess, onCancel, transaction = null }) => {
           </div>
         </div>
 
-        {/* Description */}
         <div className="form-group">
           <label htmlFor="description" className="form-label">
             Description
@@ -207,14 +228,13 @@ const TransactionForm = ({ onSuccess, onCancel, transaction = null }) => {
           </div>
         </div>
 
-        {/* Category */}
         <div className="form-group">
           <label htmlFor="categoryId" className="form-label">
             Category
           </label>
           <div className="category-grid">
             {getCurrentCategories().map(category => (
-              <label 
+              <label
                 key={category.id}
                 className={`category-option ${parseInt(formData.categoryId) === category.id ? 'selected' : ''}`}
               >
@@ -232,7 +252,6 @@ const TransactionForm = ({ onSuccess, onCancel, transaction = null }) => {
           </div>
         </div>
 
-        {/* Date */}
         <div className="form-group">
           <label htmlFor="transactionDate" className="form-label">
             Date
@@ -251,7 +270,6 @@ const TransactionForm = ({ onSuccess, onCancel, transaction = null }) => {
           </div>
         </div>
 
-        {/* Form Actions */}
         <div className="form-actions">
           <button
             type="button"

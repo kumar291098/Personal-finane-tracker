@@ -20,8 +20,8 @@ public class DataInitializer implements CommandLineRunner {
     public void run(String... args) throws Exception {
         accessPolicyService.ensureDefaults();
 
-        // Check if categories already exist
-        if (categoryRepository.count() == 0) {
+        // Check if default categories already exist
+        if (!categoryRepository.existsByNameAndTypeAndUserIsNull("Income", "INCOME")) {
             System.out.println("Initializing default categories...");
 
             // Create default income categories
@@ -51,7 +51,7 @@ public class DataInitializer implements CommandLineRunner {
     }
 
     private void ensureCategory(String name, String type, String icon) {
-        if (!categoryRepository.existsByNameAndType(name, type)) {
+        if (!categoryRepository.existsByNameAndTypeAndUserIsNull(name, type)) {
             categoryRepository.save(new Category(name, type, icon));
             System.out.println(name + " category added.");
         }
