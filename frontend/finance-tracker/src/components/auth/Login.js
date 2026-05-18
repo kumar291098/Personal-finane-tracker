@@ -162,11 +162,32 @@ const Login = () => {
         </div>
 
         <div className="auth-demo">
-          <div className="demo-card">
+          <div className="demo-card auth-showcase">
             <h3 className="demo-title">Fast Money Checkups</h3>
             <p className="demo-description">
               Log in to see balances, category trends, and recent activity in one focused workspace.
             </p>
+            <div className="auth-preview-card">
+              <div className="auth-preview-topline">
+                <span>May balance</span>
+                <strong>₹9,172</strong>
+              </div>
+              <div className="auth-preview-bars">
+                <span style={{ height: '44%' }}></span>
+                <span style={{ height: '68%' }}></span>
+                <span style={{ height: '38%' }}></span>
+                <span style={{ height: '82%' }}></span>
+                <span style={{ height: '56%' }}></span>
+              </div>
+              <div className="auth-preview-row">
+                <span>Food & Dining</span>
+                <strong>₹181</strong>
+              </div>
+              <div className="auth-preview-row">
+                <span>Transportation</span>
+                <strong>₹56</strong>
+              </div>
+            </div>
             <div className="demo-benefits">
               <div className="benefit-item">
                 <BarChart3 size={20} />

@@ -3,18 +3,17 @@ package com.finance.service;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.finance.model.Transaction;
 import com.finance.model.User;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.MediaType;
-import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestClient;
-
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Stream;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.MediaType;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClient;
 
 @Service
 public class FinancialAiService {
@@ -41,7 +40,12 @@ public class FinancialAiService {
 
     public String reply(String message, User user, List<Transaction> transactions) {
         if (message == null || message.trim().isEmpty()) {
-            return "Ask me about spending, savings, budgets, or recent transactions.";
+            return "Ask me about spending, savings, budgets, recent transactions, or your membership.";
+        }
+
+        String profileAnswer = answerProfileLookup(message, user);
+        if (profileAnswer != null) {
+            return profileAnswer;
         }
 
         String directAnswer = answerTransactionLookup(message, transactions);
@@ -67,6 +71,39 @@ public class FinancialAiService {
         } catch (Exception error) {
             return "I could not reach the AI service, but here is your current snapshot: " + summary;
         }
+    }
+
+    private String answerProfileLookup(String message, User user) {
+        String normalizedMessage = message.toLowerCase();
+        boolean asksName = normalizedMessage.contains("my name")
+                || normalizedMessage.contains("who am i")
+                || normalizedMessage.contains("whose finance");
+        boolean asksMembership = normalizedMessage.contains("membership")
+                || normalizedMessage.contains("premium")
+                || normalizedMessage.contains("free user")
+                || normalizedMessage.contains("access level")
+                || normalizedMessage.contains("subscription");
+
+        if (!asksName && !asksMembership) {
+            return null;
+        }
+
+        if (user == null) {
+            return "I cannot read the current profile right now.";
+        }
+
+        if (asksName && asksMembership) {
+            return "This finance tracker is for " + getDisplayName(user)
+                    + ". Membership: " + getMembership(user)
+                    + ". Subscription ends: " + formatSubscriptionEnd(user.getSubscriberUntil()) + ".";
+        }
+
+        if (asksName) {
+            return "This finance tracker is for " + getDisplayName(user) + ".";
+        }
+
+        return "Membership: " + getMembership(user)
+                + ". Subscription ends: " + formatSubscriptionEnd(user.getSubscriberUntil()) + ".";
     }
 
     private String answerTransactionLookup(String message, List<Transaction> transactions) {
@@ -157,7 +194,7 @@ public class FinancialAiService {
             return outputText.asText();
         }
 
-        return extractTextFromOutput(response);
+        return extractTextFromOpenAiOutput(response);
     }
 
     private String callGemini(String message, String summary, String userContext) {
@@ -199,7 +236,7 @@ public class FinancialAiService {
                 """.formatted(userContext, summary, message);
     }
 
-    private String extractTextFromOutput(JsonNode response) {
+    private String extractTextFromOpenAiOutput(JsonNode response) {
         JsonNode output = response.get("output");
         if (output == null || !output.isArray()) {
             return "I could not prepare a response right now.";
@@ -283,6 +320,13 @@ public class FinancialAiService {
             return "current user profile unavailable";
         }
 
+        return "current user name " + nullSafe(getDisplayName(user))
+                + ", username " + nullSafe(user.getUsername())
+                + ", membership " + getMembership(user)
+                + ", subscription ends " + formatSubscriptionEnd(user.getSubscriberUntil());
+    }
+
+    private String getDisplayName(User user) {
         String displayName = Stream.of(user.getFirstName(), user.getLastName())
                 .filter(value -> value != null && !value.isBlank())
                 .collect(Collectors.joining(" "))
@@ -292,11 +336,11 @@ public class FinancialAiService {
             displayName = user.getUsername();
         }
 
-        String subscriptionEnd = formatSubscriptionEnd(user.getSubscriberUntil());
-        return "current user name " + nullSafe(displayName)
-                + ", username " + nullSafe(user.getUsername())
-                + ", membership " + user.getAccessLevel().name()
-                + ", subscription ends " + subscriptionEnd;
+        return nullSafe(displayName);
+    }
+
+    private String getMembership(User user) {
+        return user.getAccessLevel() == null ? "not set" : user.getAccessLevel().name();
     }
 
     private String formatSubscriptionEnd(LocalDateTime subscriberUntil) {

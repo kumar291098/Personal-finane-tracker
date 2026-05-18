@@ -95,6 +95,109 @@
   font-size: var(--font-size-lg);
 }
 
+.monitoring-panel-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--spacing-md);
+}
+
+.monitoring-panel-heading p {
+  margin: 4px 0 0;
+  color: var(--gray-500);
+  font-size: var(--font-size-sm);
+  line-height: 1.45;
+}
+
+.monitoring-panel-heading svg {
+  color: var(--primary-600);
+  flex-shrink: 0;
+}
+
+.ai-cache-panel {
+  gap: var(--spacing-lg);
+}
+
+.ai-cache-summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: var(--spacing-sm);
+}
+
+.metric-tile {
+  min-height: 92px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-md);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-lg);
+  background: var(--gray-50);
+}
+
+.metric-tile span {
+  color: var(--gray-500);
+  font-size: var(--font-size-sm);
+}
+
+.metric-tile strong {
+  color: var(--gray-900);
+  font-size: var(--font-size-xl);
+  overflow-wrap: anywhere;
+}
+
+.metric-tile.success {
+  background: var(--success-100);
+  border-color: var(--success-300);
+}
+
+.metric-tile.warning {
+  background: var(--warning-100);
+  border-color: var(--warning-300);
+}
+
+.metric-tile.success strong {
+  color: var(--success-700);
+}
+
+.metric-tile.warning strong {
+  color: var(--warning-700);
+}
+
+.ai-cache-table {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1px;
+  overflow: hidden;
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-lg);
+  background: var(--gray-200);
+}
+
+.metric-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-md);
+  min-width: 0;
+  padding: 12px var(--spacing-md);
+  background: white;
+}
+
+.metric-row span {
+  min-width: 0;
+  color: var(--gray-600);
+  font-size: var(--font-size-sm);
+}
+
+.metric-row strong {
+  color: var(--gray-900);
+  font-size: var(--font-size-sm);
+  text-align: right;
+  overflow-wrap: anywhere;
+}
+
 .monitoring-list {
   display: grid;
   gap: var(--spacing-sm);
@@ -174,5 +277,16 @@
 :root[data-theme='dark'] .metric-hint,
 :root[data-theme='dark'] .monitoring-panel code {
   background: #0f172a;
+  border-color: #334155;
+}
+
+:root[data-theme='dark'] .metric-tile,
+:root[data-theme='dark'] .metric-row {
+  background: #0f172a;
+  border-color: #334155;
+}
+
+:root[data-theme='dark'] .ai-cache-table {
+  background: #334155;
   border-color: #334155;
 }

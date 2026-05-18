@@ -1,5 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { BarChart3, CalendarDays, FileSpreadsheet, Flag, PieChart, Printer, TrendingDown, TrendingUp } from 'lucide-react';
+import { BarChart3, CalendarDays, FileSpreadsheet, Flag, PieChart, Printer, TrendingDown, TrendingUp, Target } from 'lucide-react';
+import {
+  CartesianGrid,
+  Legend,
+  Line,
+  LineChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis
+} from 'recharts';
 import { transactionService } from '../../services/transactionService';
 import StatsCard from '../shared/StatsCard';
 import { formatCurrency } from '../../utils/transactionUtils';
@@ -23,16 +33,12 @@ const periodOptions = [
 const Analytics = () => {
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [incomeFilter, setIncomeFilter] = useState({
+  const [analysisFilter, setAnalysisFilter] = useState({
     period: 'all',
     startDate: '',
     endDate: ''
   });
-  const [expenseFilter, setExpenseFilter] = useState({
-    period: 'all',
-    startDate: '',
-    endDate: ''
-  });
+
   const readSavedGoal = () => {
     try {
       const savedGoal = localStorage.getItem('financeGoal');
@@ -114,8 +120,8 @@ const Analytics = () => {
 
   const getTotal = (items) => items.reduce((sum, transaction) => sum + transaction.amount, 0);
 
-  const filterTransactionsByRange = (type, filter) => {
-    const { startDate, endDate } = getDateRange(filter);
+  const filterTransactionsByRange = (type) => {
+    const { startDate, endDate } = getDateRange(analysisFilter);
     return transactions.filter(transaction => {
       const transactionDate = new Date(transaction.transactionDate);
       return transaction.type === type &&
@@ -124,17 +130,16 @@ const Analytics = () => {
     });
   };
 
-  const updateFilter = (type, field, value) => {
-    const setter = type === 'income' ? setIncomeFilter : setExpenseFilter;
-    setter(prev => ({
+  const updateFilter = (field, value) => {
+    setAnalysisFilter(prev => ({
       ...prev,
       [field]: value
     }));
   };
 
   const getAnalytics = () => {
-    const incomeTransactions = filterTransactionsByRange('INCOME', incomeFilter);
-    const expenseTransactions = filterTransactionsByRange('EXPENSE', expenseFilter);
+    const incomeTransactions = filterTransactionsByRange('INCOME');
+    const expenseTransactions = filterTransactionsByRange('EXPENSE');
     const periodTransactions = [...incomeTransactions, ...expenseTransactions];
 
     const income = getTotal(incomeTransactions);
@@ -186,6 +191,7 @@ const Analytics = () => {
   };
 
   const analytics = getAnalytics();
+  
   const getCategoryChartData = (type) => {
     const source = type === 'income' ? analytics.incomeTransactions : analytics.expenseTransactions;
     const totals = source.reduce((acc, transaction) => {
@@ -239,9 +245,41 @@ const Analytics = () => {
       }));
   };
 
+  const getDailyTrend = () => {
+    const grouped = analytics.periodTransactions.reduce((acc, transaction) => {
+      const date = new Date(transaction.transactionDate);
+      const key = date.toISOString().slice(0, 10);
+
+      if (!acc[key]) {
+        acc[key] = { date: key, income: 0, expense: 0, balance: 0 };
+      }
+
+      if (transaction.type === 'INCOME') {
+        acc[key].income += transaction.amount;
+      } else {
+        acc[key].expense += transaction.amount;
+      }
+
+      acc[key].balance = acc[key].income - acc[key].expense;
+      return acc;
+    }, {});
+
+    return Object.values(grouped)
+      .sort((first, second) => first.date.localeCompare(second.date))
+      .slice(-12)
+      .map(item => ({
+        ...item,
+        label: new Date(`${item.date}T00:00:00`).toLocaleDateString('en-IN', {
+          day: '2-digit',
+          month: 'short'
+        })
+      }));
+  };
+
   const expenseCategoryData = getCategoryChartData('expense');
   const incomeCategoryData = getCategoryChartData('income');
   const monthlyTrend = getMonthlyTrend();
+  const dailyTrend = getDailyTrend();
   const categoryTotal = expenseCategoryData.reduce((sum, item) => sum + item.amount, 0);
   const maxTrendAmount = Math.max(
     ...monthlyTrend.flatMap(item => [item.income, item.expense]),
@@ -278,27 +316,29 @@ const Analytics = () => {
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;');
 
-  const exportExcel = () => {
+  const escapeCsvCell = (value) => {
+    const text = String(value ?? '').replace(/"/g, '""');
+    return `"${text}"`;
+  };
+
+  const exportCsv = () => {
     const rows = getExportRows();
+    const headers = ['Date', 'Type', 'Category', 'Description', 'Amount'];
     const summaryRows = [
+      ['FinanceTracker Report'],
       ['Total Income', analytics.income],
       ['Total Expenses', analytics.expenses],
       ['Net Balance', analytics.balance],
-      ['Goal Progress', `${analytics.goal.progress.toFixed(1)}%`]
+      ['Goal Progress', `${analytics.goal.progress.toFixed(1)}%`],
+      [],
+      headers
     ];
-    const html = `
-      <html>
-        <head><meta charset="utf-8" /></head>
-        <body>
-          <table border="1">
-            <tr><th colspan="5">FinanceTracker Report</th></tr>
-            ${summaryRows.map(row => `<tr><td colspan="3">${escapeCell(row[0])}</td><td colspan="2">${escapeCell(row[1])}</td></tr>`).join('')}
-            <tr>${Object.keys(rows[0] || { Date: '', Type: '', Category: '', Description: '', Amount: '' }).map(key => `<th>${key}</th>`).join('')}</tr>
-            ${rows.map(row => `<tr>${Object.values(row).map(value => `<td>${escapeCell(value)}</td>`).join('')}</tr>`).join('')}
-          </table>
-        </body>
-      </html>`;
-    downloadFile(html, `finance-report-${Date.now()}.xls`, 'application/vnd.ms-excel');
+    const csv = [
+      ...summaryRows.map(row => row.map(escapeCsvCell).join(',')),
+      ...rows.map(row => headers.map(header => escapeCsvCell(row[header])).join(','))
+    ].join('\r\n');
+
+    downloadFile(`\uFEFF${csv}`, `finance-report-${Date.now()}.csv`, 'text/csv;charset=utf-8');
   };
 
   const exportPdf = () => {
@@ -358,122 +398,106 @@ const Analytics = () => {
 
   return (
     <div className="analytics-page">
-      <div className="analytics-header">
-        <div className="header-content">
-          <h1 className="page-title">Analytics & Reports</h1>
-          <p className="page-subtitle">
-            Track income, expenses, date ranges, and progress toward your goal.
+      <div className="analytics-header-card">
+        <div className="analytics-header-content">
+          <p className="analytics-kicker">Analytics</p>
+          <h1 className="analytics-title">Analytics & Reports</h1>
+          <p className="analytics-subtitle">
+            Track income, expenses, date ranges, trends, and progress toward your goal.
           </p>
         </div>
-        <div className="export-actions">
-          <button type="button" className="btn btn-secondary" onClick={exportExcel}>
-            <FileSpreadsheet size={17} />
-            Excel
+        <div className="header-actions">
+          <button className="btn btn-secondary export-btn" onClick={exportCsv}>
+            <FileSpreadsheet size={18} />
+            Export CSV
           </button>
-          <button type="button" className="btn btn-primary" onClick={exportPdf}>
-            <Printer size={17} />
-            PDF
+          <button className="btn btn-primary export-btn" onClick={exportPdf}>
+            <Printer size={18} />
+            Export PDF
           </button>
         </div>
       </div>
 
-      <div className="tracking-controls">
-        <div className="filter-card income-filter">
-          <div className="filter-heading">
-            <span><TrendingUp size={18} /></span>
-            <div>
-              <h3>Income Filter</h3>
-              <p>{analytics.incomeCount} income records</p>
+      <div className="analytics-controls-grid">
+        <div className="analytics-card">
+          <div className="analytics-card-content">
+            <div className="control-header">
+              <span className="control-icon"><CalendarDays size={20} /></span>
+              <div>
+                <h3 className="control-title">Analysis Date Range</h3>
+                <p className="control-subtitle">{analytics.transactionCount} transactions in this view</p>
+              </div>
             </div>
+            
+            <div className="control-form-group">
+              <label htmlFor="analysis-period">Range</label>
+              <select
+                id="analysis-period"
+                value={analysisFilter.period}
+                onChange={(event) => updateFilter('period', event.target.value)}
+                className="analytics-select"
+              >
+                {periodOptions.map(option => (
+                  <option key={option.value} value={option.value}>{option.label}</option>
+                ))}
+              </select>
+            </div>
+            
+            {analysisFilter.period === 'custom' && (
+              <div className="custom-date-grid">
+                <div className="control-form-group">
+                  <label htmlFor="start-date">From</label>
+                  <input
+                    id="start-date"
+                    type="date"
+                    className="analytics-input"
+                    value={analysisFilter.startDate}
+                    onChange={(event) => updateFilter('startDate', event.target.value)}
+                  />
+                </div>
+                <div className="control-form-group">
+                  <label htmlFor="end-date">To</label>
+                  <input
+                    id="end-date"
+                    type="date"
+                    className="analytics-input"
+                    value={analysisFilter.endDate}
+                    onChange={(event) => updateFilter('endDate', event.target.value)}
+                  />
+                </div>
+              </div>
+            )}
           </div>
-          <select
-            value={incomeFilter.period}
-            onChange={(event) => updateFilter('income', 'period', event.target.value)}
-            className="period-select"
-          >
-            {periodOptions.map(option => (
-              <option key={option.value} value={option.value}>{option.label}</option>
-            ))}
-          </select>
-          {incomeFilter.period === 'custom' && (
-            <div className="custom-range">
-              <label>
-                From
-                <input
-                  type="date"
-                  value={incomeFilter.startDate}
-                  onChange={(event) => updateFilter('income', 'startDate', event.target.value)}
-                />
-              </label>
-              <label>
-                To
-                <input
-                  type="date"
-                  value={incomeFilter.endDate}
-                  onChange={(event) => updateFilter('income', 'endDate', event.target.value)}
-                />
-              </label>
-            </div>
-          )}
         </div>
 
-        <div className="filter-card expense-filter">
-          <div className="filter-heading">
-            <span><TrendingDown size={18} /></span>
-            <div>
-              <h3>Expense Filter</h3>
-              <p>{analytics.expenseCount} expense records</p>
+        <div className="analytics-card">
+          <div className="analytics-card-content">
+            <div className="control-header">
+              <span className="control-icon goal-icon"><Target size={20} /></span>
+              <div>
+                <h3 className="control-title">{goal.title || 'Financial Goal'}</h3>
+                <p className="control-subtitle">
+                  {goal.targetDate ? `Target date ${goal.targetDate}` : 'Set a goal from Dashboard'}
+                </p>
+              </div>
             </div>
-          </div>
-          <select
-            value={expenseFilter.period}
-            onChange={(event) => updateFilter('expense', 'period', event.target.value)}
-            className="period-select"
-          >
-            {periodOptions.map(option => (
-              <option key={option.value} value={option.value}>{option.label}</option>
-            ))}
-          </select>
-          {expenseFilter.period === 'custom' && (
-            <div className="custom-range">
-              <label>
-                From
-                <input
-                  type="date"
-                  value={expenseFilter.startDate}
-                  onChange={(event) => updateFilter('expense', 'startDate', event.target.value)}
-                />
-              </label>
-              <label>
-                To
-                <input
-                  type="date"
-                  value={expenseFilter.endDate}
-                  onChange={(event) => updateFilter('expense', 'endDate', event.target.value)}
-                />
-              </label>
+            
+            <div className="goal-progress-container">
+              <div className="goal-progress-header">
+                <span className="goal-achieved">{formatCurrency(analytics.goal.achievedAmount)} achieved</span>
+                <span className="goal-percent">{analytics.goal.progress.toFixed(0)}%</span>
+              </div>
+              <div className="goal-progress-track">
+                <div 
+                  className="goal-progress-fill" 
+                  style={{ width: `${analytics.goal.progress}%` }}
+                ></div>
+              </div>
+              <div className="goal-progress-footer">
+                <span>Goal: {analytics.goal.targetAmount ? formatCurrency(analytics.goal.targetAmount) : 'Not set'}</span>
+                <span>Left: {analytics.goal.targetAmount ? formatCurrency(analytics.goal.remainingAmount) : formatCurrency(0)}</span>
+              </div>
             </div>
-          )}
-        </div>
-
-        <div className="goal-progress-card">
-          <div className="filter-heading">
-            <span><Flag size={18} /></span>
-            <div>
-              <h3>{goal.title || 'Financial Goal'}</h3>
-              <p>{goal.targetDate ? `Target date ${goal.targetDate}` : 'Set a goal from Dashboard'}</p>
-            </div>
-          </div>
-          <div className="goal-progress-values">
-            <span>{formatCurrency(analytics.goal.achievedAmount)} achieved</span>
-            <strong>{analytics.goal.progress.toFixed(0)}%</strong>
-          </div>
-          <div className="goal-progress-track">
-            <div className="goal-progress-fill" style={{ width: `${analytics.goal.progress}%` }} />
-          </div>
-          <div className="goal-progress-footer">
-            <span>Goal: {analytics.goal.targetAmount ? formatCurrency(analytics.goal.targetAmount) : 'Not set'}</span>
-            <span>Left: {analytics.goal.targetAmount ? formatCurrency(analytics.goal.remainingAmount) : formatCurrency(0)}</span>
           </div>
         </div>
       </div>
@@ -485,7 +509,7 @@ const Analytics = () => {
           icon="📈"
           type="success"
           trend="up"
-          subtitle="Using income filter"
+          subtitle="Selected date range"
         />
         <StatsCard
           title="Total Expenses"
@@ -493,7 +517,7 @@ const Analytics = () => {
           icon="📉"
           type="error"
           trend="down"
-          subtitle="Using expense filter"
+          subtitle="Selected date range"
         />
         <StatsCard
           title="Net Balance"
@@ -501,7 +525,7 @@ const Analytics = () => {
           icon="💰"
           type={analytics.balance >= 0 ? 'success' : 'error'}
           trend={analytics.balance >= 0 ? 'up' : 'down'}
-          subtitle="Filtered income - expenses"
+          subtitle="Income - expenses"
         />
         <StatsCard
           title="Avg Transaction"
@@ -513,6 +537,76 @@ const Analytics = () => {
       </div>
 
       <div className="report-grid">
+        <div className="report-card report-card-wide">
+          <div className="report-card-header">
+            <div>
+              <h3><TrendingUp size={20} /> Cash Flow Line</h3>
+              <p>Daily income, expenses, and net balance for the selected date range.</p>
+            </div>
+          </div>
+          {dailyTrend.length === 0 ? (
+            <div className="empty-analytics">No line chart data available for this range.</div>
+          ) : (
+            <div className="line-chart-wrap">
+              <ResponsiveContainer width="100%" height={320}>
+                <LineChart data={dailyTrend} margin={{ top: 12, right: 16, left: 4, bottom: 8 }}>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
+                  <XAxis
+                    dataKey="label"
+                    tickLine={false}
+                    axisLine={false}
+                    tick={{ fill: '#64748b', fontSize: 12 }}
+                  />
+                  <YAxis
+                    tickLine={false}
+                    axisLine={false}
+                    tick={{ fill: '#64748b', fontSize: 12 }}
+                    tickFormatter={(value) => `INR ${Math.round(value)}`}
+                    width={70}
+                  />
+                  <Tooltip
+                    formatter={(value, name) => [formatCurrency(value), name]}
+                    labelFormatter={(label) => `Date: ${label}`}
+                    contentStyle={{
+                      borderRadius: 12,
+                      border: '1px solid #e2e8f0',
+                      boxShadow: '0 12px 30px rgba(15, 23, 42, 0.12)'
+                    }}
+                  />
+                  <Legend verticalAlign="top" height={36} iconType="circle" />
+                  <Line
+                    type="monotone"
+                    dataKey="income"
+                    name="Income"
+                    stroke="#0f766e"
+                    strokeWidth={3}
+                    dot={{ r: 4, strokeWidth: 2 }}
+                    activeDot={{ r: 6 }}
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="expense"
+                    name="Expenses"
+                    stroke="#ef4444"
+                    strokeWidth={3}
+                    dot={{ r: 4, strokeWidth: 2 }}
+                    activeDot={{ r: 6 }}
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="balance"
+                    name="Balance"
+                    stroke="#2563eb"
+                    strokeWidth={3}
+                    dot={{ r: 4, strokeWidth: 2 }}
+                    activeDot={{ r: 6 }}
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+          )}
+        </div>
+
         <div className="report-card report-card-wide">
           <div className="report-card-header">
             <div>

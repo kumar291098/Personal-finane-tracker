@@ -15,3 +15,227 @@ Note that the development build is not optimized.
 To create a production build, use npm run build.
 
 webpack compiled [1m[32msuccessfully[39m[22m
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src\components\analytics\Analytics.js
+  Line 6:3:   'Card' is defined but never used            no-unused-vars
+  Line 7:3:   'CardContent' is defined but never used     no-unused-vars
+  Line 10:3:  'Grid' is defined but never used            no-unused-vars
+  Line 12:3:  'LinearProgress' is defined but never used  no-unused-vars
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+[1m[33mWARNING[39m[22m in [1m[eslint] 
+src\components\analytics\Analytics.js
+  Line 6:3:   'Card' is defined but never used            no-unused-vars
+  Line 7:3:   'CardContent' is defined but never used     no-unused-vars
+  Line 10:3:  'Grid' is defined but never used            no-unused-vars
+  Line 12:3:  'LinearProgress' is defined but never used  no-unused-vars
+
+[39m[22m
+
+webpack compiled with [1m[33m1 warning[39m[22m
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src\components\analytics\Analytics.js
+  Line 6:3:   'Card' is defined but never used            no-unused-vars
+  Line 7:3:   'CardContent' is defined but never used     no-unused-vars
+  Line 10:3:  'Grid' is defined but never used            no-unused-vars
+  Line 12:3:  'LinearProgress' is defined but never used  no-unused-vars
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+[1m[33mWARNING[39m[22m in [1m[eslint] 
+src\components\analytics\Analytics.js
+  Line 6:3:   'Card' is defined but never used            no-unused-vars
+  Line 7:3:   'CardContent' is defined but never used     no-unused-vars
+  Line 10:3:  'Grid' is defined but never used            no-unused-vars
+  Line 12:3:  'LinearProgress' is defined but never used  no-unused-vars
+
+[39m[22m
+
+webpack compiled with [1m[33m1 warning[39m[22m
+Compiling...
+Compiled successfully!
+webpack compiled [1m[32msuccessfully[39m[22m
+Compiling...
+Compiled successfully!
+webpack compiled [1m[32msuccessfully[39m[22m
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src\components\analytics\Analytics.js
+  Line 2:52:  'Flag' is defined but never used  no-unused-vars
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+[1m[33mWARNING[39m[22m in [1m[eslint] 
+src\components\analytics\Analytics.js
+  Line 2:52:  'Flag' is defined but never used  no-unused-vars
+
+[39m[22m
+
+webpack compiled with [1m[33m1 warning[39m[22m
+Compiling...
+Failed to compile.
+
+[eslint] 
+src\components\analytics\Analytics.js
+Syntax error: Unexpected token (2:1) (2:1)
+[1m[31mERROR[39m[22m in [1m./src/components/analytics/Analytics.js[39m[22m
+Module build failed (from ./node_modules/babel-loader/lib/index.js):
+SyntaxError: E:\JavaProject\Personal-finance-tracker\frontend\finance-tracker\src\components\analytics\Analytics.js: Unexpected token (2:1)
+
+[0m [90m 1 |[39m [36mimport[39m [33mReact[39m[33m,[39m { useEffect[33m,[39m useState } [36mfrom[39m [32m'react'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 2 |[39m [33m<<[39m[33m<<[39m[33m<<[39m[33m<[39m [33mHEAD[39m
+ [90m   |[39m  [31m[1m^[22m[39m
+ [90m 3 |[39m [36mimport[39m { [33mBarChart3[39m[33m,[39m [33mCalendarDays[39m[33m,[39m [33mFileSpreadsheet[39m[33m,[39m [33mFlag[39m[33m,[39m [33mPieChart[39m[33m,[39m [33mPrinter[39m[33m,[39m [33mTrendingDown[39m[33m,[39m [33mTrendingUp[39m[33m,[39m [33mTarget[39m } [36mfrom[39m [32m'lucide-react'[39m[33m;[39m
+ [90m 4 |[39m [33m===[39m[33m===[39m[33m=[39m
+ [90m 5 |[39m [36mimport[39m { [33mBarChart3[39m[33m,[39m [33mCalendarDays[39m[33m,[39m [33mFileSpreadsheet[39m[33m,[39m [33mFlag[39m[33m,[39m [33mPieChart[39m[33m,[39m [33mPrinter[39m[33m,[39m [33mTrendingDown[39m[33m,[39m [33mTrendingUp[39m } [36mfrom[39m [32m'lucide-react'[39m[33m;[39m[0m
+    at constructor (E:\JavaProject\Personal-finance-tracker\frontend\finance-tracker\node_modules\@babel\parser\lib\index.js:367:19)
+    at FlowParserMixin.raise (E:\JavaProject\Personal-finance-tracker\frontend\finance-tracker\node_modules\@babel\parser\lib\index.js:6627:19)
+    at FlowParserMixin.unexpected (E:\JavaProject\Personal-finance-tracker\frontend\finance-tracker\node_modules\@babel\parser\lib\index.js:6647:16)
+    at FlowParserMixin.jsxParseIdentifier (E:\JavaProject\Personal-finance-tracker\frontend\finance-tracker\node_modules\@babel\parser\lib\index.js:4599:12)
+    at FlowParserMixin.jsxParseNamespacedName (E:\JavaProject\Personal-finance-tracker\frontend\finance-tracker\node_modules\@babel\parser\lib\index.js:4606:23)
+    at FlowParserMixin.jsxParseElementName (E:\JavaProject\Personal-finance-tracker\frontend\finance-tracker\node_modules\@babel\parser\lib\index.js:4615:21)
+    at FlowParserMixin.jsxParseOpeningElementAt (E:\JavaProject\Personal-finance-tracker\frontend\finance-tracker\node_modules\@babel\parser\lib\index.js:4691:22)
+    at FlowParserMixin.jsxParseElementAt (E:\JavaProject\Personal-finance-tracker\frontend\finance-tracker\node_modules\@babel\parser\lib\index.js:4716:33)
+    at FlowParserMixin.jsxParseElement (E:\JavaProject\Personal-finance-tracker\frontend\finance-tracker\node_modules\@babel\parser\lib\index.js:4779:17)
+    at FlowParserMixin.parseExprAtom (E:\JavaProject\Personal-finance-tracker\frontend\finance-tracker\node_modules\@babel\parser\lib\index.js:4789:19)
+    at FlowParserMixin.parseExprSubscripts (E:\JavaProject\Personal-finance-tracker\frontend\finance-tracker\node_modules\@babel\parser\lib\index.js:11076:23)
+    at FlowParserMixin.parseUpdate (E:\JavaProject\Personal-finance-tracker\frontend\finance-tracker\node_modules\@babel\parser\lib\index.js:11061:21)
+    at FlowParserMixin.parseMaybeUnary (E:\JavaProject\Personal-finance-tracker\frontend\finance-tracker\node_modules\@babel\parser\lib\index.js:11041:23)
+    at FlowParserMixin.parseMaybeUnaryOrPrivate (E:\JavaProject\Personal-finance-tracker\frontend\finance-tracker\node_modules\@babel\parser\lib\index.js:10894:61)
+    at FlowParserMixin.parseExprOps (E:\JavaProject\Personal-finance-tracker\frontend\finance-tracker\node_modules\@babel\parser\lib\index.js:10899:23)
+    at FlowParserMixin.parseMaybeConditional (E:\JavaProject\Personal-finance-tracker\frontend\finance-tracker\node_modules\@babel\parser\lib\index.js:10876:23)
+    at FlowParserMixin.parseMaybeAssign (E:\JavaProject\Personal-finance-tracker\frontend\finance-tracker\node_modules\@babel\parser\lib\index.js:10826:21)
+    at E:\JavaProject\Personal-finance-tracker\frontend\finance-tracker\node_modules\@babel\parser\lib\index.js:3528:39
+    at FlowParserMixin.tryParse (E:\JavaProject\Personal-finance-tracker\frontend\finance-tracker\node_modules\@babel\parser\lib\index.js:6935:20)
+    at FlowParserMixin.parseMaybeAssign (E:\JavaProject\Personal-finance-tracker\frontend\finance-tracker\node_modules\@babel\parser\lib\index.js:3528:18)
+    at FlowParserMixin.parseExpressionBase (E:\JavaProject\Personal-finance-tracker\frontend\finance-tracker\node_modules\@babel\parser\lib\index.js:10779:23)
+    at E:\JavaProject\Personal-finance-tracker\frontend\finance-tracker\node_modules\@babel\parser\lib\index.js:10775:39
+    at FlowParserMixin.allowInAnd (E:\JavaProject\Personal-finance-tracker\frontend\finance-tracker\node_modules\@babel\parser\lib\index.js:12422:16)
+    at FlowParserMixin.parseExpression (E:\JavaProject\Personal-finance-tracker\frontend\finance-tracker\node_modules\@babel\parser\lib\index.js:10775:17)
+    at FlowParserMixin.parseStatementContent (E:\JavaProject\Personal-finance-tracker\frontend\finance-tracker\node_modules\@babel\parser\lib\index.js:12895:23)
+    at FlowParserMixin.parseStatementLike (E:\JavaProject\Personal-finance-tracker\frontend\finance-tracker\node_modules\@babel\parser\lib\index.js:12767:17)
+    at FlowParserMixin.parseStatementLike (E:\JavaProject\Personal-finance-tracker\frontend\finance-tracker\node_modules\@babel\parser\lib\index.js:2946:24)
+    at FlowParserMixin.parseModuleItem (E:\JavaProject\Personal-finance-tracker\frontend\finance-tracker\node_modules\@babel\parser\lib\index.js:12744:17)
+    at FlowParserMixin.parseBlockOrModuleBlockBody (E:\JavaProject\Personal-finance-tracker\frontend\finance-tracker\node_modules\@babel\parser\lib\index.js:13316:36)
+    at FlowParserMixin.parseBlockBody (E:\JavaProject\Personal-finance-tracker\frontend\finance-tracker\node_modules\@babel\parser\lib\index.js:13309:10)
+    at FlowParserMixin.parseProgram (E:\JavaProject\Personal-finance-tracker\frontend\finance-tracker\node_modules\@babel\parser\lib\index.js:12625:10)
+    at FlowParserMixin.parseTopLevel (E:\JavaProject\Personal-finance-tracker\frontend\finance-tracker\node_modules\@babel\parser\lib\index.js:12615:25)
+    at FlowParserMixin.parseTopLevel (E:\JavaProject\Personal-finance-tracker\frontend\finance-tracker\node_modules\@babel\parser\lib\index.js:3715:28)
+    at FlowParserMixin.parse (E:\JavaProject\Personal-finance-tracker\frontend\finance-tracker\node_modules\@babel\parser\lib\index.js:14492:10)
+    at parse (E:\JavaProject\Personal-finance-tracker\frontend\finance-tracker\node_modules\@babel\parser\lib\index.js:14526:38)
+    at parser (E:\JavaProject\Personal-finance-tracker\frontend\finance-tracker\node_modules\@babel\core\lib\parser\index.js:41:34)
+    at parser.next (<anonymous>)
+    at normalizeFile (E:\JavaProject\Personal-finance-tracker\frontend\finance-tracker\node_modules\@babel\core\lib\transformation\normalize-file.js:64:37)
+    at normalizeFile.next (<anonymous>)
+    at run (E:\JavaProject\Personal-finance-tracker\frontend\finance-tracker\node_modules\@babel\core\lib\transformation\index.js:22:50)
+    at run.next (<anonymous>)
+    at transform (E:\JavaProject\Personal-finance-tracker\frontend\finance-tracker\node_modules\@babel\core\lib\transform.js:22:33)
+    at transform.next (<anonymous>)
+    at step (E:\JavaProject\Personal-finance-tracker\frontend\finance-tracker\node_modules\gensync\index.js:261:32)
+    at E:\JavaProject\Personal-finance-tracker\frontend\finance-tracker\node_modules\gensync\index.js:273:13
+    at async.call.result.err.err (E:\JavaProject\Personal-finance-tracker\frontend\finance-tracker\node_modules\gensync\index.js:223:11)
+
+[1m[31mERROR[39m[22m in [1m[eslint] 
+src\components\analytics\Analytics.js
+  Line 2:1:  Parsing [1m[31merror[39m[22m[1m: [1m[31mUnexpected[39m[22m[1m token (2:1)
+
+[39m[22m
+
+webpack compiled with [1m[31m2 errors[39m[22m
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src\components\analytics\Analytics.js
+  Line 2:52:  'Flag' is defined but never used  no-unused-vars
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+[1m[33mWARNING[39m[22m in [1m[eslint] 
+src\components\analytics\Analytics.js
+  Line 2:52:  'Flag' is defined but never used  no-unused-vars
+
+[39m[22m
+
+webpack compiled with [1m[33m1 warning[39m[22m
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src\components\analytics\Analytics.js
+  Line 2:52:  'Flag' is defined but never used  no-unused-vars
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+[1m[33mWARNING[39m[22m in [1m[eslint] 
+src\components\analytics\Analytics.js
+  Line 2:52:  'Flag' is defined but never used  no-unused-vars
+
+[39m[22m
+
+webpack compiled with [1m[33m1 warning[39m[22m
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src\components\analytics\Analytics.js
+  Line 2:52:  'Flag' is defined but never used  no-unused-vars
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+[1m[33mWARNING[39m[22m in [1m[eslint] 
+src\components\analytics\Analytics.js
+  Line 2:52:  'Flag' is defined but never used  no-unused-vars
+
+[39m[22m
+
+webpack compiled with [1m[33m1 warning[39m[22m
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src\components\analytics\Analytics.js
+  Line 2:52:  'Flag' is defined but never used  no-unused-vars
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+[1m[33mWARNING[39m[22m in [1m[eslint] 
+src\components\analytics\Analytics.js
+  Line 2:52:  'Flag' is defined but never used  no-unused-vars
+
+[39m[22m
+
+webpack compiled with [1m[33m1 warning[39m[22m
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src\components\analytics\Analytics.js
+  Line 2:52:  'Flag' is defined but never used  no-unused-vars
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+[1m[33mWARNING[39m[22m in [1m[eslint] 
+src\components\analytics\Analytics.js
+  Line 2:52:  'Flag' is defined but never used  no-unused-vars
+
+[39m[22m
+
+webpack compiled with [1m[33m1 warning[39m[22m

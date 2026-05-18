@@ -164,25 +164,10 @@ public class SubscriptionController {
             ));
         }
 
-        if (demoSubscriptionReferenceService.isDemoReference(reference)) {
-            return ResponseEntity.badRequest().body(
-                "Invalid or expired demo reference. Generate a new reference from the thank you page."
-            );
-        }
-
-        SubscriptionPayment payment = new SubscriptionPayment();
-        payment.setUserId(userId);
-        payment.setOrderId("UPI_" + userId + "_" + System.currentTimeMillis());
-        payment.setPaymentId(reference.trim());
-        payment.setAmountPaise(settings.getAmountPaise());
-        payment.setCurrency(CURRENCY);
-        payment.setStatus("PENDING_REVIEW");
-        subscriptionPaymentRepository.save(payment);
-
-        return ResponseEntity.ok(Map.of(
-            "success", true,
-            "message", "Payment reference submitted. Admin will review and activate subscriber access."
-        ));
+        String message = demoSubscriptionReferenceService.isDemoReference(reference)
+            ? "Invalid or expired demo UTR. Generate a fresh demo UTR and try again."
+            : "Enter a valid demo UTR to activate automatically. This reference was not sent for admin review.";
+        return ResponseEntity.badRequest().body(message);
     }
 
     @PostMapping("/verify")

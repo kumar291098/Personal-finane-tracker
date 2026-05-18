@@ -5,17 +5,8 @@ import { formatCurrency, formatDate, getISTDateString } from '../utils/transacti
 const MAX_LIST_ITEMS = 10;
 const CHAT_CACHE_TTL_MS = 30 * 1000;
 
-let transactionCache = {
-  userId: null,
-  data: null,
-  expiresAt: 0
-};
-
-let profileCache = {
-  userId: null,
-  data: null,
-  expiresAt: 0
-};
+let transactionCache = { userId: null, data: null, expiresAt: 0 };
+let profileCache = { userId: null, data: null, expiresAt: 0 };
 
 const categoryIdsByName = {
   Salary: 1,
@@ -67,24 +58,20 @@ const getAuthHeaders = () => {
 export const aiService = {
   sendMessage: async (message, conversation = []) => {
     const normalizedMessage = normalizeMessage(message);
-    const capabilityReply = getCapabilityReply(normalizedMessage);
-    if (capabilityReply) {
-      return { reply: capabilityReply };
-    }
 
     const profileReply = await getProfileAwareReply(normalizedMessage);
     if (profileReply) {
       return { reply: profileReply };
     }
 
-    const correctionReply = await maybeCorrectTransactionCategory(normalizedMessage);
-    if (correctionReply) {
-      return { reply: correctionReply };
-    }
-
     const createReply = await maybeCreateTransactionFromMessage(message, normalizedMessage);
     if (createReply) {
       return { reply: createReply };
+    }
+
+    const correctionReply = await maybeCorrectTransactionCategory(normalizedMessage);
+    if (correctionReply) {
+      return { reply: correctionReply };
     }
 
     const transactionReply = await getSmartFinanceReply(message, conversation);
@@ -134,47 +121,9 @@ const normalizeMessage = (message) => {
     .trim();
 };
 
-const getCapabilityReply = (message) => {
-  const asksCapability = (
-    message.includes('what can you do')
-    || message.includes('what u can do')
-    || message.includes('what can u do')
-    || message.includes('do you have permission')
-    || message.includes('do u have permission')
-    || message.includes('can you add transactions')
-    || message.includes('can u add transactions')
-  );
-
-  if (!asksCapability) {
-    return null;
-  }
-
-  return [
-    'I can help with your finance data in two ways:',
-    '1. Read answers: last transactions, totals, summaries, spending by category, today/this month views.',
-    '2. Add simple transactions when you provide an amount, type, and description.',
-    '3. Tell you your current app name/profile display and membership status.',
-    '',
-    'Example: "add 100 rupees expense for badminton court booking".'
-  ].join('\n');
-};
-
 const getProfileAwareReply = async (message) => {
-  const asksName = (
-    message.includes('my name')
-    || message.includes('who am i')
-    || message.includes('whose finance')
-    || message.includes('whose finances')
-  );
-
-  const asksMembership = (
-    message.includes('membership')
-    || message.includes('subscription')
-    || message.includes('premium')
-    || message.includes('free user')
-    || message.includes('plan')
-    || message.includes('access level')
-  );
+  const asksName = message.includes('my name') || message.includes('who am i') || message.includes('whose finance');
+  const asksMembership = message.includes('membership') || message.includes('subscription') || message.includes('premium') || message.includes('free user') || message.includes('plan') || message.includes('access level');
 
   if (!asksName && !asksMembership) {
     return null;
@@ -187,7 +136,7 @@ const getProfileAwareReply = async (message) => {
 
   const displayName = getDisplayName(profile);
   const membership = profile.accessLevel || 'FREE';
-  const subscriptionEnd = formatSubscriptionEnd(profile.subscriberUntil);
+  const subscriptionEnd = profile.subscriberUntil ? formatDate(profile.subscriberUntil) : 'not set';
 
   if (asksName && asksMembership) {
     return `This finance tracker is currently signed in as ${displayName}. Membership: ${membership}. Subscription ends: ${subscriptionEnd}.`;
@@ -200,59 +149,161 @@ const getProfileAwareReply = async (message) => {
   return `Your membership is ${membership}. Subscription ends: ${subscriptionEnd}.`;
 };
 
+const maybeCreateTransactionFromMessage = async (originalMessage, normalizedMessage) => {
+  if (!isCreateTransactionRequest(normalizedMessage)) {
+    return null;
+  }
+
+  const amount = extractAmount(normalizedMessage);
+  if (!amount) {
+    return 'I can add it, but I need the amount. Example: "add 100 rupees expense for badminton court booking".';
+  }
+
+  const type = findCreateType(normalizedMessage);
+  if (!type) {
+    return 'Should I add this as an income or an expense? Example: "add 100 rupees expense for badminton court booking".';
+  }
+
+  const category = findAliasCategory(normalizedMessage) || (type === 'INCOME' ? 'Salary' : 'General');
+  const description = extractCreateDescription(originalMessage, normalizedMessage, category, type);
+  const savedTransaction = await transactionService.createTransaction({
+    amount,
+    type,
+    category,
+    categoryId: categoryIdsByName[category] || (type === 'INCOME' ? 1 : 2),
+    description,
+    transactionDate: getISTDateString()
+  });
+  invalidateTransactionCache();
+
+  return `Added transaction:\n${formatTransactionLine(savedTransaction)}`;
+};
+
+const maybeCorrectTransactionCategory = async (message) => {
+  const isCorrection = message.includes('should') || message.includes('wrong category') || message.includes('change category') || message.includes('update category') || message.includes('under sports') || message.includes('not education');
+  if (!isCorrection) {
+    return null;
+  }
+
+  const targetCategory = findAliasCategory(message);
+  if (!targetCategory) {
+    return null;
+  }
+
+  const keywords = message
+    .split(' ')
+    .filter(word => word.length >= 4)
+    .filter(word => !['added', 'transaction', 'transactions', 'should', 'under', 'category', 'expense', 'income', 'education', 'sports', 'rupees'].includes(word));
+
+  const transactions = await getCachedTransactions();
+  const matches = transactions
+    .filter(transaction => keywords.some(keyword => (transaction.description || '').toLowerCase().includes(keyword)))
+    .sort((first, second) => parseTransactionDate(second.transactionDate) - parseTransactionDate(first.transactionDate) || Number(second.id || 0) - Number(first.id || 0));
+
+  if (!matches.length) {
+    return null;
+  }
+
+  const updatedTransaction = await transactionService.updateTransaction(matches[0].id, {
+    ...matches[0],
+    category: targetCategory,
+    categoryId: categoryIdsByName[targetCategory] || matches[0].categoryId
+  });
+  invalidateTransactionCache();
+
+  return `Updated transaction category:\n${formatTransactionLine(updatedTransaction)}`;
+};
+
+const isCreateTransactionRequest = (message) => {
+  if (message.includes('added transaction:') || message.startsWith('added transaction')) {
+    return false;
+  }
+
+  return /\b(add|create|record|log|save|enter)\b/.test(message)
+    && ['transaction', 'transactions', 'expense', 'income', 'payment', 'spend', 'spent', 'rupee', 'rupees', 'rs', 'inr', '₹'].some(word => message.includes(word));
+};
+
+const extractAmount = (message) => {
+  const currencyAmountMatch = message.match(/(?:₹|rs\.?|inr)\s*(\d+(?:\.\d{1,2})?)|\b(\d+(?:\.\d{1,2})?)\s*(?:rupees?|rs\.?|inr|₹)\b/);
+  if (currencyAmountMatch) {
+    const amount = Number(currencyAmountMatch[1] || currencyAmountMatch[2]);
+    return amount > 0 ? amount : null;
+  }
+
+  const amountMatch = message.match(/\b(?:add|create|record|log|save|enter)\b\D{0,30}\b(\d+(?:\.\d{1,2})?)\b/);
+  if (!amountMatch) {
+    return null;
+  }
+
+  const amount = Number(amountMatch[1]);
+  return amount > 0 ? amount : null;
+};
+
+const findCreateType = (message) => {
+  if (message.includes('income') || message.includes('salary') || message.includes('earning') || message.includes('earned')) {
+    return 'INCOME';
+  }
+
+  if (message.includes('expense') || message.includes('spend') || message.includes('spent') || message.includes('payment') || message.includes('booking') || message.includes('paid')) {
+    return 'EXPENSE';
+  }
+
+  return null;
+};
+
+const extractCreateDescription = (originalMessage, normalizedMessage, category, type) => {
+  const forMatch = originalMessage.toLowerCase().match(/\bfor\s+(.+)$/);
+  if (forMatch?.[1]?.trim()) {
+    return cleanCreateDescription(forMatch[1], category, type);
+  }
+
+  const withoutAmount = normalizedMessage
+    .replace(/(?:₹|rs\.?|inr)?\s*\d+(?:\.\d{1,2})?\s*(?:rupees?|rs\.?|inr|₹)?/g, ' ')
+    .replace(/\b(can|could|you|u|please|pls|lets|let|me|also|the|a|an|of|in|section|transaction|transactions|add|create|record|log|save|enter|rupees?|rs|inr|expense|income|payment)\b/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+
+  return cleanCreateDescription(withoutAmount, category, type);
+};
+
+const cleanCreateDescription = (description, category, type) => {
+  const cleaned = description.replace(/[?.!,]+$/g, '').replace(/\s+/g, ' ').trim();
+  if (cleaned) {
+    return cleaned;
+  }
+  return type === 'INCOME' ? `${category} income` : `${category} expense`;
+};
+
 const getCachedTransactions = async () => {
   const user = getStoredUser();
   const now = Date.now();
-
   if (transactionCache.data && transactionCache.userId === user?.id && transactionCache.expiresAt > now) {
     return transactionCache.data;
   }
 
   const data = await transactionService.getUserTransactions();
-  transactionCache = {
-    userId: user?.id || null,
-    data,
-    expiresAt: now + CHAT_CACHE_TTL_MS
-  };
+  transactionCache = { userId: user?.id || null, data, expiresAt: now + CHAT_CACHE_TTL_MS };
   return data;
 };
 
 const invalidateTransactionCache = () => {
-  transactionCache = {
-    userId: null,
-    data: null,
-    expiresAt: 0
-  };
+  transactionCache = { userId: null, data: null, expiresAt: 0 };
 };
 
 const getCachedProfile = async () => {
   const user = getStoredUser();
-  const token = localStorage.getItem('token');
   const now = Date.now();
-
   if (profileCache.data && profileCache.userId === user?.id && profileCache.expiresAt > now) {
     return profileCache.data;
   }
 
-  if (!token) {
-    return user;
-  }
-
   try {
-    const response = await fetch(`${API_BASE_URL}/profile`, {
-      headers: getAuthHeaders()
-    });
-
+    const response = await fetch(`${API_BASE_URL}/profile`, { headers: getAuthHeaders() });
     if (!response.ok) {
       return user;
     }
-
     const profile = await response.json();
-    profileCache = {
-      userId: user?.id || profile.id || null,
-      data: profile,
-      expiresAt: now + CHAT_CACHE_TTL_MS
-    };
+    profileCache = { userId: user?.id || profile.id || null, data: profile, expiresAt: now + CHAT_CACHE_TTL_MS };
     return profile;
   } catch (error) {
     return user;
@@ -273,192 +324,8 @@ const getStoredUser = () => {
 };
 
 const getDisplayName = (profile) => {
-  const fullName = [profile.firstName, profile.lastName]
-    .filter(Boolean)
-    .join(' ')
-    .trim();
-
+  const fullName = [profile.firstName, profile.lastName].filter(Boolean).join(' ').trim();
   return fullName || profile.username || 'the current user';
-};
-
-const formatSubscriptionEnd = (subscriberUntil) => {
-  if (!subscriberUntil) {
-    return 'not set';
-  }
-
-  return formatDate(subscriberUntil);
-};
-
-const maybeCreateTransactionFromMessage = async (originalMessage, normalizedMessage) => {
-  if (!isCreateTransactionRequest(normalizedMessage)) {
-    return null;
-  }
-
-  const amount = extractAmount(normalizedMessage);
-  if (!amount) {
-    return 'I can add it, but I need the amount. Example: "add 100 rupees expense for badminton court booking".';
-  }
-
-  const type = findCreateType(normalizedMessage);
-  if (!type) {
-    return 'Should I add this as an income or an expense? Example: "add 100 rupees expense for badminton court booking".';
-  }
-
-  const category = findAliasCategory(normalizedMessage) || findCategory(normalizedMessage, []) || (type === 'INCOME' ? 'Salary' : 'General');
-  const description = extractCreateDescription(originalMessage, normalizedMessage, category, type);
-
-  const savedTransaction = await transactionService.createTransaction({
-    amount,
-    type,
-    category,
-    categoryId: categoryIdsByName[category] || (type === 'INCOME' ? 1 : 2),
-    description,
-    transactionDate: getISTDateString()
-  });
-  invalidateTransactionCache();
-
-  return [
-    'Added transaction:',
-    formatTransactionLine(savedTransaction)
-  ].join('\n');
-};
-
-const isCreateTransactionRequest = (message) => {
-  if (message.includes('added transaction:') || message.startsWith('added transaction')) {
-    return false;
-  }
-
-  const createPattern = /\b(add|create|record|log|save|enter)\b/;
-  const financeWords = ['transaction', 'transactions', 'expense', 'income', 'payment', 'spend', 'spent', 'rupee', 'rupees', 'rs', 'inr', '₹'];
-
-  return createPattern.test(message)
-    && financeWords.some(word => message.includes(word));
-};
-
-const extractAmount = (message) => {
-  const currencyAmountMatch = message.match(/(?:₹|rs\.?|inr)\s*(\d+(?:\.\d{1,2})?)|\b(\d+(?:\.\d{1,2})?)\s*(?:rupees?|rs\.?|inr|₹)\b/);
-  if (currencyAmountMatch) {
-    const amount = Number(currencyAmountMatch[1] || currencyAmountMatch[2]);
-    return amount > 0 ? amount : null;
-  }
-
-  const amountMatch = message.match(/\b(?:add|create|record|log|save|enter)\b\D{0,30}\b(\d+(?:\.\d{1,2})?)\b/);
-  if (!amountMatch) {
-    return null;
-  }
-
-  const amount = Number(amountMatch[1]);
-  return amount > 0 ? amount : null;
-};
-
-const maybeCorrectTransactionCategory = async (message) => {
-  const isCorrection = (
-    message.includes('should')
-    || message.includes('wrong category')
-    || message.includes('change category')
-    || message.includes('update category')
-    || message.includes('not education')
-    || message.includes('under sports')
-  );
-
-  if (!isCorrection) {
-    return null;
-  }
-
-  const targetCategory = findAliasCategory(message);
-  if (!targetCategory) {
-    return null;
-  }
-
-  const oldCategory = categoryAliases
-    .map(alias => alias.category)
-    .find(category => category !== targetCategory && message.includes(category.toLowerCase()));
-
-  const keywords = message
-    .split(' ')
-    .filter(word => word.length >= 4)
-    .filter(word => ![
-      'added', 'transaction', 'transactions', 'should', 'under', 'category',
-      'expense', 'income', 'education', 'sports', 'rupees'
-    ].includes(word));
-
-  const transactions = await getCachedTransactions();
-  const matches = transactions
-    .filter(transaction => {
-      const description = transaction.description?.toLowerCase() || '';
-      const categoryMatches = !oldCategory || transaction.category === oldCategory;
-      const descriptionMatches = keywords.some(keyword => description.includes(keyword));
-      return categoryMatches && descriptionMatches;
-    })
-    .sort((first, second) => {
-      const dateDifference = parseTransactionDate(second.transactionDate) - parseTransactionDate(first.transactionDate);
-      return dateDifference || Number(second.id || 0) - Number(first.id || 0);
-    });
-
-  const transactionToUpdate = matches[0];
-  if (!transactionToUpdate) {
-    return null;
-  }
-
-  const updatedTransaction = await transactionService.updateTransaction(transactionToUpdate.id, {
-    ...transactionToUpdate,
-    category: targetCategory,
-    categoryId: categoryIdsByName[targetCategory] || transactionToUpdate.categoryId
-  });
-  invalidateTransactionCache();
-
-  return [
-    'Updated transaction category:',
-    formatTransactionLine(updatedTransaction)
-  ].join('\n');
-};
-
-const findCreateType = (message) => {
-  if (message.includes('income') || message.includes('salary') || message.includes('earning') || message.includes('earned')) {
-    return 'INCOME';
-  }
-
-  if (
-    message.includes('expense')
-    || message.includes('spend')
-    || message.includes('spent')
-    || message.includes('payment')
-    || message.includes('booking')
-    || message.includes('paid')
-  ) {
-    return 'EXPENSE';
-  }
-
-  return null;
-};
-
-const extractCreateDescription = (originalMessage, normalizedMessage, category, type) => {
-  const lowerOriginal = originalMessage.toLowerCase();
-  const forMatch = lowerOriginal.match(/\bfor\s+(.+)$/);
-  if (forMatch?.[1]?.trim()) {
-    return cleanCreateDescription(forMatch[1], category, type);
-  }
-
-  const withoutAmount = normalizedMessage
-    .replace(/(?:₹|rs\.?|inr)?\s*\d+(?:\.\d{1,2})?\s*(?:rupees?|rs\.?|inr|₹)?/g, ' ')
-    .replace(/\b(can|could|you|u|please|pls|lets|let|me|also|the|a|an|of|in|section|transaction|transactions|add|create|record|log|save|enter|rupees?|rs|inr|expense|income|payment)\b/g, ' ')
-    .replace(/\s+/g, ' ')
-    .trim();
-
-  return cleanCreateDescription(withoutAmount, category, type);
-};
-
-const cleanCreateDescription = (description, category, type) => {
-  const cleaned = description
-    .replace(/[?.!,]+$/g, '')
-    .replace(/\s+/g, ' ')
-    .trim();
-
-  if (cleaned) {
-    return cleaned;
-  }
-
-  return type === 'INCOME' ? `${category} income` : `${category} expense`;
 };
 
 const understandFinanceIntent = (message, transactions, conversation) => {
