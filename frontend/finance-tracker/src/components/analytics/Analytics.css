@@ -384,44 +384,7 @@
 
 .line-chart-wrap {
   width: 100%;
-  overflow-x: auto;
-}
-
-.line-chart {
-  display: block;
-  width: 100%;
-  min-width: 640px;
-  height: auto;
-}
-
-.line-chart-axis,
-.line-chart-tick {
-  stroke: var(--gray-300);
-  stroke-width: 1;
-}
-
-.line-chart-path {
-  fill: none;
-  stroke-width: 4;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-.line-chart-path.income {
-  stroke: #0f766e;
-}
-
-.line-chart-path.expense {
-  stroke: #ef4444;
-}
-
-.line-chart-path.balance {
-  stroke: #2563eb;
-}
-
-.line-chart text {
-  fill: var(--gray-500);
-  font-size: 12px;
+  min-height: 320px;
 }
 
 .analytics-donut-layout {
@@ -854,11 +817,6 @@
 :root[data-theme='dark'] .goal-progress-track {
   background: #1e293b;
   border-color: #334155;
-}
-
-:root[data-theme='dark'] .line-chart-axis,
-:root[data-theme='dark'] .line-chart-tick {
-  stroke: #334155;
 }
 
 :root[data-theme='dark'] .analytics-donut > div,

@@ -1,5 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { BarChart3, CalendarDays, FileSpreadsheet, Flag, PieChart, Printer, TrendingDown, TrendingUp } from 'lucide-react';
+import {
+  CartesianGrid,
+  Legend,
+  Line,
+  LineChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis
+} from 'recharts';
 import { transactionService } from '../../services/transactionService';
 import StatsCard from '../shared/StatsCard';
 import { formatCurrency } from '../../utils/transactionUtils';
@@ -264,26 +274,10 @@ const Analytics = () => {
       }));
   };
 
-  const getLinePoints = (items, key, width = 720, height = 220) => {
-    if (items.length === 0) {
-      return '';
-    }
-
-    const maxValue = Math.max(...items.map(item => Math.abs(item[key])), 1);
-    return items.map((item, index) => {
-      const x = items.length === 1 ? width / 2 : (index / (items.length - 1)) * width;
-      const y = height - ((item[key] + maxValue) / (maxValue * 2)) * height;
-      return `${x.toFixed(1)},${Math.max(8, Math.min(height - 8, y)).toFixed(1)}`;
-    }).join(' ');
-  };
-
   const expenseCategoryData = getCategoryChartData('expense');
   const incomeCategoryData = getCategoryChartData('income');
   const monthlyTrend = getMonthlyTrend();
   const dailyTrend = getDailyTrend();
-  const incomeLinePoints = getLinePoints(dailyTrend, 'income');
-  const expenseLinePoints = getLinePoints(dailyTrend, 'expense');
-  const balanceLinePoints = getLinePoints(dailyTrend, 'balance');
   const categoryTotal = expenseCategoryData.reduce((sum, item) => sum + item.amount, 0);
   const maxTrendAmount = Math.max(
     ...monthlyTrend.flatMap(item => [item.income, item.expense]),
@@ -529,28 +523,63 @@ const Analytics = () => {
             <div className="empty-analytics">No line chart data available for this range.</div>
           ) : (
             <div className="line-chart-wrap">
-              <svg className="line-chart" viewBox="0 0 720 260" role="img" aria-label="Cash flow line chart">
-                <line x1="0" y1="220" x2="720" y2="220" className="line-chart-axis" />
-                <polyline points={incomeLinePoints} className="line-chart-path income" />
-                <polyline points={expenseLinePoints} className="line-chart-path expense" />
-                <polyline points={balanceLinePoints} className="line-chart-path balance" />
-                {dailyTrend.map((item, index) => {
-                  const x = dailyTrend.length === 1 ? 360 : (index / (dailyTrend.length - 1)) * 720;
-                  return (
-                    <g key={item.date}>
-                      <line x1={x} y1="226" x2={x} y2="232" className="line-chart-tick" />
-                      <text x={x} y="250" textAnchor="middle">{item.label}</text>
-                    </g>
-                  );
-                })}
-              </svg>
+              <ResponsiveContainer width="100%" height={320}>
+                <LineChart data={dailyTrend} margin={{ top: 12, right: 16, left: 4, bottom: 8 }}>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
+                  <XAxis
+                    dataKey="label"
+                    tickLine={false}
+                    axisLine={false}
+                    tick={{ fill: '#64748b', fontSize: 12 }}
+                  />
+                  <YAxis
+                    tickLine={false}
+                    axisLine={false}
+                    tick={{ fill: '#64748b', fontSize: 12 }}
+                    tickFormatter={(value) => `₹${Math.round(value)}`}
+                    width={70}
+                  />
+                  <Tooltip
+                    formatter={(value, name) => [formatCurrency(value), name]}
+                    labelFormatter={(label) => `Date: ${label}`}
+                    contentStyle={{
+                      borderRadius: 12,
+                      border: '1px solid #e2e8f0',
+                      boxShadow: '0 12px 30px rgba(15, 23, 42, 0.12)'
+                    }}
+                  />
+                  <Legend verticalAlign="top" height={36} iconType="circle" />
+                  <Line
+                    type="monotone"
+                    dataKey="income"
+                    name="Income"
+                    stroke="#0f766e"
+                    strokeWidth={3}
+                    dot={{ r: 4, strokeWidth: 2 }}
+                    activeDot={{ r: 6 }}
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="expense"
+                    name="Expenses"
+                    stroke="#ef4444"
+                    strokeWidth={3}
+                    dot={{ r: 4, strokeWidth: 2 }}
+                    activeDot={{ r: 6 }}
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="balance"
+                    name="Balance"
+                    stroke="#2563eb"
+                    strokeWidth={3}
+                    dot={{ r: 4, strokeWidth: 2 }}
+                    activeDot={{ r: 6 }}
+                  />
+                </LineChart>
+              </ResponsiveContainer>
             </div>
           )}
-          <div className="report-legend">
-            <span><i className="legend-income" /> Income</span>
-            <span><i className="legend-expense" /> Expenses</span>
-            <span><i className="legend-balance" /> Balance</span>
-          </div>
         </div>
 
         <div className="report-card report-card-wide">
