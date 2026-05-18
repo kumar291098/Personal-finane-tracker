@@ -1,22 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { BarChart3, CalendarDays, FileSpreadsheet, Flag, PieChart, Printer, TrendingDown, TrendingUp } from 'lucide-react';
-import {
-  Box,
-  Button,
-  Card,
-  CardContent,
-  Chip,
-  FormControl,
-  Grid,
-  InputLabel,
-  LinearProgress,
-  MenuItem,
-  Paper,
-  Select,
-  Stack,
-  TextField,
-  Typography
-} from '@mui/material';
+import { BarChart3, CalendarDays, FileSpreadsheet, Flag, PieChart, Printer, TrendingDown, TrendingUp, Target } from 'lucide-react';
 import {
   CartesianGrid,
   Legend,
@@ -55,6 +38,7 @@ const Analytics = () => {
     startDate: '',
     endDate: ''
   });
+
   const readSavedGoal = () => {
     try {
       const savedGoal = localStorage.getItem('financeGoal');
@@ -207,6 +191,7 @@ const Analytics = () => {
   };
 
   const analytics = getAnalytics();
+  
   const getCategoryChartData = (type) => {
     const source = type === 'income' ? analytics.incomeTransactions : analytics.expenseTransactions;
     const totals = source.reduce((acc, transaction) => {
@@ -413,111 +398,109 @@ const Analytics = () => {
 
   return (
     <div className="analytics-page">
-      <Paper className="analytics-mui-header" elevation={0}>
-        <Stack direction={{ xs: 'column', md: 'row' }} alignItems={{ xs: 'stretch', md: 'center' }} justifyContent="space-between" spacing={2}>
-          <Box>
-            <Chip size="small" color="primary" variant="outlined" label="Analytics" sx={{ mb: 1 }} />
-            <Typography variant="h4" component="h1" fontWeight={800} color="text.primary">
-              Analytics & Reports
-            </Typography>
-            <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5, maxWidth: 720 }}>
-              Track income, expenses, date ranges, trends, and progress toward your goal.
-            </Typography>
-          </Box>
-          <Stack direction="row" spacing={1} flexWrap="wrap">
-            <Button variant="outlined" startIcon={<FileSpreadsheet size={17} />} onClick={exportCsv}>
-              CSV
-            </Button>
-            <Button variant="contained" startIcon={<Printer size={17} />} onClick={exportPdf}>
-              PDF
-            </Button>
-          </Stack>
-        </Stack>
-      </Paper>
+      <div className="analytics-header-card">
+        <div className="analytics-header-content">
+          <p className="analytics-kicker">Analytics</p>
+          <h1 className="analytics-title">Analytics & Reports</h1>
+          <p className="analytics-subtitle">
+            Track income, expenses, date ranges, trends, and progress toward your goal.
+          </p>
+        </div>
+        <div className="header-actions">
+          <button className="btn btn-secondary export-btn" onClick={exportCsv}>
+            <FileSpreadsheet size={18} />
+            Export CSV
+          </button>
+          <button className="btn btn-primary export-btn" onClick={exportPdf}>
+            <Printer size={18} />
+            Export PDF
+          </button>
+        </div>
+      </div>
 
-      <Grid container spacing={2}>
-        <Grid item xs={12} md={7}>
-          <Card className="analytics-mui-card" variant="outlined">
-            <CardContent>
-              <Stack spacing={2}>
-                <Stack direction="row" spacing={1.5} alignItems="center">
-                  <span className="analytics-mui-icon"><CalendarDays size={18} /></span>
-                  <Box>
-                    <Typography variant="subtitle1" fontWeight={700}>Analysis Date Range</Typography>
-                    <Typography variant="body2" color="text.secondary">{analytics.transactionCount} transactions in this view</Typography>
-                  </Box>
-                </Stack>
-                <FormControl fullWidth size="small">
-                  <InputLabel id="analysis-period-label">Range</InputLabel>
-                  <Select
-                    labelId="analysis-period-label"
-                    value={analysisFilter.period}
-                    label="Range"
-                    onChange={(event) => updateFilter('period', event.target.value)}
-                  >
-                    {periodOptions.map(option => (
-                      <MenuItem key={option.value} value={option.value}>{option.label}</MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-                {analysisFilter.period === 'custom' && (
-                  <Grid container spacing={1.5}>
-                    <Grid item xs={12} sm={6}>
-                      <TextField
-                        fullWidth
-                        size="small"
-                        type="date"
-                        label="From"
-                        value={analysisFilter.startDate}
-                        onChange={(event) => updateFilter('startDate', event.target.value)}
-                        InputLabelProps={{ shrink: true }}
-                      />
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <TextField
-                        fullWidth
-                        size="small"
-                        type="date"
-                        label="To"
-                        value={analysisFilter.endDate}
-                        onChange={(event) => updateFilter('endDate', event.target.value)}
-                        InputLabelProps={{ shrink: true }}
-                      />
-                    </Grid>
-                  </Grid>
-                )}
-              </Stack>
-            </CardContent>
-          </Card>
-        </Grid>
+      <div className="analytics-controls-grid">
+        <div className="analytics-card">
+          <div className="analytics-card-content">
+            <div className="control-header">
+              <span className="control-icon"><CalendarDays size={20} /></span>
+              <div>
+                <h3 className="control-title">Analysis Date Range</h3>
+                <p className="control-subtitle">{analytics.transactionCount} transactions in this view</p>
+              </div>
+            </div>
+            
+            <div className="control-form-group">
+              <label htmlFor="analysis-period">Range</label>
+              <select
+                id="analysis-period"
+                value={analysisFilter.period}
+                onChange={(event) => updateFilter('period', event.target.value)}
+                className="analytics-select"
+              >
+                {periodOptions.map(option => (
+                  <option key={option.value} value={option.value}>{option.label}</option>
+                ))}
+              </select>
+            </div>
+            
+            {analysisFilter.period === 'custom' && (
+              <div className="custom-date-grid">
+                <div className="control-form-group">
+                  <label htmlFor="start-date">From</label>
+                  <input
+                    id="start-date"
+                    type="date"
+                    className="analytics-input"
+                    value={analysisFilter.startDate}
+                    onChange={(event) => updateFilter('startDate', event.target.value)}
+                  />
+                </div>
+                <div className="control-form-group">
+                  <label htmlFor="end-date">To</label>
+                  <input
+                    id="end-date"
+                    type="date"
+                    className="analytics-input"
+                    value={analysisFilter.endDate}
+                    onChange={(event) => updateFilter('endDate', event.target.value)}
+                  />
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
 
-        <Grid item xs={12} md={5}>
-          <Card className="analytics-mui-card" variant="outlined">
-            <CardContent>
-              <Stack spacing={2}>
-                <Stack direction="row" spacing={1.5} alignItems="center">
-                  <span className="analytics-mui-icon goal"><Flag size={18} /></span>
-                  <Box>
-                    <Typography variant="subtitle1" fontWeight={700}>{goal.title || 'Financial Goal'}</Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      {goal.targetDate ? `Target date ${goal.targetDate}` : 'Set a goal from Dashboard'}
-                    </Typography>
-                  </Box>
-                </Stack>
-                <Stack direction="row" justifyContent="space-between" spacing={2}>
-                  <Typography variant="body2" color="text.secondary">{formatCurrency(analytics.goal.achievedAmount)} achieved</Typography>
-                  <Typography variant="h6" fontWeight={800} color="primary">{analytics.goal.progress.toFixed(0)}%</Typography>
-                </Stack>
-                <LinearProgress variant="determinate" value={analytics.goal.progress} sx={{ height: 10, borderRadius: 999 }} />
-                <Stack direction="row" justifyContent="space-between" spacing={2}>
-                  <Typography variant="caption" color="text.secondary">Goal: {analytics.goal.targetAmount ? formatCurrency(analytics.goal.targetAmount) : 'Not set'}</Typography>
-                  <Typography variant="caption" color="text.secondary">Left: {analytics.goal.targetAmount ? formatCurrency(analytics.goal.remainingAmount) : formatCurrency(0)}</Typography>
-                </Stack>
-              </Stack>
-            </CardContent>
-          </Card>
-        </Grid>
-      </Grid>
+        <div className="analytics-card">
+          <div className="analytics-card-content">
+            <div className="control-header">
+              <span className="control-icon goal-icon"><Target size={20} /></span>
+              <div>
+                <h3 className="control-title">{goal.title || 'Financial Goal'}</h3>
+                <p className="control-subtitle">
+                  {goal.targetDate ? `Target date ${goal.targetDate}` : 'Set a goal from Dashboard'}
+                </p>
+              </div>
+            </div>
+            
+            <div className="goal-progress-container">
+              <div className="goal-progress-header">
+                <span className="goal-achieved">{formatCurrency(analytics.goal.achievedAmount)} achieved</span>
+                <span className="goal-percent">{analytics.goal.progress.toFixed(0)}%</span>
+              </div>
+              <div className="goal-progress-track">
+                <div 
+                  className="goal-progress-fill" 
+                  style={{ width: `${analytics.goal.progress}%` }}
+                ></div>
+              </div>
+              <div className="goal-progress-footer">
+                <span>Goal: {analytics.goal.targetAmount ? formatCurrency(analytics.goal.targetAmount) : 'Not set'}</span>
+                <span>Left: {analytics.goal.targetAmount ? formatCurrency(analytics.goal.remainingAmount) : formatCurrency(0)}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
       <div className="analytics-stats">
         <StatsCard
