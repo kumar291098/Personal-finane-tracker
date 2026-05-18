@@ -1,10 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { BarChart3, CalendarDays, FileSpreadsheet, Flag, PieChart, Printer, TrendingDown, TrendingUp, Target } from 'lucide-react';
+import { BarChart3, CalendarDays, FileSpreadsheet, PieChart, Printer, TrendingDown, TrendingUp, Target } from 'lucide-react';
 import {
   CartesianGrid,
   Legend,
   Line,
   LineChart,
+  BarChart,
+  Bar,
+  PieChart as RechartsPieChart,
+  Pie,
+  Cell,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -614,33 +619,36 @@ const Analytics = () => {
               <p>Month-wise income and expenses for the selected filters.</p>
             </div>
           </div>
-          <div className="cashflow-chart">
+          <div className="cashflow-chart" style={{ display: 'block', minHeight: 'auto', padding: 0 }}>
             {monthlyTrend.length === 0 ? (
               <div className="empty-analytics">No cash flow data available for this range.</div>
             ) : (
-              monthlyTrend.map(item => (
-                <div key={item.month} className="cashflow-column">
-                  <div className="cashflow-bars">
-                    <span
-                      className="cashflow-bar income"
-                      style={{ height: `${Math.max((item.income / maxTrendAmount) * 100, 8)}%` }}
-                      title={`Income ${formatCurrency(item.income)}`}
-                    />
-                    <span
-                      className="cashflow-bar expense"
-                      style={{ height: `${Math.max((item.expense / maxTrendAmount) * 100, 8)}%` }}
-                      title={`Expense ${formatCurrency(item.expense)}`}
-                    />
-                  </div>
-                  <strong>{item.label}</strong>
-                  <small>{formatCurrency(item.income - item.expense)}</small>
-                </div>
-              ))
+              <ResponsiveContainer width="100%" height={260}>
+                <BarChart data={monthlyTrend} margin={{ top: 20, right: 0, left: -20, bottom: 0 }}>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
+                  <XAxis 
+                    dataKey="label" 
+                    tickLine={false} 
+                    axisLine={false} 
+                    tick={{ fill: '#64748b', fontSize: 12 }} 
+                  />
+                  <YAxis 
+                    tickLine={false} 
+                    axisLine={false} 
+                    tick={{ fill: '#64748b', fontSize: 12 }} 
+                    tickFormatter={(value) => `₹${Math.round(value)}`} 
+                  />
+                  <Tooltip 
+                    formatter={(value, name) => [formatCurrency(value), name]} 
+                    cursor={{ fill: 'rgba(15, 23, 42, 0.04)' }} 
+                    contentStyle={{ borderRadius: 12, border: '1px solid #e2e8f0', boxShadow: '0 12px 30px rgba(15, 23, 42, 0.12)' }} 
+                  />
+                  <Legend verticalAlign="top" height={36} iconType="circle" />
+                  <Bar dataKey="income" name="Income" fill="#0f766e" radius={[4, 4, 0, 0]} maxBarSize={40} />
+                  <Bar dataKey="expense" name="Expenses" fill="#ef4444" radius={[4, 4, 0, 0]} maxBarSize={40} />
+                </BarChart>
+              </ResponsiveContainer>
             )}
-          </div>
-          <div className="report-legend">
-            <span><i className="legend-income" /> Income</span>
-            <span><i className="legend-expense" /> Expenses</span>
           </div>
         </div>
 
@@ -652,23 +660,37 @@ const Analytics = () => {
             </div>
           </div>
           <div className="analytics-donut-layout">
-            <div
-              className="analytics-donut"
-              style={{
-                background: expenseCategoryData.length
-                  ? `conic-gradient(${expenseCategoryData.map((item, index) => {
-                      const start = expenseCategoryData
-                        .slice(0, index)
-                        .reduce((sum, current) => sum + current.percentage, 0);
-                      return `${item.color} ${start}% ${start + item.percentage}%`;
-                    }).join(', ')})`
-                  : '#e2e8f0'
-              }}
-            >
-              <div>
-                <span>Expense</span>
-                <strong>{formatCurrency(categoryTotal)}</strong>
-              </div>
+            <div className="analytics-donut-container" style={{ width: '100%', height: 220 }}>
+              {expenseCategoryData.length === 0 ? (
+                <div className="empty-analytics" style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', border: 'none' }}>
+                  No data available
+                </div>
+              ) : (
+                <ResponsiveContainer width="100%" height="100%">
+                  <RechartsPieChart>
+                    <Pie
+                      data={expenseCategoryData}
+                      cx="50%"
+                      cy="50%"
+                      innerRadius={60}
+                      outerRadius={80}
+                      paddingAngle={5}
+                      dataKey="amount"
+                      nameKey="category"
+                      stroke="none"
+                    >
+                      {expenseCategoryData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={entry.color} />
+                      ))}
+                    </Pie>
+                    <Tooltip 
+                      formatter={(value) => formatCurrency(value)} 
+                      contentStyle={{ borderRadius: 12, border: '1px solid #e2e8f0', boxShadow: '0 12px 30px rgba(15, 23, 42, 0.12)' }} 
+                      itemStyle={{ color: '#0f172a', fontWeight: 600 }}
+                    />
+                  </RechartsPieChart>
+                </ResponsiveContainer>
+              )}
             </div>
             <div className="donut-list">
               {expenseCategoryData.length === 0 ? (

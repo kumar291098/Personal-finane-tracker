@@ -5498,3 +5498,780 @@ Authentication set for user: demo
 JWT Filter - Processing request: GET /api/transactions/user/1
 Authentication set for user: demo
 2026-05-19T01:31:31.802+05:30  INFO 47816 --- [nio-8080-exec-9] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/transactions/user/1 status=200 durationMs=7
+JWT Filter - Processing request: GET /api/transactions/user/1
+Authentication set for user: demo
+2026-05-19T01:39:11.393+05:30  INFO 47816 --- [nio-8080-exec-1] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/transactions/user/1 status=200 durationMs=4
+JWT Filter - Processing request: GET /api/transactions/user/1
+Authentication set for user: demo
+2026-05-19T01:39:11.416+05:30  INFO 47816 --- [nio-8080-exec-3] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/transactions/user/1 status=200 durationMs=4
+JWT Filter - Processing request: GET /api/subscription/plan
+Authentication set for user: demo
+2026-05-19T01:39:13.918+05:30  INFO 47816 --- [nio-8080-exec-8] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/subscription/plan status=200 durationMs=69
+JWT Filter - Processing request: GET /api/subscription/plan
+Authentication set for user: demo
+2026-05-19T01:39:13.942+05:30  INFO 47816 --- [nio-8080-exec-4] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/subscription/plan status=200 durationMs=11
+JWT Filter - Processing request: GET /api/profile
+Authentication set for user: demo
+2026-05-19T01:39:15.538+05:30  INFO 47816 --- [nio-8080-exec-6] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/profile status=200 durationMs=4
+JWT Filter - Processing request: GET /api/profile
+Authentication set for user: demo
+2026-05-19T01:39:15.564+05:30  INFO 47816 --- [nio-8080-exec-2] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/profile status=200 durationMs=4
+JWT Filter - Processing request: GET /api/categories
+Authentication set for user: demo
+2026-05-19T01:39:17.382+05:30  INFO 47816 --- [io-8080-exec-10] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/categories status=200 durationMs=48
+JWT Filter - Processing request: GET /api/categories
+Authentication set for user: demo
+2026-05-19T01:39:17.407+05:30  INFO 47816 --- [nio-8080-exec-9] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/categories status=200 durationMs=4
+JWT Filter - Processing request: GET /api/transactions/user/1
+Authentication set for user: demo
+2026-05-19T01:39:19.752+05:30  INFO 47816 --- [nio-8080-exec-5] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/transactions/user/1 status=200 durationMs=6
+JWT Filter - Processing request: GET /api/transactions/user/1
+Authentication set for user: demo
+2026-05-19T01:39:19.774+05:30  INFO 47816 --- [nio-8080-exec-7] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/transactions/user/1 status=200 durationMs=4
+JWT Filter - Processing request: GET /api/access-policy/me
+Authentication set for user: demo
+2026-05-19T01:39:30.419+05:30  INFO 47816 --- [nio-8080-exec-1] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/access-policy/me status=200 durationMs=0
+JWT Filter - Processing request: GET /api/access-policy/me
+Authentication set for user: demo
+2026-05-19T01:39:30.445+05:30  INFO 47816 --- [nio-8080-exec-3] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/access-policy/me status=200 durationMs=1
+JWT Filter - Processing request: GET /api/transactions/user/1
+Authentication set for user: demo
+2026-05-19T01:39:30.512+05:30  INFO 47816 --- [nio-8080-exec-8] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/transactions/user/1 status=200 durationMs=4
+JWT Filter - Processing request: GET /api/transactions/user/1
+Authentication set for user: demo
+2026-05-19T01:39:30.533+05:30  INFO 47816 --- [nio-8080-exec-4] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/transactions/user/1 status=200 durationMs=3
+JWT Filter - Processing request: GET /api/transactions/user/1
+Authentication set for user: demo
+2026-05-19T01:49:34.861+05:30  INFO 47816 --- [io-8080-exec-10] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/transactions/user/1 status=200 durationMs=4
+JWT Filter - Processing request: GET /api/transactions/user/1
+Authentication set for user: demo
+2026-05-19T01:55:30.662+05:30  INFO 47816 --- [nio-8080-exec-5] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/transactions/user/1 status=200 durationMs=4
+JWT Filter - Processing request: GET /api/transactions/user/1
+Authentication set for user: demo
+2026-05-19T01:58:05.109+05:30  INFO 47816 --- [nio-8080-exec-3] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/transactions/user/1 status=200 durationMs=7
+JWT Filter - Processing request: GET /api/transactions/user/1
+Authentication set for user: demo
+2026-05-19T01:58:08.620+05:30  INFO 47816 --- [nio-8080-exec-8] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/transactions/user/1 status=200 durationMs=7
+JWT Filter - Processing request: GET /api/transactions/user/1
+Authentication set for user: demo
+2026-05-19T01:58:08.659+05:30  INFO 47816 --- [nio-8080-exec-4] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/transactions/user/1 status=200 durationMs=6
+JWT Filter - Processing request: GET /api/access-policy/me
+Authentication set for user: demo
+2026-05-19T01:58:12.326+05:30  INFO 47816 --- [nio-8080-exec-6] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/access-policy/me status=200 durationMs=6
+JWT Filter - Processing request: GET /api/access-policy/me
+Authentication set for user: demo
+2026-05-19T01:58:12.357+05:30  INFO 47816 --- [nio-8080-exec-2] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/access-policy/me status=200 durationMs=2
+JWT Filter - Processing request: GET /api/transactions/user/1
+Authentication set for user: demo
+2026-05-19T01:58:12.419+05:30  INFO 47816 --- [io-8080-exec-10] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/transactions/user/1 status=200 durationMs=4
+JWT Filter - Processing request: GET /api/transactions/user/1
+Authentication set for user: demo
+2026-05-19T01:58:12.437+05:30  INFO 47816 --- [nio-8080-exec-9] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/transactions/user/1 status=200 durationMs=4
+JWT Filter - Processing request: GET /api/transactions/user/1
+Authentication set for user: demo
+2026-05-19T01:58:15.418+05:30  INFO 47816 --- [nio-8080-exec-5] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/transactions/user/1 status=200 durationMs=3
+JWT Filter - Processing request: GET /api/transactions/user/1
+Authentication set for user: demo
+2026-05-19T01:58:15.443+05:30  INFO 47816 --- [nio-8080-exec-7] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/transactions/user/1 status=200 durationMs=7
+JWT Filter - Processing request: GET /api/access-policy/me
+Authentication set for user: demo
+2026-05-19T01:58:18.043+05:30  INFO 47816 --- [nio-8080-exec-1] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/access-policy/me status=200 durationMs=1
+JWT Filter - Processing request: GET /api/access-policy/me
+Authentication set for user: demo
+2026-05-19T01:58:18.060+05:30  INFO 47816 --- [nio-8080-exec-3] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/access-policy/me status=200 durationMs=1
+JWT Filter - Processing request: GET /api/transactions/user/1
+Authentication set for user: demo
+2026-05-19T01:58:18.152+05:30  INFO 47816 --- [nio-8080-exec-8] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/transactions/user/1 status=200 durationMs=14
+JWT Filter - Processing request: GET /api/transactions/user/1
+Authentication set for user: demo
+2026-05-19T01:58:18.172+05:30  INFO 47816 --- [nio-8080-exec-4] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/transactions/user/1 status=200 durationMs=4
+JWT Filter - Processing request: GET /api/admin/access-policies
+JWT Filter - Processing request: GET /api/admin/users
+Authentication set for user: demo
+Authentication set for user: demo
+2026-05-19T01:58:20.900+05:30  INFO 47816 --- [nio-8080-exec-2] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/admin/access-policies status=200 durationMs=31
+JWT Filter - Processing request: GET /api/admin/access-policies
+2026-05-19T01:58:20.905+05:30  INFO 47816 --- [nio-8080-exec-6] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/admin/users status=200 durationMs=38
+JWT Filter - Processing request: GET /api/admin/users
+JWT Filter - Processing request: GET /api/admin/users/subscription-requests
+JWT Filter - Processing request: GET /api/admin/users/subscription-settings
+Authentication set for user: demo
+Authentication set for user: demo
+2026-05-19T01:58:20.919+05:30  INFO 47816 --- [nio-8080-exec-9] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/admin/users status=200 durationMs=4
+Authentication set for user: demo
+Authentication set for user: demo
+2026-05-19T01:58:20.923+05:30  INFO 47816 --- [io-8080-exec-10] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/admin/access-policies status=200 durationMs=9
+2026-05-19T01:58:20.928+05:30  INFO 47816 --- [nio-8080-exec-7] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/admin/users/subscription-settings status=200 durationMs=6
+2026-05-19T01:58:20.928+05:30  INFO 47816 --- [nio-8080-exec-5] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/admin/users/subscription-requests status=200 durationMs=6
+JWT Filter - Processing request: GET /api/admin/users/subscription-settings
+JWT Filter - Processing request: GET /api/admin/users/subscription-requests
+Authentication set for user: demo
+Authentication set for user: demo
+2026-05-19T01:58:20.949+05:30  INFO 47816 --- [nio-8080-exec-1] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/admin/users/subscription-settings status=200 durationMs=3
+2026-05-19T01:58:20.949+05:30  INFO 47816 --- [nio-8080-exec-3] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/admin/users/subscription-requests status=200 durationMs=3
+JWT Filter - Processing request: GET /api/access-policy/me
+Authentication set for user: demo
+2026-05-19T01:58:23.906+05:30  INFO 47816 --- [nio-8080-exec-8] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/access-policy/me status=200 durationMs=1
+JWT Filter - Processing request: GET /api/access-policy/me
+Authentication set for user: demo
+2026-05-19T01:58:23.924+05:30  INFO 47816 --- [nio-8080-exec-4] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/access-policy/me status=200 durationMs=1
+JWT Filter - Processing request: GET /api/admin/users
+JWT Filter - Processing request: GET /api/admin/access-policies
+Authentication set for user: demo
+Authentication set for user: demo
+2026-05-19T01:58:23.981+05:30  INFO 47816 --- [nio-8080-exec-2] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/admin/users status=200 durationMs=4
+JWT Filter - Processing request: GET /api/admin/users
+2026-05-19T01:58:23.988+05:30  INFO 47816 --- [nio-8080-exec-6] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/admin/access-policies status=200 durationMs=10
+JWT Filter - Processing request: GET /api/admin/access-policies
+Authentication set for user: demo
+Authentication set for user: demo
+2026-05-19T01:58:24.001+05:30  INFO 47816 --- [nio-8080-exec-9] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/admin/users status=200 durationMs=4
+JWT Filter - Processing request: GET /api/admin/users/subscription-requests
+JWT Filter - Processing request: GET /api/admin/users/subscription-settings
+Authentication set for user: demo
+Authentication set for user: demo
+2026-05-19T01:58:24.184+05:30  INFO 47816 --- [nio-8080-exec-7] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/admin/users/subscription-requests status=200 durationMs=14
+2026-05-19T01:58:24.184+05:30  INFO 47816 --- [io-8080-exec-10] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/admin/access-policies status=200 durationMs=74
+2026-05-19T01:58:24.184+05:30  INFO 47816 --- [nio-8080-exec-5] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/admin/users/subscription-settings status=200 durationMs=14
+JWT Filter - Processing request: GET /api/admin/users/subscription-requests
+JWT Filter - Processing request: GET /api/admin/users/subscription-settings
+Authentication set for user: demo
+Authentication set for user: demo
+2026-05-19T01:58:24.218+05:30  INFO 47816 --- [nio-8080-exec-1] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/admin/users/subscription-requests status=200 durationMs=5
+2026-05-19T01:58:24.218+05:30  INFO 47816 --- [nio-8080-exec-3] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/admin/users/subscription-settings status=200 durationMs=3
+JWT Filter - Processing request: GET /api/actuator/health
+Public path, skipping JWT check: /api/actuator/health
+2026-05-19T01:58:27.071+05:30 DEBUG 47816 --- [nio-8080-exec-8] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'health'
+2026-05-19T01:58:27.082+05:30  INFO 47816 --- [nio-8080-exec-8] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/health status=200 durationMs=11
+JWT Filter - Processing request: GET /api/actuator/health
+Public path, skipping JWT check: /api/actuator/health
+2026-05-19T01:58:27.085+05:30 DEBUG 47816 --- [nio-8080-exec-4] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'health'
+2026-05-19T01:58:27.088+05:30  INFO 47816 --- [nio-8080-exec-4] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/health status=200 durationMs=4
+JWT Filter - Processing request: GET /api/actuator/metrics/http.server.requests
+JWT Filter - Processing request: GET /api/actuator/metrics/jvm.memory.used
+JWT Filter - Processing request: GET /api/actuator/metrics/process.uptime
+JWT Filter - Processing request: GET /api/actuator/metrics/http.server.requests
+JWT Filter - Processing request: GET /api/actuator/metrics/hikaricp.connections.pending
+JWT Filter - Processing request: GET /api/actuator/metrics/hikaricp.connections.active
+Authentication set for user: demo
+Authentication set for user: demo
+Authentication set for user: demo
+2026-05-19T01:58:27.122+05:30 DEBUG 47816 --- [io-8080-exec-10] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+2026-05-19T01:58:27.122+05:30 DEBUG 47816 --- [nio-8080-exec-2] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+Authentication set for user: demo
+Authentication set for user: demo
+2026-05-19T01:58:27.124+05:30 DEBUG 47816 --- [nio-8080-exec-5] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+2026-05-19T01:58:27.125+05:30 DEBUG 47816 --- [nio-8080-exec-9] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+2026-05-19T01:58:27.127+05:30 DEBUG 47816 --- [nio-8080-exec-6] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+2026-05-19T01:58:27.126+05:30  INFO 47816 --- [io-8080-exec-10] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/hikaricp.connections.active status=200 durationMs=4
+Authentication set for user: demo
+2026-05-19T01:58:27.127+05:30  INFO 47816 --- [nio-8080-exec-5] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/hikaricp.connections.pending status=200 durationMs=4
+2026-05-19T01:58:27.128+05:30  INFO 47816 --- [nio-8080-exec-9] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/jvm.memory.used status=200 durationMs=4
+2026-05-19T01:58:27.129+05:30 DEBUG 47816 --- [nio-8080-exec-7] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+2026-05-19T01:58:27.129+05:30  INFO 47816 --- [nio-8080-exec-2] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/http.server.requests status=200 durationMs=7
+2026-05-19T01:58:27.130+05:30  INFO 47816 --- [nio-8080-exec-6] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/http.server.requests status=200 durationMs=3
+JWT Filter - Processing request: GET /api/actuator/metrics/finance.ai.context.cache.requests
+JWT Filter - Processing request: GET /api/actuator/metrics/finance.ai.context.cache.hits
+2026-05-19T01:58:27.133+05:30  INFO 47816 --- [nio-8080-exec-7] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/process.uptime status=200 durationMs=4
+JWT Filter - Processing request: GET /api/actuator/metrics/finance.ai.context.cache.disabled
+JWT Filter - Processing request: GET /api/actuator/metrics/finance.ai.context.cache.misses
+JWT Filter - Processing request: GET /api/actuator/metrics/finance.ai.context.cache.errors
+JWT Filter - Processing request: GET /api/actuator/metrics/finance.ai.context.cache.puts
+Authentication set for user: demo
+Authentication set for user: demo
+Authentication set for user: demo
+2026-05-19T01:58:27.168+05:30 DEBUG 47816 --- [nio-8080-exec-8] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+2026-05-19T01:58:27.168+05:30 DEBUG 47816 --- [io-8080-exec-10] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+2026-05-19T01:58:27.169+05:30 DEBUG 47816 --- [nio-8080-exec-1] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+Authentication set for user: demo
+2026-05-19T01:58:27.171+05:30  INFO 47816 --- [nio-8080-exec-8] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/finance.ai.context.cache.misses status=200 durationMs=3
+2026-05-19T01:58:27.171+05:30  INFO 47816 --- [io-8080-exec-10] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/finance.ai.context.cache.errors status=200 durationMs=3
+2026-05-19T01:58:27.173+05:30 DEBUG 47816 --- [nio-8080-exec-3] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+2026-05-19T01:58:27.171+05:30  INFO 47816 --- [nio-8080-exec-1] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/finance.ai.context.cache.requests status=200 durationMs=2
+Authentication set for user: demo
+2026-05-19T01:58:27.175+05:30  INFO 47816 --- [nio-8080-exec-3] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/finance.ai.context.cache.hits status=200 durationMs=2
+2026-05-19T01:58:27.175+05:30 DEBUG 47816 --- [nio-8080-exec-5] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+JWT Filter - Processing request: GET /api/actuator/metrics/finance.ai.context.database.calls
+Authentication set for user: demo
+2026-05-19T01:58:27.177+05:30 DEBUG 47816 --- [nio-8080-exec-4] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+2026-05-19T01:58:27.178+05:30  INFO 47816 --- [nio-8080-exec-5] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/finance.ai.context.cache.puts status=200 durationMs=3
+JWT Filter - Processing request: GET /api/actuator/metrics/finance.ai.context.database.loads
+JWT Filter - Processing request: GET /api/actuator/metrics/finance.ai.context.database.last_load_ms
+JWT Filter - Processing request: GET /api/actuator/metrics/finance.ai.context.cache.lookup.duration
+2026-05-19T01:58:27.180+05:30  INFO 47816 --- [nio-8080-exec-4] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/finance.ai.context.cache.disabled status=200 durationMs=3
+JWT Filter - Processing request: GET /api/actuator/metrics/finance.ai.context.database.load.duration
+JWT Filter - Processing request: GET /api/actuator/metrics/finance.ai.context.cache.estimated_saved_ms
+Authentication set for user: demo
+2026-05-19T01:58:27.211+05:30 DEBUG 47816 --- [nio-8080-exec-2] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+Authentication set for user: demo
+2026-05-19T01:58:27.213+05:30  INFO 47816 --- [nio-8080-exec-2] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/finance.ai.context.database.calls status=200 durationMs=2
+2026-05-19T01:58:27.213+05:30 DEBUG 47816 --- [nio-8080-exec-8] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+2026-05-19T01:58:27.215+05:30  INFO 47816 --- [nio-8080-exec-8] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/finance.ai.context.cache.lookup.duration status=200 durationMs=2
+Authentication set for user: demo
+Authentication set for user: demo
+JWT Filter - Processing request: GET /api/actuator/metrics/hikaricp.connections.active
+2026-05-19T01:58:27.216+05:30 DEBUG 47816 --- [nio-8080-exec-6] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+2026-05-19T01:58:27.216+05:30 DEBUG 47816 --- [nio-8080-exec-9] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+JWT Filter - Processing request: GET /api/actuator/metrics/hikaricp.connections.pending
+2026-05-19T01:58:27.217+05:30  INFO 47816 --- [nio-8080-exec-9] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/finance.ai.context.database.last_load_ms status=200 durationMs=1
+Authentication set for user: demo
+2026-05-19T01:58:27.218+05:30 DEBUG 47816 --- [nio-8080-exec-7] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+2026-05-19T01:58:27.217+05:30  INFO 47816 --- [nio-8080-exec-6] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/finance.ai.context.database.loads status=200 durationMs=1
+2026-05-19T01:58:27.220+05:30  INFO 47816 --- [nio-8080-exec-7] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/finance.ai.context.database.load.duration status=200 durationMs=2
+JWT Filter - Processing request: GET /api/actuator/metrics/jvm.memory.used
+JWT Filter - Processing request: GET /api/actuator/metrics/http.server.requests
+Authentication set for user: demo
+2026-05-19T01:58:27.224+05:30 DEBUG 47816 --- [nio-8080-exec-1] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+2026-05-19T01:58:27.226+05:30  INFO 47816 --- [nio-8080-exec-1] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/finance.ai.context.cache.estimated_saved_ms status=200 durationMs=2
+JWT Filter - Processing request: GET /api/actuator/metrics/process.uptime
+JWT Filter - Processing request: GET /api/actuator/metrics/http.server.requests
+Authentication set for user: demo
+2026-05-19T01:58:27.235+05:30 DEBUG 47816 --- [nio-8080-exec-3] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+2026-05-19T01:58:27.237+05:30  INFO 47816 --- [nio-8080-exec-3] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/hikaricp.connections.active status=200 durationMs=3
+Authentication set for user: demo
+2026-05-19T01:58:27.241+05:30 DEBUG 47816 --- [nio-8080-exec-5] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+2026-05-19T01:58:27.243+05:30  INFO 47816 --- [nio-8080-exec-5] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/hikaricp.connections.pending status=200 durationMs=2
+JWT Filter - Processing request: GET /api/actuator/metrics/finance.ai.context.cache.misses
+Authentication set for user: demo
+Authentication set for user: demo
+Authentication set for user: demo
+2026-05-19T01:58:27.245+05:30 DEBUG 47816 --- [nio-8080-exec-4] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+2026-05-19T01:58:27.247+05:30 DEBUG 47816 --- [io-8080-exec-10] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+2026-05-19T01:58:27.247+05:30 DEBUG 47816 --- [nio-8080-exec-8] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+2026-05-19T01:58:27.249+05:30  INFO 47816 --- [io-8080-exec-10] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/jvm.memory.used status=200 durationMs=2
+2026-05-19T01:58:27.249+05:30  INFO 47816 --- [nio-8080-exec-4] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/http.server.requests status=200 durationMs=4
+2026-05-19T01:58:27.249+05:30  INFO 47816 --- [nio-8080-exec-8] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/process.uptime status=200 durationMs=2
+JWT Filter - Processing request: GET /api/actuator/metrics/finance.ai.context.cache.errors
+JWT Filter - Processing request: GET /api/actuator/metrics/finance.ai.context.cache.requests
+Authentication set for user: demo
+JWT Filter - Processing request: GET /api/actuator/metrics/finance.ai.context.cache.hits
+2026-05-19T01:58:27.253+05:30 DEBUG 47816 --- [nio-8080-exec-7] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+2026-05-19T01:58:27.256+05:30  INFO 47816 --- [nio-8080-exec-7] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/http.server.requests status=200 durationMs=3
+Authentication set for user: demo
+JWT Filter - Processing request: GET /api/actuator/metrics/finance.ai.context.cache.puts
+2026-05-19T01:58:27.260+05:30 DEBUG 47816 --- [nio-8080-exec-9] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+JWT Filter - Processing request: GET /api/actuator/metrics/finance.ai.context.cache.disabled
+2026-05-19T01:58:27.261+05:30  INFO 47816 --- [nio-8080-exec-9] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/finance.ai.context.cache.misses status=200 durationMs=1
+JWT Filter - Processing request: GET /api/actuator/metrics/finance.ai.context.database.calls
+Authentication set for user: demo
+Authentication set for user: demo
+2026-05-19T01:58:27.269+05:30 DEBUG 47816 --- [nio-8080-exec-1] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+2026-05-19T01:58:27.269+05:30 DEBUG 47816 --- [nio-8080-exec-2] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+Authentication set for user: demo
+2026-05-19T01:58:27.272+05:30  INFO 47816 --- [nio-8080-exec-2] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/finance.ai.context.cache.hits status=200 durationMs=3
+2026-05-19T01:58:27.272+05:30 DEBUG 47816 --- [nio-8080-exec-6] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+2026-05-19T01:58:27.272+05:30  INFO 47816 --- [nio-8080-exec-1] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/finance.ai.context.cache.requests status=200 durationMs=3
+2026-05-19T01:58:27.274+05:30  INFO 47816 --- [nio-8080-exec-6] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/finance.ai.context.cache.errors status=200 durationMs=2
+JWT Filter - Processing request: GET /api/actuator/metrics/finance.ai.context.cache.lookup.duration
+JWT Filter - Processing request: GET /api/actuator/metrics/finance.ai.context.database.last_load_ms
+JWT Filter - Processing request: GET /api/actuator/metrics/finance.ai.context.database.loads
+Authentication set for user: demo
+2026-05-19T01:58:27.280+05:30 DEBUG 47816 --- [nio-8080-exec-3] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+Authentication set for user: demo
+2026-05-19T01:58:27.282+05:30  INFO 47816 --- [nio-8080-exec-3] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/finance.ai.context.cache.puts status=200 durationMs=2
+2026-05-19T01:58:27.284+05:30 DEBUG 47816 --- [nio-8080-exec-5] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+JWT Filter - Processing request: GET /api/actuator/metrics/finance.ai.context.database.load.duration
+2026-05-19T01:58:27.286+05:30  INFO 47816 --- [nio-8080-exec-5] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/finance.ai.context.cache.disabled status=200 durationMs=2
+JWT Filter - Processing request: GET /api/actuator/metrics/finance.ai.context.cache.estimated_saved_ms
+Authentication set for user: demo
+2026-05-19T01:58:27.290+05:30 DEBUG 47816 --- [io-8080-exec-10] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+2026-05-19T01:58:27.293+05:30  INFO 47816 --- [io-8080-exec-10] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/finance.ai.context.database.calls status=200 durationMs=3
+Authentication set for user: demo
+2026-05-19T01:58:27.295+05:30 DEBUG 47816 --- [nio-8080-exec-8] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+2026-05-19T01:58:27.298+05:30  INFO 47816 --- [nio-8080-exec-8] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/finance.ai.context.cache.lookup.duration status=200 durationMs=3
+Authentication set for user: demo
+2026-05-19T01:58:27.300+05:30 DEBUG 47816 --- [nio-8080-exec-7] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+Authentication set for user: demo
+2026-05-19T01:58:27.301+05:30 DEBUG 47816 --- [nio-8080-exec-4] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+2026-05-19T01:58:27.301+05:30  INFO 47816 --- [nio-8080-exec-7] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/finance.ai.context.database.last_load_ms status=200 durationMs=1
+2026-05-19T01:58:27.304+05:30  INFO 47816 --- [nio-8080-exec-4] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/finance.ai.context.database.loads status=200 durationMs=3
+Authentication set for user: demo
+2026-05-19T01:58:27.305+05:30 DEBUG 47816 --- [nio-8080-exec-9] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+2026-05-19T01:58:27.307+05:30  INFO 47816 --- [nio-8080-exec-9] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/finance.ai.context.database.load.duration status=200 durationMs=2
+Authentication set for user: demo
+2026-05-19T01:58:27.308+05:30 DEBUG 47816 --- [nio-8080-exec-2] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+2026-05-19T01:58:27.310+05:30  INFO 47816 --- [nio-8080-exec-2] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/finance.ai.context.cache.estimated_saved_ms status=200 durationMs=2
+JWT Filter - Processing request: GET /api/transactions/user/1
+Authentication set for user: demo
+2026-05-19T01:58:32.530+05:30  INFO 47816 --- [nio-8080-exec-6] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/transactions/user/1 status=200 durationMs=5
+JWT Filter - Processing request: GET /api/transactions/user/1
+Authentication set for user: demo
+2026-05-19T01:58:32.553+05:30  INFO 47816 --- [nio-8080-exec-1] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/transactions/user/1 status=200 durationMs=3
+JWT Filter - Processing request: GET /api/categories
+Authentication set for user: demo
+2026-05-19T01:58:39.912+05:30  INFO 47816 --- [nio-8080-exec-3] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/categories status=200 durationMs=7
+JWT Filter - Processing request: GET /api/categories
+Authentication set for user: demo
+2026-05-19T01:58:39.934+05:30  INFO 47816 --- [nio-8080-exec-5] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/categories status=200 durationMs=5
+JWT Filter - Processing request: GET /api/subscription/plan
+Authentication set for user: demo
+2026-05-19T01:58:43.661+05:30  INFO 47816 --- [io-8080-exec-10] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/subscription/plan status=200 durationMs=5
+JWT Filter - Processing request: GET /api/subscription/plan
+Authentication set for user: demo
+2026-05-19T01:58:43.680+05:30  INFO 47816 --- [nio-8080-exec-8] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/subscription/plan status=200 durationMs=3
+JWT Filter - Processing request: GET /api/profile
+Authentication set for user: demo
+2026-05-19T01:58:46.473+05:30  INFO 47816 --- [nio-8080-exec-7] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/profile status=200 durationMs=5
+JWT Filter - Processing request: GET /api/profile
+Authentication set for user: demo
+2026-05-19T01:58:46.501+05:30  INFO 47816 --- [nio-8080-exec-4] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/profile status=200 durationMs=4
+JWT Filter - Processing request: GET /api/admin/users
+JWT Filter - Processing request: GET /api/admin/access-policies
+Authentication set for user: demo
+Authentication set for user: demo
+2026-05-19T01:58:51.074+05:30  INFO 47816 --- [nio-8080-exec-9] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/admin/users status=200 durationMs=4
+JWT Filter - Processing request: GET /api/admin/users
+2026-05-19T01:58:51.081+05:30  INFO 47816 --- [nio-8080-exec-2] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/admin/access-policies status=200 durationMs=12
+JWT Filter - Processing request: GET /api/admin/access-policies
+JWT Filter - Processing request: GET /api/admin/users/subscription-requests
+JWT Filter - Processing request: GET /api/admin/users/subscription-settings
+Authentication set for user: demo
+2026-05-19T01:58:51.098+05:30  INFO 47816 --- [nio-8080-exec-6] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/admin/users status=200 durationMs=5
+Authentication set for user: demo
+Authentication set for user: demo
+Authentication set for user: demo
+2026-05-19T01:58:51.109+05:30  INFO 47816 --- [nio-8080-exec-3] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/admin/users/subscription-requests status=200 durationMs=2
+2026-05-19T01:58:51.109+05:30  INFO 47816 --- [nio-8080-exec-5] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/admin/users/subscription-settings status=200 durationMs=2
+2026-05-19T01:58:51.110+05:30  INFO 47816 --- [nio-8080-exec-1] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/admin/access-policies status=200 durationMs=8
+JWT Filter - Processing request: GET /api/admin/users/subscription-settings
+JWT Filter - Processing request: GET /api/admin/users/subscription-requests
+Authentication set for user: demo
+Authentication set for user: demo
+2026-05-19T01:58:51.148+05:30  INFO 47816 --- [nio-8080-exec-8] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/admin/users/subscription-settings status=200 durationMs=4
+2026-05-19T01:58:51.148+05:30  INFO 47816 --- [io-8080-exec-10] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/admin/users/subscription-requests status=200 durationMs=5
+JWT Filter - Processing request: GET /api/transactions/user/1
+Authentication set for user: demo
+2026-05-19T01:58:52.978+05:30  INFO 47816 --- [nio-8080-exec-7] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/transactions/user/1 status=200 durationMs=5
+JWT Filter - Processing request: GET /api/transactions/user/1
+Authentication set for user: demo
+2026-05-19T01:58:52.999+05:30  INFO 47816 --- [nio-8080-exec-4] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/transactions/user/1 status=200 durationMs=4
+JWT Filter - Processing request: GET /api/access-policy/me
+Authentication set for user: demo
+2026-05-19T02:07:58.372+05:30  INFO 47816 --- [nio-8080-exec-7] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/access-policy/me status=200 durationMs=2
+JWT Filter - Processing request: GET /api/access-policy/me
+Authentication set for user: demo
+2026-05-19T02:07:58.399+05:30  INFO 47816 --- [nio-8080-exec-4] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/access-policy/me status=200 durationMs=0
+JWT Filter - Processing request: GET /api/transactions/user/1
+Authentication set for user: demo
+2026-05-19T02:07:58.489+05:30  INFO 47816 --- [nio-8080-exec-2] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/transactions/user/1 status=200 durationMs=4
+JWT Filter - Processing request: GET /api/transactions/user/1
+Authentication set for user: demo
+2026-05-19T02:07:58.511+05:30  INFO 47816 --- [nio-8080-exec-9] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/transactions/user/1 status=200 durationMs=4
+JWT Filter - Processing request: GET /api/transactions/user/1
+Authentication set for user: demo
+2026-05-19T02:08:02.697+05:30  INFO 47816 --- [nio-8080-exec-3] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/transactions/user/1 status=200 durationMs=7
+JWT Filter - Processing request: GET /api/transactions/user/1
+Authentication set for user: demo
+2026-05-19T02:08:02.729+05:30  INFO 47816 --- [nio-8080-exec-6] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/transactions/user/1 status=200 durationMs=7
+JWT Filter - Processing request: GET /api/transactions/user/1
+Authentication set for user: demo
+2026-05-19T02:09:35.149+05:30  INFO 47816 --- [nio-8080-exec-8] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/transactions/user/1 status=200 durationMs=13
+JWT Filter - Processing request: GET /api/transactions/user/1
+Authentication set for user: demo
+2026-05-19T02:09:35.254+05:30  INFO 47816 --- [io-8080-exec-10] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/transactions/user/1 status=200 durationMs=4
+JWT Filter - Processing request: GET /api/transactions/user/1
+Authentication set for user: demo
+2026-05-19T02:09:49.745+05:30  INFO 47816 --- [nio-8080-exec-7] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/transactions/user/1 status=200 durationMs=5
+JWT Filter - Processing request: GET /api/transactions/user/1
+Authentication set for user: demo
+2026-05-19T02:09:49.772+05:30  INFO 47816 --- [nio-8080-exec-4] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/transactions/user/1 status=200 durationMs=5
+JWT Filter - Processing request: GET /api/transactions/user/1
+Authentication set for user: demo
+2026-05-19T02:10:05.839+05:30  INFO 47816 --- [nio-8080-exec-2] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/transactions/user/1 status=200 durationMs=5
+JWT Filter - Processing request: GET /api/transactions/user/1
+Authentication set for user: demo
+2026-05-19T02:10:05.863+05:30  INFO 47816 --- [nio-8080-exec-9] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/transactions/user/1 status=200 durationMs=5
+JWT Filter - Processing request: GET /api/admin/access-policies
+JWT Filter - Processing request: GET /api/admin/users
+Authentication set for user: demo
+Authentication set for user: demo
+2026-05-19T02:10:13.685+05:30  INFO 47816 --- [nio-8080-exec-3] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/admin/users status=200 durationMs=12
+2026-05-19T02:10:13.686+05:30  INFO 47816 --- [nio-8080-exec-6] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/admin/access-policies status=200 durationMs=13
+JWT Filter - Processing request: GET /api/admin/users
+JWT Filter - Processing request: GET /api/admin/access-policies
+JWT Filter - Processing request: GET /api/admin/users/subscription-requests
+JWT Filter - Processing request: GET /api/admin/users/subscription-settings
+Authentication set for user: demo
+2026-05-19T02:10:13.727+05:30  INFO 47816 --- [nio-8080-exec-1] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/admin/users status=200 durationMs=8
+Authentication set for user: demo
+Authentication set for user: demo
+Authentication set for user: demo
+2026-05-19T02:10:13.738+05:30  INFO 47816 --- [nio-8080-exec-8] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/admin/users/subscription-requests status=200 durationMs=6
+2026-05-19T02:10:13.739+05:30  INFO 47816 --- [io-8080-exec-10] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/admin/users/subscription-settings status=200 durationMs=6
+2026-05-19T02:10:13.744+05:30  INFO 47816 --- [nio-8080-exec-5] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/admin/access-policies status=200 durationMs=14
+JWT Filter - Processing request: GET /api/admin/users/subscription-requests
+JWT Filter - Processing request: GET /api/admin/users/subscription-settings
+Authentication set for user: demo
+Authentication set for user: demo
+2026-05-19T02:10:13.787+05:30  INFO 47816 --- [nio-8080-exec-7] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/admin/users/subscription-requests status=200 durationMs=5
+2026-05-19T02:10:13.788+05:30  INFO 47816 --- [nio-8080-exec-4] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/admin/users/subscription-settings status=200 durationMs=5
+JWT Filter - Processing request: GET /api/actuator/health
+Public path, skipping JWT check: /api/actuator/health
+2026-05-19T02:10:19.119+05:30 DEBUG 47816 --- [nio-8080-exec-2] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'health'
+2026-05-19T02:10:19.127+05:30  INFO 47816 --- [nio-8080-exec-2] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/health status=200 durationMs=8
+JWT Filter - Processing request: GET /api/actuator/health
+Public path, skipping JWT check: /api/actuator/health
+2026-05-19T02:10:19.130+05:30 DEBUG 47816 --- [nio-8080-exec-9] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'health'
+2026-05-19T02:10:19.135+05:30  INFO 47816 --- [nio-8080-exec-9] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/health status=200 durationMs=5
+JWT Filter - Processing request: GET /api/actuator/metrics/http.server.requests
+JWT Filter - Processing request: GET /api/actuator/metrics/http.server.requests
+JWT Filter - Processing request: GET /api/actuator/metrics/process.uptime
+JWT Filter - Processing request: GET /api/actuator/metrics/hikaricp.connections.active
+JWT Filter - Processing request: GET /api/actuator/metrics/jvm.memory.used
+JWT Filter - Processing request: GET /api/actuator/metrics/hikaricp.connections.pending
+Authentication set for user: demo
+Authentication set for user: demo
+Authentication set for user: demo
+2026-05-19T02:10:19.171+05:30 DEBUG 47816 --- [nio-8080-exec-3] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+2026-05-19T02:10:19.171+05:30 DEBUG 47816 --- [nio-8080-exec-8] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+2026-05-19T02:10:19.172+05:30 DEBUG 47816 --- [io-8080-exec-10] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+Authentication set for user: demo
+2026-05-19T02:10:19.178+05:30 DEBUG 47816 --- [nio-8080-exec-6] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+Authentication set for user: demo
+2026-05-19T02:10:19.178+05:30  INFO 47816 --- [io-8080-exec-10] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/hikaricp.connections.active status=200 durationMs=6
+2026-05-19T02:10:19.179+05:30  INFO 47816 --- [nio-8080-exec-8] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/process.uptime status=200 durationMs=8
+Authentication set for user: demo
+2026-05-19T02:10:19.180+05:30  INFO 47816 --- [nio-8080-exec-3] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/http.server.requests status=200 durationMs=9
+2026-05-19T02:10:19.182+05:30 DEBUG 47816 --- [nio-8080-exec-1] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+2026-05-19T02:10:19.181+05:30 DEBUG 47816 --- [nio-8080-exec-5] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+2026-05-19T02:10:19.183+05:30  INFO 47816 --- [nio-8080-exec-6] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/http.server.requests status=200 durationMs=6
+JWT Filter - Processing request: GET /api/actuator/metrics/finance.ai.context.cache.requests
+2026-05-19T02:10:19.185+05:30  INFO 47816 --- [nio-8080-exec-1] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/jvm.memory.used status=200 durationMs=3
+JWT Filter - Processing request: GET /api/actuator/metrics/finance.ai.context.cache.hits
+2026-05-19T02:10:19.185+05:30  INFO 47816 --- [nio-8080-exec-5] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/hikaricp.connections.pending status=200 durationMs=5
+JWT Filter - Processing request: GET /api/actuator/metrics/finance.ai.context.cache.misses
+JWT Filter - Processing request: GET /api/actuator/metrics/finance.ai.context.cache.disabled
+JWT Filter - Processing request: GET /api/actuator/metrics/finance.ai.context.cache.errors
+JWT Filter - Processing request: GET /api/actuator/metrics/finance.ai.context.cache.puts
+Authentication set for user: demo
+Authentication set for user: demo
+Authentication set for user: demo
+2026-05-19T02:10:19.222+05:30 DEBUG 47816 --- [nio-8080-exec-7] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+2026-05-19T02:10:19.224+05:30 DEBUG 47816 --- [nio-8080-exec-2] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+2026-05-19T02:10:19.224+05:30 DEBUG 47816 --- [nio-8080-exec-4] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+Authentication set for user: demo
+2026-05-19T02:10:19.227+05:30 DEBUG 47816 --- [nio-8080-exec-9] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+2026-05-19T02:10:19.227+05:30  INFO 47816 --- [nio-8080-exec-4] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/finance.ai.context.cache.hits status=200 durationMs=3
+2026-05-19T02:10:19.226+05:30  INFO 47816 --- [nio-8080-exec-7] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/finance.ai.context.cache.requests status=200 durationMs=4
+2026-05-19T02:10:19.230+05:30  INFO 47816 --- [nio-8080-exec-2] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/finance.ai.context.cache.misses status=200 durationMs=7
+2026-05-19T02:10:19.230+05:30  INFO 47816 --- [nio-8080-exec-9] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/finance.ai.context.cache.disabled status=200 durationMs=4
+Authentication set for user: demo
+JWT Filter - Processing request: GET /api/actuator/metrics/finance.ai.context.database.calls
+2026-05-19T02:10:19.233+05:30 DEBUG 47816 --- [nio-8080-exec-8] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+JWT Filter - Processing request: GET /api/actuator/metrics/finance.ai.context.database.last_load_ms
+JWT Filter - Processing request: GET /api/actuator/metrics/finance.ai.context.database.loads
+2026-05-19T02:10:19.237+05:30  INFO 47816 --- [nio-8080-exec-8] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/finance.ai.context.cache.errors status=200 durationMs=4
+Authentication set for user: demo
+JWT Filter - Processing request: GET /api/actuator/metrics/finance.ai.context.database.load.duration
+2026-05-19T02:10:19.240+05:30 DEBUG 47816 --- [nio-8080-exec-3] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+2026-05-19T02:10:19.241+05:30  INFO 47816 --- [nio-8080-exec-3] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/finance.ai.context.cache.puts status=200 durationMs=2
+JWT Filter - Processing request: GET /api/actuator/metrics/finance.ai.context.cache.lookup.duration
+JWT Filter - Processing request: GET /api/actuator/metrics/finance.ai.context.cache.estimated_saved_ms
+Authentication set for user: demo
+2026-05-19T02:10:19.266+05:30 DEBUG 47816 --- [nio-8080-exec-5] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+Authentication set for user: demo
+2026-05-19T02:10:19.269+05:30 DEBUG 47816 --- [io-8080-exec-10] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+2026-05-19T02:10:19.269+05:30  INFO 47816 --- [nio-8080-exec-5] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/finance.ai.context.database.last_load_ms status=200 durationMs=3
+2026-05-19T02:10:19.273+05:30  INFO 47816 --- [io-8080-exec-10] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/finance.ai.context.database.load.duration status=200 durationMs=3
+Authentication set for user: demo
+JWT Filter - Processing request: GET /api/actuator/metrics/hikaricp.connections.active
+2026-05-19T02:10:19.275+05:30 DEBUG 47816 --- [nio-8080-exec-6] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+JWT Filter - Processing request: GET /api/actuator/metrics/process.uptime
+2026-05-19T02:10:19.279+05:30  INFO 47816 --- [nio-8080-exec-6] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/finance.ai.context.database.calls status=200 durationMs=4
+Authentication set for user: demo
+2026-05-19T02:10:19.282+05:30 DEBUG 47816 --- [nio-8080-exec-1] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+Authentication set for user: demo
+2026-05-19T02:10:19.285+05:30  INFO 47816 --- [nio-8080-exec-1] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/finance.ai.context.database.loads status=200 durationMs=3
+2026-05-19T02:10:19.285+05:30 DEBUG 47816 --- [nio-8080-exec-4] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+JWT Filter - Processing request: GET /api/actuator/metrics/http.server.requests
+2026-05-19T02:10:19.286+05:30  INFO 47816 --- [nio-8080-exec-4] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/finance.ai.context.cache.lookup.duration status=200 durationMs=2
+JWT Filter - Processing request: GET /api/actuator/metrics/http.server.requests
+Authentication set for user: demo
+2026-05-19T02:10:19.289+05:30 DEBUG 47816 --- [nio-8080-exec-2] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+2026-05-19T02:10:19.290+05:30  INFO 47816 --- [nio-8080-exec-2] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/finance.ai.context.cache.estimated_saved_ms status=200 durationMs=1
+JWT Filter - Processing request: GET /api/actuator/metrics/jvm.memory.used
+Authentication set for user: demo
+JWT Filter - Processing request: GET /api/actuator/metrics/hikaricp.connections.pending
+2026-05-19T02:10:19.294+05:30 DEBUG 47816 --- [nio-8080-exec-7] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+2026-05-19T02:10:19.297+05:30  INFO 47816 --- [nio-8080-exec-7] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/process.uptime status=200 durationMs=3
+Authentication set for user: demo
+2026-05-19T02:10:19.298+05:30 DEBUG 47816 --- [nio-8080-exec-9] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+Authentication set for user: demo
+2026-05-19T02:10:19.300+05:30  INFO 47816 --- [nio-8080-exec-9] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/hikaricp.connections.active status=200 durationMs=2
+2026-05-19T02:10:19.300+05:30 DEBUG 47816 --- [nio-8080-exec-8] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+Authentication set for user: demo
+JWT Filter - Processing request: GET /api/actuator/metrics/finance.ai.context.cache.requests
+2026-05-19T02:10:19.302+05:30  INFO 47816 --- [nio-8080-exec-8] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/http.server.requests status=200 durationMs=2
+JWT Filter - Processing request: GET /api/actuator/metrics/finance.ai.context.cache.hits
+2026-05-19T02:10:19.303+05:30 DEBUG 47816 --- [nio-8080-exec-3] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+JWT Filter - Processing request: GET /api/actuator/metrics/finance.ai.context.cache.misses
+2026-05-19T02:10:19.306+05:30  INFO 47816 --- [nio-8080-exec-3] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/http.server.requests status=200 durationMs=4
+Authentication set for user: demo
+2026-05-19T02:10:19.309+05:30 DEBUG 47816 --- [io-8080-exec-10] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+2026-05-19T02:10:19.310+05:30  INFO 47816 --- [io-8080-exec-10] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/hikaricp.connections.pending status=200 durationMs=2
+JWT Filter - Processing request: GET /api/actuator/metrics/finance.ai.context.cache.disabled
+Authentication set for user: demo
+2026-05-19T02:10:19.314+05:30 DEBUG 47816 --- [nio-8080-exec-6] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+JWT Filter - Processing request: GET /api/actuator/metrics/finance.ai.context.cache.errors
+2026-05-19T02:10:19.316+05:30  INFO 47816 --- [nio-8080-exec-6] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/finance.ai.context.cache.requests status=200 durationMs=2
+Authentication set for user: demo
+2026-05-19T02:10:19.319+05:30 DEBUG 47816 --- [nio-8080-exec-5] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+JWT Filter - Processing request: GET /api/actuator/metrics/finance.ai.context.cache.puts
+2026-05-19T02:10:19.321+05:30  INFO 47816 --- [nio-8080-exec-5] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/jvm.memory.used status=200 durationMs=2
+Authentication set for user: demo
+2026-05-19T02:10:19.323+05:30 DEBUG 47816 --- [nio-8080-exec-4] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+JWT Filter - Processing request: GET /api/actuator/metrics/finance.ai.context.database.last_load_ms
+Authentication set for user: demo
+Authentication set for user: demo
+2026-05-19T02:10:19.324+05:30  INFO 47816 --- [nio-8080-exec-4] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/finance.ai.context.cache.misses status=200 durationMs=2
+2026-05-19T02:10:19.325+05:30 DEBUG 47816 --- [nio-8080-exec-1] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+2026-05-19T02:10:19.325+05:30 DEBUG 47816 --- [nio-8080-exec-2] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+2026-05-19T02:10:19.327+05:30  INFO 47816 --- [nio-8080-exec-1] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/finance.ai.context.cache.hits status=200 durationMs=3
+2026-05-19T02:10:19.327+05:30  INFO 47816 --- [nio-8080-exec-2] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/finance.ai.context.cache.disabled status=200 durationMs=2
+JWT Filter - Processing request: GET /api/actuator/metrics/finance.ai.context.database.load.duration
+JWT Filter - Processing request: GET /api/actuator/metrics/finance.ai.context.database.calls
+JWT Filter - Processing request: GET /api/actuator/metrics/finance.ai.context.database.loads
+Authentication set for user: demo
+Authentication set for user: demo
+2026-05-19T02:10:19.335+05:30 DEBUG 47816 --- [nio-8080-exec-7] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+2026-05-19T02:10:19.335+05:30 DEBUG 47816 --- [nio-8080-exec-9] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+2026-05-19T02:10:19.336+05:30  INFO 47816 --- [nio-8080-exec-7] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/finance.ai.context.cache.errors status=200 durationMs=1
+2026-05-19T02:10:19.336+05:30  INFO 47816 --- [nio-8080-exec-9] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/finance.ai.context.cache.puts status=200 durationMs=1
+Authentication set for user: demo
+2026-05-19T02:10:19.339+05:30 DEBUG 47816 --- [nio-8080-exec-8] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+JWT Filter - Processing request: GET /api/actuator/metrics/finance.ai.context.cache.lookup.duration
+JWT Filter - Processing request: GET /api/actuator/metrics/finance.ai.context.cache.estimated_saved_ms
+2026-05-19T02:10:19.341+05:30  INFO 47816 --- [nio-8080-exec-8] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/finance.ai.context.database.last_load_ms status=200 durationMs=3
+Authentication set for user: demo
+Authentication set for user: demo
+2026-05-19T02:10:19.342+05:30 DEBUG 47816 --- [io-8080-exec-10] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+2026-05-19T02:10:19.342+05:30 DEBUG 47816 --- [nio-8080-exec-6] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+2026-05-19T02:10:19.343+05:30  INFO 47816 --- [io-8080-exec-10] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/finance.ai.context.database.calls status=200 durationMs=1
+2026-05-19T02:10:19.344+05:30  INFO 47816 --- [nio-8080-exec-6] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/finance.ai.context.database.loads status=200 durationMs=1
+Authentication set for user: demo
+2026-05-19T02:10:19.345+05:30 DEBUG 47816 --- [nio-8080-exec-3] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+2026-05-19T02:10:19.347+05:30  INFO 47816 --- [nio-8080-exec-3] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/finance.ai.context.database.load.duration status=200 durationMs=2
+Authentication set for user: demo
+2026-05-19T02:10:19.348+05:30 DEBUG 47816 --- [nio-8080-exec-5] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+Authentication set for user: demo
+2026-05-19T02:10:19.349+05:30  INFO 47816 --- [nio-8080-exec-5] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/finance.ai.context.cache.lookup.duration status=200 durationMs=1
+2026-05-19T02:10:19.350+05:30 DEBUG 47816 --- [nio-8080-exec-4] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+2026-05-19T02:10:19.351+05:30  INFO 47816 --- [nio-8080-exec-4] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/finance.ai.context.cache.estimated_saved_ms status=200 durationMs=1
+JWT Filter - Processing request: GET /api/transactions/user/1
+Authentication set for user: demo
+2026-05-19T02:10:25.554+05:30  INFO 47816 --- [nio-8080-exec-1] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/transactions/user/1 status=200 durationMs=5
+JWT Filter - Processing request: GET /api/transactions/user/1
+Authentication set for user: demo
+2026-05-19T02:10:25.583+05:30  INFO 47816 --- [nio-8080-exec-2] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/transactions/user/1 status=200 durationMs=5
+JWT Filter - Processing request: GET /api/categories
+Authentication set for user: demo
+2026-05-19T02:10:36.129+05:30  INFO 47816 --- [nio-8080-exec-7] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/categories status=200 durationMs=8
+JWT Filter - Processing request: GET /api/categories
+Authentication set for user: demo
+2026-05-19T02:10:36.146+05:30  INFO 47816 --- [nio-8080-exec-9] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/categories status=200 durationMs=5
+JWT Filter - Processing request: GET /api/subscription/plan
+Authentication set for user: demo
+2026-05-19T02:10:41.792+05:30  INFO 47816 --- [nio-8080-exec-8] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/subscription/plan status=200 durationMs=4
+JWT Filter - Processing request: GET /api/subscription/plan
+Authentication set for user: demo
+2026-05-19T02:10:41.818+05:30  INFO 47816 --- [io-8080-exec-10] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/subscription/plan status=200 durationMs=4
+JWT Filter - Processing request: GET /api/profile
+Authentication set for user: demo
+2026-05-19T02:10:45.485+05:30  INFO 47816 --- [nio-8080-exec-6] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/profile status=200 durationMs=3
+JWT Filter - Processing request: GET /api/profile
+Authentication set for user: demo
+2026-05-19T02:10:45.502+05:30  INFO 47816 --- [nio-8080-exec-3] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/profile status=200 durationMs=4
+JWT Filter - Processing request: GET /api/transactions/user/1
+Authentication set for user: demo
+2026-05-19T02:12:17.280+05:30  INFO 47816 --- [nio-8080-exec-8] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/transactions/user/1 status=200 durationMs=3
+JWT Filter - Processing request: GET /api/transactions/user/1
+Authentication set for user: demo
+2026-05-19T02:12:17.301+05:30  INFO 47816 --- [io-8080-exec-10] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/transactions/user/1 status=200 durationMs=4
+JWT Filter - Processing request: GET /api/transactions/user/1
+Authentication set for user: demo
+2026-05-19T02:12:28.179+05:30  INFO 47816 --- [nio-8080-exec-6] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/transactions/user/1 status=200 durationMs=6
+JWT Filter - Processing request: GET /api/transactions/user/1
+Authentication set for user: demo
+2026-05-19T02:12:28.226+05:30  INFO 47816 --- [nio-8080-exec-3] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/transactions/user/1 status=200 durationMs=9
+JWT Filter - Processing request: GET /api/admin/users
+JWT Filter - Processing request: GET /api/admin/access-policies
+Authentication set for user: demo
+Authentication set for user: demo
+2026-05-19T02:12:33.170+05:30  INFO 47816 --- [nio-8080-exec-5] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/admin/users status=200 durationMs=5
+JWT Filter - Processing request: GET /api/admin/users
+2026-05-19T02:12:33.173+05:30  INFO 47816 --- [nio-8080-exec-2] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/admin/access-policies status=200 durationMs=12
+JWT Filter - Processing request: GET /api/admin/access-policies
+JWT Filter - Processing request: GET /api/admin/users/subscription-requests
+JWT Filter - Processing request: GET /api/admin/users/subscription-settings
+Authentication set for user: demo
+Authentication set for user: demo
+2026-05-19T02:12:33.292+05:30  INFO 47816 --- [nio-8080-exec-1] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/admin/users status=200 durationMs=11
+2026-05-19T02:12:33.292+05:30  INFO 47816 --- [nio-8080-exec-4] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/admin/access-policies status=200 durationMs=10
+Authentication set for user: demo
+Authentication set for user: demo
+2026-05-19T02:12:33.299+05:30  INFO 47816 --- [nio-8080-exec-9] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/admin/users/subscription-settings status=200 durationMs=2
+JWT Filter - Processing request: GET /api/admin/users/subscription-settings
+2026-05-19T02:12:33.304+05:30  INFO 47816 --- [nio-8080-exec-7] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/admin/users/subscription-requests status=200 durationMs=5
+JWT Filter - Processing request: GET /api/admin/users/subscription-requests
+Authentication set for user: demo
+2026-05-19T02:12:33.319+05:30  INFO 47816 --- [nio-8080-exec-8] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/admin/users/subscription-settings status=200 durationMs=3
+Authentication set for user: demo
+2026-05-19T02:12:33.323+05:30  INFO 47816 --- [io-8080-exec-10] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/admin/users/subscription-requests status=200 durationMs=3
+JWT Filter - Processing request: GET /api/actuator/health
+Public path, skipping JWT check: /api/actuator/health
+2026-05-19T02:12:37.665+05:30 DEBUG 47816 --- [nio-8080-exec-6] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'health'
+2026-05-19T02:12:37.674+05:30  INFO 47816 --- [nio-8080-exec-6] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/health status=200 durationMs=9
+JWT Filter - Processing request: GET /api/actuator/health
+Public path, skipping JWT check: /api/actuator/health
+2026-05-19T02:12:37.678+05:30 DEBUG 47816 --- [nio-8080-exec-3] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'health'
+2026-05-19T02:12:37.683+05:30  INFO 47816 --- [nio-8080-exec-3] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/health status=200 durationMs=5
+JWT Filter - Processing request: GET /api/actuator/metrics/http.server.requests
+JWT Filter - Processing request: GET /api/actuator/metrics/process.uptime
+JWT Filter - Processing request: GET /api/actuator/metrics/jvm.memory.used
+JWT Filter - Processing request: GET /api/actuator/metrics/http.server.requests
+JWT Filter - Processing request: GET /api/actuator/metrics/hikaricp.connections.pending
+JWT Filter - Processing request: GET /api/actuator/metrics/hikaricp.connections.active
+Authentication set for user: demo
+2026-05-19T02:12:37.721+05:30 DEBUG 47816 --- [nio-8080-exec-9] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+2026-05-19T02:12:37.728+05:30  INFO 47816 --- [nio-8080-exec-9] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/hikaricp.connections.active status=200 durationMs=7
+Authentication set for user: demo
+Authentication set for user: demo
+Authentication set for user: demo
+2026-05-19T02:12:37.731+05:30 DEBUG 47816 --- [nio-8080-exec-4] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+2026-05-19T02:12:37.731+05:30 DEBUG 47816 --- [nio-8080-exec-5] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+2026-05-19T02:12:37.732+05:30 DEBUG 47816 --- [nio-8080-exec-7] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+2026-05-19T02:12:37.734+05:30  INFO 47816 --- [nio-8080-exec-4] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/jvm.memory.used status=200 durationMs=3
+2026-05-19T02:12:37.738+05:30  INFO 47816 --- [nio-8080-exec-5] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/http.server.requests status=200 durationMs=7
+JWT Filter - Processing request: GET /api/actuator/metrics/finance.ai.context.cache.hits
+JWT Filter - Processing request: GET /api/actuator/metrics/finance.ai.context.cache.misses
+JWT Filter - Processing request: GET /api/actuator/metrics/finance.ai.context.cache.requests
+2026-05-19T02:12:37.750+05:30  INFO 47816 --- [nio-8080-exec-7] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/hikaricp.connections.pending status=200 durationMs=18
+JWT Filter - Processing request: GET /api/actuator/metrics/finance.ai.context.cache.disabled
+Authentication set for user: demo
+2026-05-19T02:12:37.755+05:30 DEBUG 47816 --- [nio-8080-exec-2] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+2026-05-19T02:12:37.758+05:30  INFO 47816 --- [nio-8080-exec-2] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/http.server.requests status=200 durationMs=3
+JWT Filter - Processing request: GET /api/actuator/metrics/finance.ai.context.cache.errors
+Authentication set for user: demo
+2026-05-19T02:12:37.776+05:30 DEBUG 47816 --- [nio-8080-exec-1] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+2026-05-19T02:12:37.793+05:30  INFO 47816 --- [nio-8080-exec-1] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/process.uptime status=200 durationMs=17
+JWT Filter - Processing request: GET /api/actuator/metrics/finance.ai.context.cache.puts
+Authentication set for user: demo
+2026-05-19T02:12:37.844+05:30 DEBUG 47816 --- [nio-8080-exec-3] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+Authentication set for user: demo
+2026-05-19T02:12:37.846+05:30 DEBUG 47816 --- [nio-8080-exec-9] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+2026-05-19T02:12:37.846+05:30  INFO 47816 --- [nio-8080-exec-3] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/finance.ai.context.cache.disabled status=200 durationMs=2
+2026-05-19T02:12:37.848+05:30  INFO 47816 --- [nio-8080-exec-9] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/finance.ai.context.cache.errors status=200 durationMs=2
+Authentication set for user: demo
+2026-05-19T02:12:37.863+05:30 DEBUG 47816 --- [nio-8080-exec-6] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+JWT Filter - Processing request: GET /api/actuator/metrics/finance.ai.context.database.calls
+JWT Filter - Processing request: GET /api/actuator/metrics/finance.ai.context.database.loads
+2026-05-19T02:12:37.865+05:30  INFO 47816 --- [nio-8080-exec-6] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/finance.ai.context.cache.misses status=200 durationMs=3
+JWT Filter - Processing request: GET /api/actuator/metrics/finance.ai.context.database.last_load_ms
+Authentication set for user: demo
+Authentication set for user: demo
+2026-05-19T02:12:37.899+05:30 DEBUG 47816 --- [nio-8080-exec-8] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+2026-05-19T02:12:37.899+05:30 DEBUG 47816 --- [io-8080-exec-10] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+2026-05-19T02:12:37.900+05:30  INFO 47816 --- [io-8080-exec-10] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/finance.ai.context.cache.hits status=200 durationMs=1
+2026-05-19T02:12:37.900+05:30  INFO 47816 --- [nio-8080-exec-8] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/finance.ai.context.cache.requests status=200 durationMs=1
+JWT Filter - Processing request: GET /api/actuator/metrics/finance.ai.context.database.load.duration
+JWT Filter - Processing request: GET /api/actuator/metrics/finance.ai.context.cache.lookup.duration
+Authentication set for user: demo
+2026-05-19T02:12:37.932+05:30 DEBUG 47816 --- [nio-8080-exec-4] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+2026-05-19T02:12:37.934+05:30  INFO 47816 --- [nio-8080-exec-4] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/finance.ai.context.cache.puts status=200 durationMs=3
+JWT Filter - Processing request: GET /api/actuator/metrics/finance.ai.context.cache.estimated_saved_ms
+Authentication set for user: demo
+Authentication set for user: demo
+2026-05-19T02:12:37.958+05:30 DEBUG 47816 --- [nio-8080-exec-5] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+2026-05-19T02:12:37.963+05:30 DEBUG 47816 --- [nio-8080-exec-2] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+2026-05-19T02:12:37.964+05:30  INFO 47816 --- [nio-8080-exec-5] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/finance.ai.context.database.calls status=200 durationMs=6
+Authentication set for user: demo
+Authentication set for user: demo
+2026-05-19T02:12:37.964+05:30  INFO 47816 --- [nio-8080-exec-2] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/finance.ai.context.database.last_load_ms status=200 durationMs=1
+2026-05-19T02:12:37.967+05:30 DEBUG 47816 --- [nio-8080-exec-7] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+2026-05-19T02:12:37.968+05:30 DEBUG 47816 --- [nio-8080-exec-1] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+JWT Filter - Processing request: GET /api/actuator/metrics/jvm.memory.used
+JWT Filter - Processing request: GET /api/actuator/metrics/hikaricp.connections.active
+2026-05-19T02:12:37.969+05:30  INFO 47816 --- [nio-8080-exec-7] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/finance.ai.context.database.loads status=200 durationMs=2
+2026-05-19T02:12:37.970+05:30  INFO 47816 --- [nio-8080-exec-1] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/finance.ai.context.database.load.duration status=200 durationMs=3
+Authentication set for user: demo
+JWT Filter - Processing request: GET /api/actuator/metrics/hikaricp.connections.pending
+JWT Filter - Processing request: GET /api/actuator/metrics/http.server.requests
+2026-05-19T02:12:37.974+05:30 DEBUG 47816 --- [nio-8080-exec-3] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+2026-05-19T02:12:37.976+05:30  INFO 47816 --- [nio-8080-exec-3] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/finance.ai.context.cache.estimated_saved_ms status=200 durationMs=2
+JWT Filter - Processing request: GET /api/actuator/metrics/http.server.requests
+Authentication set for user: demo
+2026-05-19T02:12:37.988+05:30 DEBUG 47816 --- [nio-8080-exec-9] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+2026-05-19T02:12:37.990+05:30  INFO 47816 --- [nio-8080-exec-9] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/finance.ai.context.cache.lookup.duration status=200 durationMs=2
+JWT Filter - Processing request: GET /api/actuator/metrics/process.uptime
+Authentication set for user: demo
+2026-05-19T02:12:38.001+05:30 DEBUG 47816 --- [nio-8080-exec-8] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+Authentication set for user: demo
+Authentication set for user: demo
+2026-05-19T02:12:38.006+05:30 DEBUG 47816 --- [nio-8080-exec-4] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+2026-05-19T02:12:38.006+05:30 DEBUG 47816 --- [nio-8080-exec-6] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+Authentication set for user: demo
+2026-05-19T02:12:38.007+05:30  INFO 47816 --- [nio-8080-exec-6] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/hikaricp.connections.active status=200 durationMs=1
+2026-05-19T02:12:38.007+05:30  INFO 47816 --- [nio-8080-exec-4] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/hikaricp.connections.pending status=200 durationMs=1
+2026-05-19T02:12:38.008+05:30 DEBUG 47816 --- [io-8080-exec-10] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+2026-05-19T02:12:38.010+05:30  INFO 47816 --- [io-8080-exec-10] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/jvm.memory.used status=200 durationMs=3
+JWT Filter - Processing request: GET /api/actuator/metrics/finance.ai.context.cache.errors
+JWT Filter - Processing request: GET /api/actuator/metrics/finance.ai.context.cache.disabled
+JWT Filter - Processing request: GET /api/actuator/metrics/finance.ai.context.cache.misses
+2026-05-19T02:12:38.011+05:30  INFO 47816 --- [nio-8080-exec-8] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/http.server.requests status=200 durationMs=10
+JWT Filter - Processing request: GET /api/actuator/metrics/finance.ai.context.cache.hits
+Authentication set for user: demo
+2026-05-19T02:12:38.025+05:30 DEBUG 47816 --- [nio-8080-exec-5] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+2026-05-19T02:12:38.028+05:30  INFO 47816 --- [nio-8080-exec-5] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/http.server.requests status=200 durationMs=3
+JWT Filter - Processing request: GET /api/actuator/metrics/finance.ai.context.cache.requests
+Authentication set for user: demo
+2026-05-19T02:12:38.038+05:30 DEBUG 47816 --- [nio-8080-exec-3] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+Authentication set for user: demo
+Authentication set for user: demo
+2026-05-19T02:12:38.040+05:30  INFO 47816 --- [nio-8080-exec-3] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/finance.ai.context.cache.misses status=200 durationMs=2
+Authentication set for user: demo
+2026-05-19T02:12:38.041+05:30 DEBUG 47816 --- [nio-8080-exec-2] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+JWT Filter - Processing request: GET /api/actuator/metrics/finance.ai.context.cache.puts
+Authentication set for user: demo
+2026-05-19T02:12:38.041+05:30 DEBUG 47816 --- [nio-8080-exec-7] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+2026-05-19T02:12:38.043+05:30 DEBUG 47816 --- [nio-8080-exec-9] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+2026-05-19T02:12:38.048+05:30  INFO 47816 --- [nio-8080-exec-7] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/finance.ai.context.cache.errors status=200 durationMs=7
+2026-05-19T02:12:38.046+05:30  INFO 47816 --- [nio-8080-exec-2] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/process.uptime status=200 durationMs=6
+2026-05-19T02:12:38.049+05:30  INFO 47816 --- [nio-8080-exec-9] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/finance.ai.context.cache.hits status=200 durationMs=6
+2026-05-19T02:12:38.049+05:30 DEBUG 47816 --- [nio-8080-exec-1] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+2026-05-19T02:12:38.054+05:30  INFO 47816 --- [nio-8080-exec-1] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/finance.ai.context.cache.disabled status=200 durationMs=5
+JWT Filter - Processing request: GET /api/actuator/metrics/finance.ai.context.database.calls
+JWT Filter - Processing request: GET /api/actuator/metrics/finance.ai.context.database.last_load_ms
+JWT Filter - Processing request: GET /api/actuator/metrics/finance.ai.context.database.loads
+JWT Filter - Processing request: GET /api/actuator/metrics/finance.ai.context.database.load.duration
+Authentication set for user: demo
+Authentication set for user: demo
+2026-05-19T02:12:38.073+05:30 DEBUG 47816 --- [nio-8080-exec-4] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+2026-05-19T02:12:38.074+05:30 DEBUG 47816 --- [nio-8080-exec-6] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+2026-05-19T02:12:38.076+05:30  INFO 47816 --- [nio-8080-exec-4] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/finance.ai.context.cache.puts status=200 durationMs=3
+Authentication set for user: demo
+2026-05-19T02:12:38.078+05:30  INFO 47816 --- [nio-8080-exec-6] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/finance.ai.context.cache.requests status=200 durationMs=4
+Authentication set for user: demo
+2026-05-19T02:12:38.082+05:30 DEBUG 47816 --- [nio-8080-exec-8] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+2026-05-19T02:12:38.083+05:30 DEBUG 47816 --- [io-8080-exec-10] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+2026-05-19T02:12:38.085+05:30  INFO 47816 --- [nio-8080-exec-8] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/finance.ai.context.database.last_load_ms status=200 durationMs=4
+2026-05-19T02:12:38.086+05:30  INFO 47816 --- [io-8080-exec-10] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/finance.ai.context.database.calls status=200 durationMs=3
+JWT Filter - Processing request: GET /api/actuator/metrics/finance.ai.context.cache.estimated_saved_ms
+JWT Filter - Processing request: GET /api/actuator/metrics/finance.ai.context.cache.lookup.duration
+Authentication set for user: demo
+Authentication set for user: demo
+2026-05-19T02:12:38.098+05:30 DEBUG 47816 --- [nio-8080-exec-5] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+2026-05-19T02:12:38.100+05:30 DEBUG 47816 --- [nio-8080-exec-3] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+2026-05-19T02:12:38.101+05:30  INFO 47816 --- [nio-8080-exec-5] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/finance.ai.context.database.loads status=200 durationMs=4
+2026-05-19T02:12:38.101+05:30  INFO 47816 --- [nio-8080-exec-3] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/finance.ai.context.database.load.duration status=200 durationMs=2
+Authentication set for user: demo
+2026-05-19T02:12:38.106+05:30 DEBUG 47816 --- [nio-8080-exec-8] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+2026-05-19T02:12:38.107+05:30  INFO 47816 --- [nio-8080-exec-8] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/finance.ai.context.cache.lookup.duration status=200 durationMs=1
+Authentication set for user: demo
+2026-05-19T02:12:38.110+05:30 DEBUG 47816 --- [nio-8080-exec-2] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped to Actuator web endpoint 'metrics-requiredMetricName'
+2026-05-19T02:12:38.112+05:30  INFO 47816 --- [nio-8080-exec-2] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/actuator/metrics/finance.ai.context.cache.estimated_saved_ms status=200 durationMs=3
+JWT Filter - Processing request: GET /api/transactions/user/1
+Authentication set for user: demo
+2026-05-19T02:12:41.853+05:30  INFO 47816 --- [nio-8080-exec-7] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/transactions/user/1 status=200 durationMs=7
+JWT Filter - Processing request: GET /api/transactions/user/1
+Authentication set for user: demo
+2026-05-19T02:12:41.886+05:30  INFO 47816 --- [nio-8080-exec-1] com.finance.monitoring.ApiTimingFilter   : PERF method=GET path=/api/transactions/user/1 status=200 durationMs=9

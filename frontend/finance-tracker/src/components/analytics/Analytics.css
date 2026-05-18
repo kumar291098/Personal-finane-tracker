@@ -282,64 +282,6 @@
   line-height: 1.5;
 }
 
-.cashflow-chart {
-  min-height: 260px;
-  display: grid;
-  grid-template-columns: repeat(6, minmax(74px, 1fr));
-  gap: var(--spacing-md);
-  align-items: end;
-  overflow-x: auto;
-}
-
-.cashflow-column {
-  min-width: 74px;
-  display: grid;
-  grid-template-rows: 1fr auto auto;
-  gap: 8px;
-  text-align: center;
-}
-
-.cashflow-bars {
-  height: 180px;
-  display: flex;
-  align-items: end;
-  justify-content: center;
-  gap: 8px;
-  padding: 0 8px;
-  border-radius: var(--radius-lg);
-  background: #f8fafc;
-}
-
-.cashflow-bar {
-  width: 22px;
-  min-height: 8px;
-  border-radius: 8px 8px 3px 3px;
-  transition: height var(--transition-normal);
-}
-
-.cashflow-bar.income {
-  background: linear-gradient(180deg, #16a34a, #0f766e);
-}
-
-.cashflow-bar.expense {
-  background: linear-gradient(180deg, #ef4444, #f97316);
-}
-
-.cashflow-column strong,
-.cashflow-column small {
-  overflow-wrap: anywhere;
-}
-
-.cashflow-column strong {
-  color: var(--gray-700);
-  font-size: var(--font-size-xs);
-}
-
-.cashflow-column small {
-  color: var(--gray-500);
-  font-size: 11px;
-}
-
 .report-legend {
   display: flex;
   align-items: center;
@@ -383,45 +325,6 @@
   grid-template-columns: minmax(160px, 0.8fr) minmax(0, 1fr);
   gap: var(--spacing-lg);
   align-items: center;
-}
-
-.analytics-donut {
-  width: min(190px, 100%);
-  aspect-ratio: 1;
-  display: grid;
-  place-items: center;
-  border-radius: 50%;
-  margin: 0 auto;
-}
-
-.analytics-donut > div {
-  width: 62%;
-  aspect-ratio: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 10px;
-  border-radius: 50%;
-  background: white;
-  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.12);
-  text-align: center;
-}
-
-.analytics-donut span,
-.analytics-donut strong {
-  max-width: 100%;
-  overflow-wrap: anywhere;
-}
-
-.analytics-donut span {
-  color: var(--gray-500);
-  font-size: var(--font-size-xs);
-}
-
-.analytics-donut strong {
-  color: var(--gray-900);
-  font-size: var(--font-size-sm);
 }
 
 .donut-list,
